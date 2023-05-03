@@ -30,9 +30,6 @@ coverage/
 # JetBrains IDEs (WebStorm, IntelliJ, etc.)
 .idea/
 
-# VS Code
-.vscode/
-
 # Other OS- and IDE-specific files
 .DS_Store
 Thumbs.db
