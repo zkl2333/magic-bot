@@ -1,12 +1,8 @@
 import userAvatar from '../assets/user-avatar.jpg'
+import { ChatListItem } from '../types'
 import OpenaiIcon from './OpenaiIcon'
 
-interface ChatBubbleProps {
-  message: string
-  rule: string
-}
-
-const ChatBubble = (props: ChatBubbleProps) => {
+const ChatBubble = (props: ChatListItem) => {
   const { message, rule } = props
   const isAssistant = rule === 'assistant'
   return (
