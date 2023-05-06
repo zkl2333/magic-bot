@@ -1,12 +1,13 @@
-import Koa from 'koa'
+import Koa, { DefaultContext, DefaultState } from 'koa'
 import Router from 'koa-router'
 import completions from './service/openai/completions'
 import { Readable } from 'node:stream'
 import WebStream from 'node:stream/web'
 import { createStream, formatResponse } from './utils'
 import bodyParser from 'koa-bodyparser'
+import { ChatListItem } from './types'
 
-const app = new Koa()
+const app = new Koa<DefaultState, DefaultContext>()
 const router = new Router()
 
 const logger = async (ctx: Koa.Context, next: Koa.Next) => {
@@ -19,8 +20,12 @@ router.get('/', async ctx => {
 })
 
 router.post('/chat/completions', async ctx => {
-  console.log('request body: ', ctx.request.body)
-  const response = await completions()
+  const requestBody = ctx.request.body as { chatList: ChatListItem[] }
+  if (typeof requestBody !== 'object' || !requestBody.chatList) {
+    ctx.body = formatResponse({ msg: 'invalid request body' })
+    return
+  }
+  const response = await completions(requestBody.chatList as ChatListItem[])
   const contentType = response.headers.get('Content-Type') ?? ''
 
   // streaming response

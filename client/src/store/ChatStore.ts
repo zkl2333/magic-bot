@@ -2,16 +2,7 @@ import { makeAutoObservable } from 'mobx'
 import { ChatListItem } from '../types'
 
 export class ChatStore {
-  chatList: ChatListItem[] = [
-    {
-      message: '多多是不是世界上最可爱的人',
-      rule: 'user'
-    },
-    {
-      message: '是的, 多多是世界上最可爱的人',
-      rule: 'assistant'
-    }
-  ]
+  chatList: ChatListItem[] = []
 
   constructor() {
     makeAutoObservable(this)
@@ -28,12 +19,12 @@ export class ChatStore {
   setAssistantMessage(message: string) {
     console.log('setAssistantMessage', message)
     const lastIndex = this.chatList.length - 1
-    if (this.chatList[lastIndex].rule === 'assistant') {
+    if (this.chatList[lastIndex].role === 'assistant') {
       this.chatList[lastIndex].message = message
     } else {
       this.chatList.push({
         message: message,
-        rule: 'assistant'
+        role: 'assistant'
       })
     }
   }

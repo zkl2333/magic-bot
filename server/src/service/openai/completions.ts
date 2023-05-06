@@ -1,4 +1,10 @@
-async function completions() {
+import { ChatListItem } from '../../types'
+
+const createMessage = (chatList: ChatListItem[]) => {
+  return chatList.map(item => ({ role: item.role, content: item.message }))
+}
+
+async function completions(chatList: ChatListItem[]) {
   // fetch 在 Nodejs 18 里已经可用
   const response = await fetch(`https://key-rental-api.bowen.cool/openai/v1/chat/completions`, {
     headers: {
@@ -9,7 +15,7 @@ async function completions() {
     body: JSON.stringify({
       model: 'gpt-3.5-turbo',
       stream: true,
-      messages: [{ role: 'user', content: '你好' }]
+      messages: createMessage(chatList)
     })
   })
 

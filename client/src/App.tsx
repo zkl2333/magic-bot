@@ -27,11 +27,14 @@ function App() {
   const submitHandler = async () => {
     if (inputText === '') return
     setInputText('')
-    const newChatItem: ChatListItem = {
+    chatStore.addChatItem({
       message: inputText,
-      rule: 'user'
-    }
-    chatStore.addChatItem(newChatItem)
+      role: 'user'
+    })
+    chatStore.addChatItem({
+      message: '',
+      role: 'assistant'
+    })
     await getAnswer(chatStore.chatList).then(setAssistantMessage)
   }
 
@@ -55,7 +58,7 @@ function App() {
             {/* 聊天框 */}
             <div className='flex flex-1 flex-col p-3 lg:p-4 overflow-y-auto'>
               {chatStore.chatList.map((item, index) => (
-                <ChatBubble key={index} rule={item.rule} message={item.message} />
+                <ChatBubble key={index} role={item.role} message={item.message} />
               ))}
             </div>
             {/* 输入框 */}

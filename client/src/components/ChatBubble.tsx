@@ -3,8 +3,8 @@ import { ChatListItem } from '../types'
 import OpenaiIcon from './OpenaiIcon'
 
 const ChatBubble = (props: ChatListItem) => {
-  const { message, rule } = props
-  const isAssistant = rule === 'assistant'
+  const { message, role } = props
+  const isAssistant = role === 'assistant'
   return (
     <div className={`chat ${isAssistant ? 'chat-start' : 'chat-end'}`}>
       <div className='chat-image avatar'>
