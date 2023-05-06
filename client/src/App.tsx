@@ -3,6 +3,7 @@ import { useState } from 'react'
 
 import './App.css'
 import AutoResizeTextarea from './components/AutoResizeTextarea'
+import { ChatListItem } from './types'
 const defaultChatList: ChatListItem[] = [
   {
     message: '多多是不是世界上最可爱的人',
@@ -27,44 +28,59 @@ const chatHistory = [
   }
 ]
 
-type ChatListItem = {
-  message: string
-  rule: string
-}
-
 function App() {
   const [inputText, setInputText] = useState('')
   const [chatList, setChatList] = useState<ChatListItem[]>(defaultChatList)
 
+  const setAssistantMessage = async (response: Response) => {
+    const reader = response.body?.pipeThrough(new TextDecoderStream()).getReader()
+    if (reader) {
+      let answer = ''
+      while (true) {
+        const { value, done } = await reader.read()
+        if (done) break
+        answer += value
+
+        setChatList(chatList => {
+          if (chatList[chatList.length - 1].rule === 'assistant') {
+            chatList[chatList.length - 1].message = answer
+            return [...chatList]
+          } else {
+            return [
+              ...chatList,
+              {
+                message: answer,
+                rule: 'assistant'
+              }
+            ]
+          }
+        })
+      }
+    }
+  }
+
   const submitHandler = async () => {
     if (inputText === '') return
     setInputText('')
-    setChatList(chatList => [
+    const newChatList = [
       ...chatList,
       {
         message: inputText,
         rule: 'user'
       }
-    ])
-    await getAnswer(inputText).then(answer => {
-      setChatList(chatList => [
-        ...chatList,
-        {
-          message: answer,
-          rule: 'assistant'
-        }
-      ])
-    })
+    ]
+    setChatList(newChatList)
+    await getAnswer(newChatList).then(setAssistantMessage)
   }
 
-  const getAnswer = async (question: string) => {
+  const getAnswer = async (chatList: ChatListItem[]) => {
     return fetch('/api/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ question })
-    }).then(res => res.text())
+      body: JSON.stringify({ chatList })
+    })
   }
 
   return (

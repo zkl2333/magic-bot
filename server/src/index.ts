@@ -4,6 +4,7 @@ import completions from './service/openai/completions'
 import { Readable } from 'node:stream'
 import WebStream from 'node:stream/web'
 import { createStream, formatResponse } from './utils'
+import bodyParser from 'koa-bodyparser'
 
 const app = new Koa()
 const router = new Router()
@@ -18,6 +19,7 @@ router.get('/', async ctx => {
 })
 
 router.post('/chat/completions', async ctx => {
+  console.log('request body: ', ctx.request.body)
   const response = await completions()
   const contentType = response.headers.get('Content-Type') ?? ''
 
@@ -55,7 +57,7 @@ router.post('/chat/completions', async ctx => {
   }
 })
 
-app.use(logger).use(router.routes()).use(router.allowedMethods())
+app.use(logger).use(bodyParser()).use(router.routes()).use(router.allowedMethods())
 
 app.listen(3001, () => {
   console.log('Server is running on http://localhost:3001')
