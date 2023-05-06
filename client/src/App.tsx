@@ -36,16 +36,35 @@ function App() {
   const [inputText, setInputText] = useState('')
   const [chatList, setChatList] = useState<ChatListItem[]>(defaultChatList)
 
-  const submitHandler = () => {
+  const submitHandler = async () => {
     if (inputText === '') return
     setInputText('')
-    setChatList([
+    setChatList(chatList => [
       ...chatList,
       {
         message: inputText,
         rule: 'user'
       }
     ])
+    await getAnswer(inputText).then(answer => {
+      setChatList(chatList => [
+        ...chatList,
+        {
+          message: answer,
+          rule: 'assistant'
+        }
+      ])
+    })
+  }
+
+  const getAnswer = async (question: string) => {
+    return fetch('/api/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ question })
+    }).then(res => res.text())
   }
 
   return (
