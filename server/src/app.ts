@@ -2,7 +2,7 @@ import Koa, { DefaultContext, DefaultState } from 'koa'
 import Router from 'koa-router'
 import bodyParser from 'koa-bodyparser'
 import { getCompletions } from './controllers/chatController'
-import { register, login } from './controllers/userController'
+import { register, login, verify } from './controllers/userController'
 import { Prisma } from '@prisma/client'
 import dotenv from 'dotenv'
 
@@ -54,8 +54,9 @@ router.get('/', async ctx => {
 })
 
 // 用户注册和登录
-router.post('/register', register)
-router.post('/login', login)
+router.post('/user/register', register)
+router.post('/user/login', login)
+router.get('/user/verify', verify)
 
 router.post('/chat/completions', getCompletions)
 

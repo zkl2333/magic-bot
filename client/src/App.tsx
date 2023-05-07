@@ -1,12 +1,15 @@
 import ChatBubble from './components/ChatBubble'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import './App.css'
 import AutoResizeTextarea from './components/AutoResizeTextarea'
 import { ChatListItem } from './types'
-import { chatStore } from './store/ChatStore'
-import { observer } from 'mobx-react-lite'
+import chatStore from './store/ChatStore'
+import { Observer, observer } from 'mobx-react-lite'
 import Navbar from './components/Navbar'
 import ChatHistory from './components/ChatHistory'
+import { openLoginModal } from './components/LoginModal'
+import modalStore from './store/ModalStore'
+import useVerifyToken from './hooks/useVerifyToken'
 
 function App() {
   const [inputText, setInputText] = useState('')
@@ -48,6 +51,18 @@ function App() {
     })
   }
 
+  const { isVerified, isLoading } = useVerifyToken()
+
+  useEffect(() => {
+    let closeHandler = () => {}
+    if (!isLoading && !isVerified) {
+      closeHandler = openLoginModal()
+    }
+    return () => {
+      closeHandler()
+    }
+  }, [isLoading, isVerified])
+
   return (
     <div className='h-full w-full transition-all p-0 lg:p-4'>
       <div className='h-full w-full overflow-hidden border lg:rounded-md lg:shadow-md'>
@@ -84,6 +99,16 @@ function App() {
           </div>
         </div>
       </div>
+      <Observer>
+        {() => (
+          <>
+            {modalStore.modals.map((modal, index) => {
+              const { Component, props } = modal
+              return <Component key={index} {...props} />
+            })}
+          </>
+        )}
+      </Observer>
     </div>
   )
 }

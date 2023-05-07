@@ -45,7 +45,7 @@ const AutoResizeTextarea = (props: AutoResizeTextareaProps) => {
   return (
     <textarea
       ref={textareaRef}
-      className='textarea flex-1 textarea-bordered no-resize  mr-2'
+      className='textarea flex-1 textarea-bordered no-resize mr-2'
       style={{ height: `${height}px` }}
       value={value}
       onChange={handleChange}

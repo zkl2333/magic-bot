@@ -1,12 +1,25 @@
 import { Context } from 'koa'
 import * as bcrypt from 'bcrypt'
 import * as jwt from 'jsonwebtoken'
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient, User } from '@prisma/client'
 
 const prisma = new PrismaClient()
 
 // 生成 JWT
 const jwtSecret = process.env.JWT_SECRET || 'your-secret-key'
+
+const generateToken = (user: User) => {
+  const token = jwt.sign(
+    {
+      id: user.id,
+      username: user.username,
+      email: user.email
+    },
+    jwtSecret,
+    { expiresIn: '15d' }
+  )
+  return token
+}
 
 // 注册
 export async function register(ctx: Context) {
@@ -38,16 +51,19 @@ export async function register(ctx: Context) {
 
   const hashedPassword = await bcrypt.hash(password, 10)
 
-  await prisma.user.create({
+  const user = await prisma.user.create({
     data: {
       email: email,
-      username: email,
+      username: username,
       password: hashedPassword
     }
   })
 
   ctx.status = 201
-  ctx.body = { message: 'User registered successfully' }
+  ctx.body = {
+    message: 'User registered successfully',
+    token: generateToken(user)
+  }
 }
 
 // 登录 用户名和邮箱都可以登录
@@ -99,15 +115,28 @@ export async function login(ctx: Context) {
     return
   }
 
-  const token = jwt.sign(
-    {
-      id: user.id,
-      email: user.email
-    },
-    jwtSecret,
-    { expiresIn: '1h' }
-  )
+  const token = generateToken(user)
 
   ctx.status = 200
   ctx.body = { message: 'Logged in successfully', token }
+}
+
+// 验证 JWT
+export async function verify(ctx: Context) {
+  const token = ctx.request.headers.authorization?.split(' ')[1]
+
+  if (!token) {
+    ctx.status = 400
+    ctx.body = { message: 'Token required' }
+    return
+  }
+
+  try {
+    const decoded = jwt.verify(token as string, jwtSecret)
+    ctx.status = 200
+    ctx.body = { message: 'Token verified', decoded }
+  } catch (error) {
+    ctx.status = 401
+    ctx.body = { message: 'Invalid token', error }
+  }
 }

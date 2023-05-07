@@ -30,4 +30,5 @@ export class ChatStore {
   }
 }
 
-export const chatStore = new ChatStore()
+const chatStore = new ChatStore()
+export default chatStore
