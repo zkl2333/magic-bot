@@ -9,7 +9,7 @@
     "postinstall": "concurrently \"npm:install:server\" \"npm:install:client\"",
     "dev": "concurrently --kill-others \"npm:dev:server\" \"npm:dev:client\"",
     "build": "concurrently \"npm:build:server\" \"npm:build:client\"",
-    "start": "cd server && npm install && npm start"
+    "start": "npx prisma migrate deploy && cd server && npm install && npm start"
   },
   "devDependencies": {
     "concurrently": "^8.0.1"
