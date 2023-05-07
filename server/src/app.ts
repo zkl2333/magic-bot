@@ -4,7 +4,9 @@ import bodyParser from 'koa-bodyparser'
 import { getCompletions } from './controllers/chatController'
 import { register, login } from './controllers/userController'
 import { Prisma } from '@prisma/client'
+import dotenv from 'dotenv'
 
+dotenv.config()
 const app = new Koa<DefaultState, DefaultContext>()
 const router = new Router()
 
