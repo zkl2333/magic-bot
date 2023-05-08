@@ -66,9 +66,9 @@ const Navbar: React.FC = () => {
             className='inline-block h-5 w-5 stroke-current md:h-6 md:w-6'
           >
             <path
-              stroke-linecap='round'
-              stroke-linejoin='round'
-              stroke-width='2'
+              strokeLinecap='round'
+              strokeLinejoin='round'
+              strokeWidth='2'
               d='M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01'
             ></path>
           </svg>
@@ -88,6 +88,7 @@ const Navbar: React.FC = () => {
             {themeList.map(theme => {
               return (
                 <button
+                  key={theme}
                   className='outline-base-content overflow-hidden rounded-lg text-left'
                   onClick={() => {
                     userStore.setSettings({ theme: theme })

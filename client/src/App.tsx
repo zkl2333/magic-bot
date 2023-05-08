@@ -39,8 +39,27 @@ function App() {
       message: '',
       role: 'assistant'
     })
+
+    setTimeout(() => {
+      // 滚动到底部
+      const chatBox = document.querySelector('#chat-list')
+      if (chatBox) {
+        chatBox.scrollTop = chatBox.scrollHeight
+      }
+    }, 30)
     await getAnswer(chatStore.needChatList).then(setAssistantMessage)
   }
+
+  const scrollToBottom = () => {
+    const chatBox = document.querySelector('#chat-list')
+    if (chatBox) {
+      chatBox.scrollTop = chatBox.scrollHeight
+    }
+  }
+
+  useEffect(() => {
+    scrollToBottom()
+  }, [])
 
   const getAnswer = async (chatList: ChatListItem[]) => {
     return fetch('/api/chat/completions', {
@@ -62,14 +81,14 @@ function App() {
   return (
     <div data-theme={userStore.settings.theme} className='h-full w-full transition-all p-0 lg:p-4'>
       <div className='h-full w-full overflow-hidden border-base-200 lg:border lg:rounded-md lg:shadow-md'>
-        <div className='drawer drawer-mobile h-full bg-base-100'>
+        <div className='drawer drawer-mobile h-full'>
           <input id='side-drawer' type='checkbox' className='drawer-toggle' />
-          <div className='drawer-content flex flex-col'>
+          <div className='drawer-content flex flex-col bg-base-200'>
             <Navbar />
             {/* 聊天框 */}
-            <div className='flex flex-1 flex-col p-3 lg:p-4 overflow-y-auto'>
+            <div id='chat-list' className='flex flex-1 flex-col p-3 lg:p-4 overflow-y-auto'>
               {chatStore.chatList.map((item, index) => (
-                <ChatBubble key={index} role={item.role} message={item.message} />
+                <ChatBubble key={index} role={item.role} message={item.message || '正在思考中...'} />
               ))}
             </div>
             {/* 输入框 */}
@@ -87,7 +106,7 @@ function App() {
           <div className='drawer-side'>
             <label htmlFor='side-drawer' className='drawer-overlay'></label>
             {/* 侧边栏 */}
-            <div className='flex flex-col justify-between w-60 p-4 bg-base-200 text-base-content border-base-200 border-r'>
+            <div className='flex flex-col justify-between w-60 p-4 bg-base-200 text-base-content border-base-300 border-r'>
               <button className='btn btn-primary w-full'>新建对话</button>
               <div className='divider'></div>
               <div className='flex-1'>
