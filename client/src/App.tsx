@@ -110,7 +110,7 @@ function App() {
           <div className='drawer-side bg-base-200'>
             <label htmlFor='side-drawer' className='drawer-overlay'></label>
             {/* 侧边栏 */}
-            <div className='w-60 p-4 text-base-content border-base-300 border-r'>
+            <div className='w-60 p-4 bg-base-200 text-base-content border-base-300 border-r'>
               <div className='h-full flex flex-col justify-between safe-area'>
                 <button className='btn btn-primary w-full'>新建对话</button>
                 <div className='divider'></div>
