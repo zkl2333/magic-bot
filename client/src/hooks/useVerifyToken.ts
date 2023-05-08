@@ -2,10 +2,7 @@ import useSWR from 'swr'
 import { fetcher } from '../fetcher'
 
 type VerifyResponse = {
-  decoded: {
-    id: number
-    email: string
-  }
+  verified: boolean
 }
 
 const useVerifyToken = () => {
@@ -21,17 +18,13 @@ const useVerifyToken = () => {
       })
   )
 
-  const isVerified = !!data
+  const isVerified = !!data?.verified
 
   if (!isVerified && !isLoading) {
     localStorage.removeItem('token')
   }
 
-  return {
-    isVerified: isVerified,
-    isLoading: isLoading,
-    isError: error
-  }
+  return { isVerified: isVerified, isLoading: isLoading, isError: error }
 }
 
 export default useVerifyToken

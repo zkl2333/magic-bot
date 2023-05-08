@@ -1,6 +1,7 @@
 import classnames from 'classnames'
 import { useState } from 'react'
 import modalStore, { IModalProps } from '../store/ModalStore'
+import userStore from '../store/UserStore'
 
 type LoginModalProps = IModalProps
 
@@ -39,7 +40,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ visible, close }) => {
     })
     const data = await response.json()
     if (response.ok) {
-      localStorage.setItem('token', data.token)
+      userStore.login(data.user, data.token)
       close()
     } else {
       setError(data.message)
@@ -57,7 +58,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ visible, close }) => {
     })
     const data = await response.json()
     if (response.ok) {
-      localStorage.setItem('token', data.token)
+      userStore.login(data.user, data.token)
       close()
     } else {
       setError(data.message)

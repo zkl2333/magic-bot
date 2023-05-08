@@ -10,6 +10,8 @@ import ChatHistory from './components/ChatHistory'
 import { openLoginModal } from './components/LoginModal'
 import modalStore from './store/ModalStore'
 import useVerifyToken from './hooks/useVerifyToken'
+import Avatar from './components/Avatar'
+import userStore from './store/UserStore'
 
 function App() {
   const [inputText, setInputText] = useState('')
@@ -53,9 +55,11 @@ function App() {
 
   const { isVerified, isLoading } = useVerifyToken()
 
+  const isLogin = userStore.isLogin || (!isLoading && isVerified)
+
   useEffect(() => {
     let closeHandler = () => {}
-    if (!isLoading && !isVerified) {
+    if (!isLogin) {
       closeHandler = openLoginModal()
     }
     return () => {
@@ -91,10 +95,30 @@ function App() {
           <div className='drawer-side'>
             <label htmlFor='side-drawer' className='drawer-overlay'></label>
             {/* 侧边栏 */}
-            <div className='w-60 p-4 bg-slate-50 text-base-content border-r'>
+            <div className='flex flex-col justify-between w-60 p-4 bg-slate-50 text-base-content border-r'>
               <button className='btn btn-primary w-full bg-base-100 btn-outline'>新建对话</button>
               <div className='divider'></div>
-              <ChatHistory />
+              <div className='flex-1'>
+                <ChatHistory />
+              </div>
+              {isLogin && (
+                <>
+                  <div className='divider'></div>
+                  <div className='flex justify-between items-center'>
+                    <Avatar className='w-10 rounded-full mr-5' email={userStore.email} />
+                    <div className='flex-1'>{userStore.username}</div>
+                    {/* 退出登录 */}
+                    <button
+                      className='btn btn-primary btn-outline'
+                      onClick={() => {
+                        userStore.logout()
+                      }}
+                    >
+                      退出
+                    </button>
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </div>

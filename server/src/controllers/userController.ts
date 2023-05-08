@@ -62,6 +62,11 @@ export async function register(ctx: Context) {
   ctx.status = 201
   ctx.body = {
     message: 'User registered successfully',
+    user: {
+      id: user.id,
+      username: user.username,
+      email: user.email
+    },
     token: generateToken(user)
   }
 }
@@ -118,7 +123,15 @@ export async function login(ctx: Context) {
   const token = generateToken(user)
 
   ctx.status = 200
-  ctx.body = { message: 'Logged in successfully', token }
+  ctx.body = {
+    message: 'Logged in successfully',
+    token,
+    user: {
+      id: user.id,
+      username: user.username,
+      email: user.email
+    }
+  }
 }
 
 // 验证 JWT
@@ -134,9 +147,9 @@ export async function verify(ctx: Context) {
   try {
     const decoded = jwt.verify(token as string, jwtSecret)
     ctx.status = 200
-    ctx.body = { message: 'Token verified', decoded }
+    ctx.body = { message: 'Token verified', verified: true }
   } catch (error) {
     ctx.status = 401
-    ctx.body = { message: 'Invalid token', error }
+    ctx.body = { message: 'Invalid token', verified: false, error }
   }
 }
