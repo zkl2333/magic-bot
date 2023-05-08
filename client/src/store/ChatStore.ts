@@ -2,7 +2,13 @@ import { makeAutoObservable } from 'mobx'
 import { ChatListItem } from '../types'
 
 export class ChatStore {
-  chatList: ChatListItem[] = []
+  chatList: ChatListItem[] = [
+    {
+      exclude: true,
+      role: 'assistant',
+      message: '你好，有什么可以帮助你的吗？'
+    }
+  ]
 
   constructor() {
     makeAutoObservable(this)
@@ -27,6 +33,10 @@ export class ChatStore {
         role: 'assistant'
       })
     }
+  }
+
+  get needChatList() {
+    return this.chatList.filter(item => !item.exclude)
   }
 }
 

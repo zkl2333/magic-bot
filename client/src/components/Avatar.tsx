@@ -17,10 +17,8 @@ function generateAvatarUrl(emailAddress: string) {
 
 const Avatar = ({ className, email }: AvatarProps) => {
   return (
-    <div className='avatar'>
-      <div className={classNames(className)}>
-        <img src={generateAvatarUrl(email)} />
-      </div>
+    <div className={classNames('avatar', className)}>
+      <img src={generateAvatarUrl(email)} />
     </div>
   )
 }

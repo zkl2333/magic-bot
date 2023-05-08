@@ -6,6 +6,9 @@ class UserStore {
   username = ''
   email = ''
   token = ''
+  settings = {
+    theme: 'light'
+  }
 
   constructor() {
     makeAutoObservable(this)
@@ -44,6 +47,10 @@ class UserStore {
     this.email = ''
     this.token = ''
     localStorage.removeItem('token')
+  }
+
+  setSettings(settings: typeof this.settings) {
+    this.settings = settings
   }
 }
 

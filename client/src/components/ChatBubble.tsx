@@ -1,24 +1,31 @@
-import userAvatar from '../assets/user-avatar.jpg'
+import classNames from 'classnames'
+import userStore from '../store/UserStore'
 import { ChatListItem } from '../types'
+import Avatar from './Avatar'
 import OpenaiIcon from './OpenaiIcon'
 
 const ChatBubble = (props: ChatListItem) => {
   const { message, role } = props
   const isAssistant = role === 'assistant'
+
   return (
     <div className={`chat ${isAssistant ? 'chat-start' : 'chat-end'}`}>
-      <div className='chat-image avatar'>
-        <div className='w-10 rounded-full'>
-          {isAssistant ? (
-            <div className='text-white bg-black p-1.5'>
-              <OpenaiIcon />
-            </div>
-          ) : (
-            <img src={userAvatar} />
-          )}
+      {isAssistant ? (
+        <div className='chat-image avatar'>
+          <div className='w-10 rounded-full text-white bg-black p-1.5'>
+            <OpenaiIcon />
+          </div>
         </div>
+      ) : (
+        <Avatar className='chat-image w-10 rounded-full overflow-hidden' email={userStore.email} />
+      )}
+      <div
+        className={classNames('chat-bubble', {
+          'chat-bubble-primary': !isAssistant
+        })}
+      >
+        {message}
       </div>
-      <div className={`chat-bubble chat-bubble-success ${isAssistant ? 'bg-base-200' : ''}`}>{message}</div>
     </div>
   )
 }

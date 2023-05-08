@@ -39,7 +39,7 @@ function App() {
       message: '',
       role: 'assistant'
     })
-    await getAnswer(chatStore.chatList).then(setAssistantMessage)
+    await getAnswer(chatStore.needChatList).then(setAssistantMessage)
   }
 
   const getAnswer = async (chatList: ChatListItem[]) => {
@@ -60,9 +60,9 @@ function App() {
   }, [isLogin])
 
   return (
-    <div className='h-full w-full transition-all p-0 lg:p-4'>
-      <div className='h-full w-full overflow-hidden border lg:rounded-md lg:shadow-md'>
-        <div className='drawer drawer-mobile h-full'>
+    <div data-theme={userStore.settings.theme} className='h-full w-full transition-all p-0 lg:p-4'>
+      <div className='h-full w-full overflow-hidden border-base-200 lg:border lg:rounded-md lg:shadow-md'>
+        <div className='drawer drawer-mobile h-full bg-base-100'>
           <input id='side-drawer' type='checkbox' className='drawer-toggle' />
           <div className='drawer-content flex flex-col'>
             <Navbar />
@@ -87,8 +87,8 @@ function App() {
           <div className='drawer-side'>
             <label htmlFor='side-drawer' className='drawer-overlay'></label>
             {/* 侧边栏 */}
-            <div className='flex flex-col justify-between w-60 p-4 bg-slate-50 text-base-content border-r'>
-              <button className='btn btn-primary w-full bg-base-100 btn-outline'>新建对话</button>
+            <div className='flex flex-col justify-between w-60 p-4 bg-base-200 text-base-content border-base-200 border-r'>
+              <button className='btn btn-primary w-full'>新建对话</button>
               <div className='divider'></div>
               <div className='flex-1'>
                 <ChatHistory />
@@ -97,11 +97,11 @@ function App() {
                 <>
                   <div className='divider'></div>
                   <div className='flex justify-between items-center'>
-                    <Avatar className='w-10 rounded-full mr-5' email={userStore.email} />
+                    <Avatar className='w-10 rounded-full mr-2 overflow-hidden' email={userStore.email} />
                     <div className='flex-1'>{userStore.username}</div>
                     {/* 退出登录 */}
                     <button
-                      className='btn btn-primary btn-outline'
+                      className='btn btn-ghost btn-sm'
                       onClick={() => {
                         userStore.logout()
                       }}
