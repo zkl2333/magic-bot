@@ -9,6 +9,22 @@ class UserStore {
 
   constructor() {
     makeAutoObservable(this)
+    const token = localStorage.getItem('token')
+    if (token) {
+      this.token = token
+      this.isLogin = true
+      try {
+        const userStr = localStorage.getItem('user')
+        if (userStr) {
+          const user = JSON.parse(userStr)
+          this.id = user.id
+          this.username = user.username
+          this.email = user.email
+        }
+      } catch (error) {}
+    } else {
+      this.logout()
+    }
   }
 
   login(user: { id: number; username: string; email: string }, token: string) {
@@ -18,6 +34,7 @@ class UserStore {
     this.email = user.email
     this.token = token
     localStorage.setItem('token', token)
+    localStorage.setItem('user', JSON.stringify(user))
   }
 
   logout() {

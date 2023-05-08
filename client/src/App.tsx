@@ -9,7 +9,6 @@ import Navbar from './components/Navbar'
 import ChatHistory from './components/ChatHistory'
 import { openLoginModal } from './components/LoginModal'
 import modalStore from './store/ModalStore'
-import useVerifyToken from './hooks/useVerifyToken'
 import Avatar from './components/Avatar'
 import userStore from './store/UserStore'
 
@@ -53,19 +52,12 @@ function App() {
     })
   }
 
-  const { isVerified, isLoading } = useVerifyToken()
-
-  const isLogin = userStore.isLogin || (!isLoading && isVerified)
-
+  const isLogin = userStore.isLogin
   useEffect(() => {
-    let closeHandler = () => {}
     if (!isLogin) {
-      closeHandler = openLoginModal()
+      openLoginModal()
     }
-    return () => {
-      closeHandler()
-    }
-  }, [isLoading, isVerified])
+  }, [isLogin])
 
   return (
     <div className='h-full w-full transition-all p-0 lg:p-4'>
