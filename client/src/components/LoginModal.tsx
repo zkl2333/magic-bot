@@ -139,15 +139,15 @@ const LoginModal: React.FC<LoginModalProps> = ({ visible, close }) => {
             {/* 切换 */}
             <div className='flex flex-row justify-between items-center'>
               {isRegister ? (
-                <div className='btn btn-link no-underline text-neutral' onClick={() => setIsRegister(false)}>
+                <div className='btn btn-link no-underline text-base-content' onClick={() => setIsRegister(false)}>
                   已有账号？点击登录
                 </div>
               ) : (
-                <div className='btn btn-link no-underline text-neutral' onClick={() => setIsRegister(true)}>
+                <div className='btn btn-link no-underline text-base-content' onClick={() => setIsRegister(true)}>
                   没有账号？点击注册
                 </div>
               )}
-              <label className='btn btn-link no-underline text-neutral'>忘记密码？</label>
+              <label className='btn btn-link no-underline text-base-content'>忘记密码？</label>
             </div>
           </div>
           <div className='modal-action'>
