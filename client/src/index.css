@@ -7,7 +7,7 @@ body,
 }
 
 /* 全面屏安全区域 */
-#root {
+.safe-area {
   padding: constant(safe-area-inset-top) constant(safe-area-inset-right) constant(safe-area-inset-bottom)
     constant(safe-area-inset-left);
   padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom)
@@ -28,7 +28,7 @@ body,
 }
 
 ::-webkit-scrollbar-track {
-  background-color: hsl(var(--b2)); 
+  background-color: hsl(var(--b2));
 }
 ::-webkit-scrollbar-thumb,
 ::-webkit-scrollbar-track {

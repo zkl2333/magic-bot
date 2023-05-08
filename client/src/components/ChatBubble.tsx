@@ -46,7 +46,7 @@ const ChatBubble = (props: ChatListItem) => {
         <Avatar className='chat-image w-10 rounded-full overflow-hidden' email={userStore.email} />
       )}
       <div
-        className={classNames('prose-sm lg:prose chat-bubble bg-base-100 markdown-body dark p-3 shadow')}
+        className={classNames('prose-sm lg:prose chat-bubble bg-base-100 text-base-content markdown-body dark p-3 shadow')}
         dangerouslySetInnerHTML={{ __html: mdi.render(message) }}
       ></div>
     </div>

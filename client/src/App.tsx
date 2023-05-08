@@ -73,8 +73,12 @@ function App() {
 
   const isLogin = userStore.isLogin
   useEffect(() => {
+    let close = () => {}
     if (!isLogin) {
-      openLoginModal()
+      close = openLoginModal()
+    }
+    return () => {
+      close()
     }
   }, [isLogin])
 
@@ -83,7 +87,7 @@ function App() {
       <div className='h-full w-full overflow-hidden border-base-200 lg:border lg:rounded-md lg:shadow-md'>
         <div className='drawer drawer-mobile h-full'>
           <input id='side-drawer' type='checkbox' className='drawer-toggle' />
-          <div className='drawer-content flex flex-col bg-base-200'>
+          <div className='safe-area drawer-content flex flex-col bg-base-200'>
             <Navbar />
             {/* 聊天框 */}
             <div id='chat-list' className='flex flex-1 flex-col p-3 lg:p-4 overflow-y-auto'>
@@ -103,33 +107,35 @@ function App() {
               </button>
             </div>
           </div>
-          <div className='drawer-side'>
+          <div className='drawer-side bg-base-200'>
             <label htmlFor='side-drawer' className='drawer-overlay'></label>
             {/* 侧边栏 */}
-            <div className='flex flex-col justify-between w-60 p-4 bg-base-200 text-base-content border-base-300 border-r'>
-              <button className='btn btn-primary w-full'>新建对话</button>
-              <div className='divider'></div>
-              <div className='flex-1'>
-                <ChatHistory />
+            <div className='w-60 p-4 text-base-content border-base-300 border-r'>
+              <div className='h-full flex flex-col justify-between safe-area'>
+                <button className='btn btn-primary w-full'>新建对话</button>
+                <div className='divider'></div>
+                <div className='flex-1'>
+                  <ChatHistory />
+                </div>
+                {isLogin && (
+                  <>
+                    <div className='divider'></div>
+                    <div className='flex justify-between items-center'>
+                      <Avatar className='w-10 rounded-full mr-2 overflow-hidden' email={userStore.email} />
+                      <div className='flex-1'>{userStore.username}</div>
+                      {/* 退出登录 */}
+                      <button
+                        className='btn btn-ghost btn-sm'
+                        onClick={() => {
+                          userStore.logout()
+                        }}
+                      >
+                        退出
+                      </button>
+                    </div>
+                  </>
+                )}
               </div>
-              {isLogin && (
-                <>
-                  <div className='divider'></div>
-                  <div className='flex justify-between items-center'>
-                    <Avatar className='w-10 rounded-full mr-2 overflow-hidden' email={userStore.email} />
-                    <div className='flex-1'>{userStore.username}</div>
-                    {/* 退出登录 */}
-                    <button
-                      className='btn btn-ghost btn-sm'
-                      onClick={() => {
-                        userStore.logout()
-                      }}
-                    >
-                      退出
-                    </button>
-                  </div>
-                </>
-              )}
             </div>
           </div>
         </div>
