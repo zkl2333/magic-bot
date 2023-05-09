@@ -16,6 +16,7 @@ export type MessageItem = {
 }
 
 export interface Interaction {
+  loading: boolean
   id: UUID
   type: string
   title: string

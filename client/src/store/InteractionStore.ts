@@ -56,7 +56,7 @@ class InteractionStore {
       interaction.title = title
       interaction.type = type
     } else {
-      this.interactions.push({ id, title, type })
+      this.interactions.push({ id, title, type, loading: false })
       this.createOrUpdateMessage({
         interactionId: id,
         message: '你好，有什么可以帮到你的吗？',
@@ -118,6 +118,13 @@ class InteractionStore {
 
   deleteMessage(id: string) {
     this.messages = this.messages.filter(message => message.id !== id)
+  }
+
+  setInteractionLoading(id: string, loading: boolean) {
+    const interaction = this.interactions.find(interaction => interaction.id === id)
+    if (interaction) {
+      interaction.loading = loading
+    }
   }
 }
 

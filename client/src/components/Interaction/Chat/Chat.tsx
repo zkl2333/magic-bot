@@ -5,30 +5,37 @@ import ChatBubble from './ChatBubble'
 import { useEffect, useState } from 'react'
 import { MessageItem } from '../../../types'
 import { v4 as uuidv4 } from 'uuid'
+import classNames from 'classnames'
 
 const Chat = () => {
   const [inputText, setInputText] = useState('')
 
   const setAssistantMessage = async (messageId: string, interactionId: string, response: Response) => {
-    const reader = response.body?.pipeThrough(new TextDecoderStream()).getReader()
-    if (reader) {
-      let answer = ''
-      while (true) {
-        const { value, done } = await reader.read()
-        if (done) break
-        answer += value
-        interactionStore.createOrUpdateMessage({
-          id: messageId,
-          interactionId: interactionId,
-          role: 'assistant',
-          message: answer
-        })
+    try {
+      const reader = response.body?.pipeThrough(new TextDecoderStream()).getReader()
+      if (reader) {
+        let answer = ''
+        while (true) {
+          const { value, done } = await reader.read()
+          if (done) {
+            break
+          }
+          answer += value
+          interactionStore.createOrUpdateMessage({
+            id: messageId,
+            interactionId: interactionId,
+            role: 'assistant',
+            message: answer
+          })
+        }
       }
-    }
+    } catch (error) {}
+    interactionStore.setInteractionLoading(interactionStore.currentInteractionId, false)
   }
 
   const submitHandler = async () => {
     if (inputText === '') return
+    if (interactionStore.currentInteraction?.loading) return
     interactionStore.createOrUpdateMessage({
       interactionId: interactionStore.currentInteractionId,
       message: inputText,
@@ -65,6 +72,7 @@ const Chat = () => {
   }
 
   const getAnswer = async (chatList: MessageItem[]) => {
+    interactionStore.setInteractionLoading(interactionStore.currentInteractionId, true)
     return fetch('/api/chat/completions', {
       method: 'POST',
       headers: {
@@ -100,7 +108,12 @@ const Chat = () => {
           value={inputText}
           onEnter={submitHandler}
         />
-        <button className='btn btn-primary' onClick={submitHandler}>
+        <button
+          className={classNames('btn btn-primary', {
+            loading: interactionStore.currentInteraction?.loading
+          })}
+          onClick={submitHandler}
+        >
           发送
         </button>
       </div>
