@@ -1,26 +1,24 @@
 import { observer } from 'mobx-react-lite'
-import sessionsStore from '../store/SessionsStore'
-import chatStore from '../store/ChatStore'
+import interactionStore from '../store/InteractionStore'
 
-const ChatHistory = () => {
+const InteractionList = () => {
   return (
     <>
-      {sessionsStore.sessions.map((item, index) => (
+      {interactionStore.interactions.map((item, index) => (
         <div
           key={index}
           className={'rounded-md w-full bg-base-100 shadow mb-3 last:mb-0 hover:shadow-md p-4'}
           onClick={() => {
-            chatStore.changeCurrentSession(item.id)
+            interactionStore.setCurrentInteractionId(item.id)
           }}
         >
           <div className='flex justify-between'>
-            <div className='truncate flex-1'>{item.title || '未命名会话'}</div>
+            <div className='truncate flex-1'>{item.title || '未命名对话'}</div>
             <div
               className='btn btn-xs btn-ghost'
               onClick={e => {
                 e.stopPropagation()
-                sessionsStore.deleteSession(item.id)
-                chatStore.initCurrentSession()
+                interactionStore.deleteInteraction(item.id)
               }}
             >
               删除
@@ -32,4 +30,4 @@ const ChatHistory = () => {
   )
 }
 
-export default observer(ChatHistory)
+export default observer(InteractionList)

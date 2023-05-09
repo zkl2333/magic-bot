@@ -1,0 +1,111 @@
+import { observer } from 'mobx-react-lite'
+import interactionStore from '../../store/InteractionStore'
+import AutoResizeTextarea from '../AutoResizeTextarea'
+import ChatBubble from '../ChatBubble'
+import { useEffect, useState } from 'react'
+import { MessageItem } from '../../types'
+import { v4 as uuidv4 } from 'uuid'
+
+const Chat = () => {
+  const [inputText, setInputText] = useState('')
+
+  const setAssistantMessage = async (messageId: string, interactionId: string, response: Response) => {
+    const reader = response.body?.pipeThrough(new TextDecoderStream()).getReader()
+    if (reader) {
+      let answer = ''
+      while (true) {
+        const { value, done } = await reader.read()
+        if (done) break
+        answer += value
+        interactionStore.createOrUpdateMessage({
+          id: messageId,
+          interactionId: interactionId,
+          role: 'assistant',
+          message: answer
+        })
+      }
+    }
+  }
+
+  const submitHandler = async () => {
+    if (inputText === '') return
+    interactionStore.createOrUpdateMessage({
+      interactionId: interactionStore.currentInteractionId,
+      message: inputText,
+      role: 'user'
+    })
+
+    if (interactionStore.currentInteraction?.title === '') {
+      interactionStore.createOrUpdateInteraction({
+        id: interactionStore.currentInteractionId,
+        title: inputText,
+        type: interactionStore.currentInteraction.type
+      })
+    }
+
+    setInputText('')
+
+    const messageId = uuidv4()
+    interactionStore.createOrUpdateMessage({
+      id: messageId,
+      interactionId: interactionStore.currentInteractionId,
+      message: '思考中...',
+      role: 'assistant'
+    })
+
+    setTimeout(() => {
+      // 滚动到底部
+      const chatBox = document.querySelector('#chat-list')
+      if (chatBox) {
+        chatBox.scrollTop = chatBox.scrollHeight
+      }
+    }, 30)
+    const response = await getAnswer(interactionStore.currentInteractionMessages)
+    setAssistantMessage(messageId, interactionStore.currentInteractionId, response)
+  }
+
+  const getAnswer = async (chatList: MessageItem[]) => {
+    return fetch('/api/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ chatList })
+    })
+  }
+
+  const scrollToBottom = () => {
+    const chatBox = document.querySelector('#chat-list')
+    if (chatBox) {
+      chatBox.scrollTop = chatBox.scrollHeight
+    }
+  }
+
+  useEffect(() => {
+    scrollToBottom()
+  }, [])
+
+  return (
+    <>
+      {/* 聊天框 */}
+      <div id='chat-list' className='flex flex-1 flex-col p-3 lg:p-4 overflow-y-auto'>
+        {interactionStore.currentInteractionMessages.map(item => (
+          <ChatBubble {...item} key={item.id} />
+        ))}
+      </div>
+      {/* 输入框 */}
+      <div className='flex-shrink-0 flex flex-row justify-between items-end m-2'>
+        <AutoResizeTextarea
+          onChange={inputText => setInputText(inputText)}
+          value={inputText}
+          onEnter={submitHandler}
+        />
+        <button className='btn btn-primary' onClick={submitHandler}>
+          发送
+        </button>
+      </div>
+    </>
+  )
+}
+
+export default observer(Chat)

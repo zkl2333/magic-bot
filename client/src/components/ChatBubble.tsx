@@ -1,6 +1,6 @@
 import classNames from 'classnames'
 import userStore from '../store/UserStore'
-import { ChatListItem } from '../types'
+import { MessageItem } from '../types'
 import Avatar from './Avatar'
 import OpenaiIcon from './OpenaiIcon'
 import MarkdownIt from 'markdown-it'
@@ -30,8 +30,8 @@ const mdi = new MarkdownIt({
 mdi.use(mila, { attrs: { target: '_blank', rel: 'noopener' } })
 mdi.use(mdKatex, { blockClass: 'katexmath-block rounded-md p-[10px]', errorColor: ' #cc0000' })
 
-const ChatBubble = (props: ChatListItem) => {
-  const { message, role } = props
+const ChatBubble = (props: MessageItem) => {
+  const { message = '正在思考中...', role } = props
   const isAssistant = role === 'assistant'
 
   return (
@@ -46,7 +46,9 @@ const ChatBubble = (props: ChatListItem) => {
         <Avatar className='chat-image w-10 rounded-full overflow-hidden' email={userStore.email} />
       )}
       <div
-        className={classNames('prose-sm lg:prose chat-bubble bg-base-100 text-base-content markdown-body dark p-3 shadow')}
+        className={classNames(
+          'prose-sm lg:prose chat-bubble bg-base-100 text-base-content markdown-body dark p-3 shadow'
+        )}
         dangerouslySetInnerHTML={{ __html: mdi.render(message) }}
       ></div>
     </div>

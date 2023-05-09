@@ -1,6 +1,7 @@
 import React from 'react'
 import userStore from '../store/UserStore'
 import { observer } from 'mobx-react-lite'
+import interactionStore from '../store/InteractionStore'
 
 // 导航栏
 const Navbar: React.FC = () => {
@@ -54,7 +55,9 @@ const Navbar: React.FC = () => {
           </svg>
         </label>
       </div>
-      <div className='flex-1'></div>
+      <div className='flex-1'>
+        <div className='pl-5 font-bold normal-case text-xl'>{interactionStore.currentInteraction?.title || '未命名对话'}</div>
+      </div>
       <div title='Change Theme' className='dropdown dropdown-end'>
         <div tabIndex={0} className='btn gap-1 normal-case btn-ghost'>
           <svg
