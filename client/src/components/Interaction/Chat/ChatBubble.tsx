@@ -1,14 +1,14 @@
 import classNames from 'classnames'
-import userStore from '../store/UserStore'
-import { MessageItem } from '../types'
-import Avatar from './Avatar'
-import OpenaiIcon from './OpenaiIcon'
+import userStore from '../../../store/UserStore'
+import { MessageItem } from '../../../types'
+import Avatar from '../../Avatar'
+import OpenaiIcon from '../../OpenaiIcon'
 import MarkdownIt from 'markdown-it'
 import mdKatex from '@traptitech/markdown-it-katex'
 import mila from 'markdown-it-link-attributes'
 import hljs from 'highlight.js'
-import './highlight.less'
-import './chatBubble.less'
+import '../../../common/highlight.less'
+import '../../../common/chatBubble.less'
 
 function highlightBlock(str: string, lang?: string) {
   return `<pre class="code-block-wrapper"><code class="hljs code-block-body ${lang}">${str}</code></pre>`
@@ -35,7 +35,7 @@ const ChatBubble = (props: MessageItem) => {
   const isAssistant = role === 'assistant'
 
   return (
-    <div className={`chat ${isAssistant ? 'chat-start' : 'chat-end'}`}>
+    <div className={`loading chat ${isAssistant ? 'chat-start' : 'chat-end'}`}>
       {isAssistant ? (
         <div className='chat-image avatar'>
           <div className='w-10 rounded-full text-white bg-black p-1.5'>

@@ -39,6 +39,7 @@ export const getCompletions = async (ctx: Context) => {
         ctx.body = JSON.stringify(mayBeErrorBody)
       }
     } catch (e) {
+      console.error('[OpenAI Response] ', response)
       console.error('[OpenAI Parse] ', e)
       ctx.body = formatResponse({
         msg: 'invalid response from openai server',

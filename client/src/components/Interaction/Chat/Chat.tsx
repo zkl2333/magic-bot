@@ -1,9 +1,9 @@
 import { observer } from 'mobx-react-lite'
-import interactionStore from '../../store/InteractionStore'
-import AutoResizeTextarea from '../AutoResizeTextarea'
-import ChatBubble from '../ChatBubble'
+import interactionStore from '../../../store/InteractionStore'
+import AutoResizeTextarea from '../../AutoResizeTextarea'
+import ChatBubble from './ChatBubble'
 import { useEffect, useState } from 'react'
-import { MessageItem } from '../../types'
+import { MessageItem } from '../../../types'
 import { v4 as uuidv4 } from 'uuid'
 
 const Chat = () => {

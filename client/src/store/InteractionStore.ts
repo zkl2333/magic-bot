@@ -57,6 +57,12 @@ class InteractionStore {
       interaction.type = type
     } else {
       this.interactions.push({ id, title, type })
+      this.createOrUpdateMessage({
+        interactionId: id,
+        message: '你好，有什么可以帮到你的吗？',
+        role: 'assistant',
+        exclude: true
+      })
     }
     return id
   }
@@ -66,6 +72,8 @@ class InteractionStore {
     this.messages = this.messages.filter(message => message.interactionId !== id)
     if (this.interactions.length === 0) {
       this._initCurrentInteraction()
+    } else {
+      this.setCurrentInteractionId(this.interactions[0].id)
     }
   }
 

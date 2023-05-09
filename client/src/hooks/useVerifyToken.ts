@@ -1,12 +1,13 @@
 import useSWR from 'swr'
 import { fetcher } from '../fetcher'
+import userStore from '../store/UserStore'
 
 type VerifyResponse = {
   verified: boolean
 }
 
 const useVerifyToken = () => {
-  const token = localStorage.getItem('token')
+  const token = userStore.token
   const { data, error, isLoading } = useSWR<VerifyResponse>(
     token ? ['/api/user/verify', token] : null,
     ([url]: [string]) =>
@@ -21,7 +22,7 @@ const useVerifyToken = () => {
   const isVerified = !!data?.verified
 
   if (!isVerified && !isLoading) {
-    localStorage.removeItem('token')
+    userStore.logout()
   }
 
   return { isVerified: isVerified, isLoading: isLoading, isError: error }

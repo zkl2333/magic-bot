@@ -1,5 +1,5 @@
 import interactionStore from '../../store/InteractionStore'
-import Chat from './Chat'
+import Chat from './Chat/Chat'
 
 const Interaction = () => {
   {
