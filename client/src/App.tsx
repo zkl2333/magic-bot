@@ -11,6 +11,7 @@ import { openLoginModal } from './components/LoginModal'
 import modalStore from './store/ModalStore'
 import Avatar from './components/Avatar'
 import userStore from './store/UserStore'
+import SessionsStore from './store/SessionsStore'
 
 function App() {
   const [inputText, setInputText] = useState('')

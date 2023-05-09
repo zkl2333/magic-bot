@@ -1,17 +1,31 @@
 import { makeAutoObservable } from 'mobx'
 import { ChatListItem } from '../types'
+import SessionsStore from './SessionsStore'
 
 export class ChatStore {
-  chatList: ChatListItem[] = [
-    {
-      exclude: true,
-      role: 'assistant',
-      message: '你好，有什么可以帮助你的吗？'
-    }
-  ]
+  currentSessionId = ''
+  chatList: ChatListItem[] = []
 
   constructor() {
     makeAutoObservable(this)
+    this.initCurrentSession()
+  }
+
+  initCurrentSession() {
+    const session = SessionsStore.sessions[0]
+    if (session) {
+      this.currentSessionId = session.id
+      this.chatList = session.messages
+    } else {
+      this.currentSessionId = ''
+      this.chatList = [
+        {
+          exclude: true,
+          role: 'assistant',
+          message: '你好，有什么可以帮助你的吗？'
+        }
+      ]
+    }
   }
 
   addChatItem(chatItem: ChatListItem) {
@@ -33,10 +47,26 @@ export class ChatStore {
         role: 'assistant'
       })
     }
+    if (this.currentSessionId) {
+      SessionsStore.updateSession({ id: this.currentSessionId, messages: this.chatList })
+    } else {
+      this.currentSessionId = SessionsStore.addSession({
+        title: this.needChatList.filter(item => item.role === 'user')[0]?.message,
+        messages: this.chatList
+      })
+    }
   }
 
   get needChatList() {
     return this.chatList.filter(item => !item.exclude)
+  }
+
+  changeCurrentSession(id: string) {
+    this.currentSessionId = id
+    const session = SessionsStore.sessions.find(item => item.id === id)
+    if (session) {
+      this.chatList = session.messages
+    }
   }
 }
 
