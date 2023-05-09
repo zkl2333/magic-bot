@@ -17,14 +17,8 @@ export class ChatStore {
       this.currentSessionId = session.id
       this.chatList = session.messages
     } else {
-      this.currentSessionId = ''
-      this.chatList = [
-        {
-          exclude: true,
-          role: 'assistant',
-          message: '你好，有什么可以帮助你的吗？'
-        }
-      ]
+      const id = SessionsStore.createSession()
+      this.currentSessionId = id
     }
   }
 

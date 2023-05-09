@@ -1,4 +1,4 @@
-import { makeAutoObservable, runInAction } from 'mobx'
+import { makeAutoObservable } from 'mobx'
 import { v4 as uuidv4, validate as uuidValidate } from 'uuid'
 import { ChatListItem } from '../types'
 
@@ -18,6 +18,22 @@ class SessionsStore {
       } catch (error) {}
     }
     makeAutoObservable(this)
+  }
+
+  createSession() {
+    const id = uuidv4()
+    this.sessions.push({
+      id,
+      messages: [
+        {
+          exclude: true,
+          role: 'assistant',
+          message: '你好，有什么可以帮助你的吗？'
+        }
+      ]
+    })
+    localStorage.setItem('sessions', JSON.stringify(this.sessions))
+    return id
   }
 
   addSession({ title, messages }: { title: string; messages: ChatListItem[] }) {

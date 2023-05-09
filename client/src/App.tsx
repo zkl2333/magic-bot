@@ -11,7 +11,7 @@ import { openLoginModal } from './components/LoginModal'
 import modalStore from './store/ModalStore'
 import Avatar from './components/Avatar'
 import userStore from './store/UserStore'
-import SessionsStore from './store/SessionsStore'
+import sessionsStore from './store/SessionsStore'
 
 function App() {
   const [inputText, setInputText] = useState('')
@@ -113,7 +113,14 @@ function App() {
             {/* 侧边栏 */}
             <div className='w-60 p-4 bg-base-200 text-base-content border-base-300 border-r'>
               <div className='h-full flex flex-col justify-between safe-area'>
-                <button className='btn btn-primary w-full'>新建对话</button>
+                <button
+                  className='btn btn-primary w-full'
+                  onClick={() => {
+                    sessionsStore.createSession()
+                  }}
+                >
+                  新建对话
+                </button>
                 <div className='divider'></div>
                 <div className='flex-1'>
                   <ChatHistory />
