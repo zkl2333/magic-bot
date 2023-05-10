@@ -1,5 +1,22 @@
 .markdown-body {
+  word-wrap: break-word;
   font-size: 14px;
+
+  a {
+    color: hsl(var(--p));
+
+    &:visited {
+      color: hsl(var(--a));
+
+      &:hover {
+        color: hsl(var(--af));
+      }
+    }
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
 
   p {
     white-space: pre-wrap;
@@ -22,6 +39,8 @@
   pre {
     // background-color: #fff;
     padding: 0;
+    white-space: pre-wrap;
+    word-wrap: break-word;
   }
 
   code.hljs {

@@ -96,7 +96,7 @@ const Chat = () => {
   return (
     <>
       {/* 聊天框 */}
-      <div id='chat-list' className='flex flex-1 flex-col p-3 lg:p-4 overflow-y-auto'>
+      <div id='chat-list' className='flex flex-1 flex-col p-3 lg:p-4 overflow-y-auto overflow-x-hidden'>
         {interactionStore.currentInteractionMessages.map(item => (
           <ChatBubble {...item} key={item.id} />
         ))}
