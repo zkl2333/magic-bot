@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import './App.css'
+import './common/App.css'
 import interactionStore from './store/InteractionStore'
 import { Observer, observer } from 'mobx-react-lite'
 import Navbar from './components/Navbar'
@@ -9,6 +9,7 @@ import modalStore from './store/ModalStore'
 import Avatar from './components/Avatar'
 import userStore from './store/UserStore'
 import Interaction from './components/Interaction/Interaction'
+import './common/daisyUI.less'
 
 function App() {
   const isLogin = userStore.isLogin
@@ -31,27 +32,27 @@ function App() {
             <Navbar />
             <Interaction />
           </div>
-          <div className='drawer-side bg-base-200'>
+          <div className='drawer-side'>
             <label htmlFor='side-drawer' className='drawer-overlay'></label>
             {/* 侧边栏 */}
-            <div className='w-60 p-4 bg-base-200 text-base-content border-base-300 border-r'>
+            <div className='h-full w-60 text-base-content border-base-300 border-r bg-base-200'>
               <div className='h-full flex flex-col justify-between safe-area'>
-                <button
-                  className='btn btn-primary w-full'
-                  onClick={() => {
-                    interactionStore.createOrUpdateInteraction()
-                  }}
-                >
-                  新建对话
-                </button>
-                <div className='divider'></div>
-                <div className='flex-1'>
+                <div className='p-4 border-base-300 border-b'>
+                  <button
+                    className='btn btn-primary w-full'
+                    onClick={() => {
+                      interactionStore.createOrUpdateInteraction()
+                    }}
+                  >
+                    新建对话
+                  </button>
+                </div>
+                <div className='p-4 flex-1 overflow-y-auto'>
                   <InteractionList />
                 </div>
                 {isLogin && (
                   <>
-                    <div className='divider'></div>
-                    <div className='flex justify-between items-center'>
+                    <div className='flex justify-between items-center p-4 border-base-300 border-t'>
                       <Avatar className='w-10 rounded-full mr-2 overflow-hidden' email={userStore.email} />
                       <div className='flex-1'>{userStore.username}</div>
                       {/* 退出登录 */}

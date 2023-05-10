@@ -56,7 +56,9 @@ const Navbar: React.FC = () => {
         </label>
       </div>
       <div className='flex-1'>
-        <div className='pl-5 font-bold normal-case text-xl'>{interactionStore.currentInteraction?.title || '未命名对话'}</div>
+        <div className='pl-5 font-bold normal-case text-xl'>
+          {interactionStore.currentInteraction?.title || '未命名对话'}
+        </div>
       </div>
       <div title='Change Theme' className='dropdown dropdown-end'>
         <div tabIndex={0} className='btn gap-1 normal-case btn-ghost'>
@@ -86,38 +88,41 @@ const Navbar: React.FC = () => {
             <path d='M1799 349l242 241-1017 1017L7 590l242-241 775 775 775-775z'></path>
           </svg>
         </div>
-        <div className='dropdown-content bg-base-300 text-base-content rounded-box top-px max-h-96 h-[70vh] w-60 overflow-y-auto shadow-2xl mt-16'>
-          <div className='grid grid-cols-1 gap-3 p-3' tabIndex={0}>
-            {themeList.map(theme => {
-              return (
-                <button
-                  key={theme}
-                  className='outline-base-content overflow-hidden rounded-lg text-left'
-                  onClick={() => {
-                    userStore.setSettings({ theme: theme })
-                  }}
-                >
-                  <div
-                    data-theme={theme}
-                    className='bg-base-100 text-base-content w-full cursor-pointer font-sans'
+
+        <div className='dropdown-content bg-base-300 text-base-content rounded-box top-px max-h-96 h-[70vh] w-60 overflow-y-hidden shadow-2xl mt-16'>
+          <div className='h-full overflow-y-auto'>
+            <div className='grid grid-cols-1 gap-3 p-3' tabIndex={0}>
+              {themeList.map(theme => {
+                return (
+                  <button
+                    key={theme}
+                    className='outline-base-content overflow-hidden rounded-lg text-left'
+                    onClick={() => {
+                      userStore.setSettings({ theme: theme })
+                    }}
                   >
-                    <div className='grid grid-cols-5 grid-rows-3 h-12'>
-                      <div className='col-span-5 row-span-3 row-start-1 flex gap-2 py-3 px-4 items-center'>
-                        <div className='w-5'>{userStore.settings.theme === theme ? '👉' : null}</div>
-                        <div className='flex-grow text-sm font-bold'>{theme}</div>
-                        <div className='flex flex-shrink-0 flex-wrap gap-1 h-full'>
-                          <div className='bg-primary w-2 rounded'></div>
-                          <div className='bg-secondary w-2 rounded'></div>
-                          <div className='bg-accent w-2 rounded'></div>
-                          <div className='bg-neutral w-2 rounded'></div>
+                    <div
+                      data-theme={theme}
+                      className='bg-base-100 text-base-content w-full cursor-pointer font-sans'
+                    >
+                      <div className='grid grid-cols-5 grid-rows-3 h-12'>
+                        <div className='col-span-5 row-span-3 row-start-1 flex gap-2 py-3 px-4 items-center'>
+                          <div className='w-5'>{userStore.settings.theme === theme ? '👉' : null}</div>
+                          <div className='flex-grow text-sm font-bold'>{theme}</div>
+                          <div className='flex flex-shrink-0 flex-wrap gap-1 h-full'>
+                            <div className='bg-primary w-2 rounded'></div>
+                            <div className='bg-secondary w-2 rounded'></div>
+                            <div className='bg-accent w-2 rounded'></div>
+                            <div className='bg-neutral w-2 rounded'></div>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                </button>
-              )
-            })}
-          </div>
+                  </button>
+                )
+              })}
+            </div>
+          </div>{' '}
         </div>
       </div>
     </div>
