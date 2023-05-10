@@ -64,6 +64,7 @@ class InteractionStore {
         exclude: true
       })
     }
+    this.setCurrentInteractionId(id)
     return id
   }
 
@@ -72,7 +73,7 @@ class InteractionStore {
     this.messages = this.messages.filter(message => message.interactionId !== id)
     if (this.interactions.length === 0) {
       this._initCurrentInteraction()
-    } else {
+    } else if (this.currentInteractionId === id) {
       this.setCurrentInteractionId(this.interactions[0].id)
     }
   }
