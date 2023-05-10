@@ -66,22 +66,24 @@ const ChatBubble = (props: ChatBubbleProps) => {
         )}
         dangerouslySetInnerHTML={{ __html: mdi.render(message) }}
       />
-      <div className='group-hover:visible chat-footer opacity-40 pt-1 text-xs'>
+      <div className='group-hover:visible chat-footer pt-1 text-xs'>
         {/* <span>{dayjs(createdAt).format('YY/MM/DD HH:mm')}</span> */}
-        <span>{dayjs().calendar(dayjs(createdAt))}</span>
         {!exclude && (
-          <button
-            className='ml-2 text-xs hover:text-primary'
-            onClick={() => {
-              interactionStore.deleteMessage(id)
-            }}
-          >
-            删除
-          </button>
+          <>
+            <span className='opacity-40'>{dayjs().calendar(dayjs(createdAt))}</span>
+            <button
+              className='ml-2 opacity-50 text-xs hover:text-primary hover:opacity-100'
+              onClick={() => {
+                interactionStore.deleteMessage(id)
+              }}
+            >
+              删除
+            </button>
+          </>
         )}
         {role === 'assistant' && !exclude && (
           <button
-            className='ml-2 text-xs hover:text-primary'
+            className='ml-2 opacity-50 text-xs hover:text-primary hover:opacity-100'
             onClick={() => {
               retry(id)
             }}
