@@ -35,7 +35,7 @@ function App() {
           <div className='drawer-side'>
             <label htmlFor='side-drawer' className='drawer-overlay'></label>
             {/* 侧边栏 */}
-            <div className='h-full w-60 text-base-content border-base-300 border-r bg-base-200'>
+            <div className='overflow-hidden h-full w-60 text-base-content border-base-300 border-r bg-base-200'>
               <div className='h-full flex flex-col justify-between safe-area'>
                 <div className='p-4 border-base-300 border-b'>
                   <button

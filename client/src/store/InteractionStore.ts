@@ -90,6 +90,10 @@ class InteractionStore {
     return this.messages.filter(message => message.interactionId === this.currentInteractionId)
   }
 
+  get currentInteractionIncludeMessages() {
+    return this.currentInteractionMessages.filter(message => !message.exclude)
+  }
+
   createOrUpdateMessage({
     id = uuidv4(),
     interactionId = this.currentInteractionId,

@@ -67,7 +67,7 @@ const Chat = () => {
         chatBox.scrollTop = chatBox.scrollHeight
       }
     }, 30)
-    const response = await getAnswer(interactionStore.currentInteractionMessages)
+    const response = await getAnswer(interactionStore.currentInteractionIncludeMessages)
     setAssistantMessage(messageId, interactionStore.currentInteractionId, response)
   }
 
@@ -89,6 +89,21 @@ const Chat = () => {
     }
   }
 
+  const retryHandler = async (messageId: string) => {
+    const messageIndex = interactionStore.currentInteractionIncludeMessages.findIndex(
+      item => item.id === messageId
+    )
+    const messageList = interactionStore.currentInteractionIncludeMessages.slice(0, messageIndex)
+    interactionStore.createOrUpdateMessage({
+      id: messageId,
+      interactionId: interactionStore.currentInteractionId,
+      message: '重新思考中...',
+      role: 'assistant'
+    })
+    const response = await getAnswer(messageList)
+    setAssistantMessage(messageId, interactionStore.currentInteractionId, response)
+  }
+
   useEffect(() => {
     scrollToBottom()
   }, [])
@@ -98,7 +113,7 @@ const Chat = () => {
       {/* 聊天框 */}
       <div id='chat-list' className='flex flex-1 flex-col p-3 lg:p-4 overflow-y-auto overflow-x-hidden'>
         {interactionStore.currentInteractionMessages.map(item => (
-          <ChatBubble {...item} key={item.id} />
+          <ChatBubble {...item} key={item.id} retry={retryHandler} />
         ))}
       </div>
       {/* 输入框 */}
@@ -110,7 +125,7 @@ const Chat = () => {
         />
         <button
           className={classNames('btn btn-primary', {
-            loading: interactionStore.currentInteraction?.loading
+            'loading btn-disabled': interactionStore.currentInteraction?.loading
           })}
           onClick={submitHandler}
         >

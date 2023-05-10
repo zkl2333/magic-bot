@@ -9,7 +9,13 @@ import mila from 'markdown-it-link-attributes'
 import hljs from 'highlight.js'
 import 'katex/dist/katex.min.css'
 import '../../../common/highlight.less'
-import '../../../common/chatBubble.less'
+import './chatBubble.less'
+import dayjs from 'dayjs'
+// import relativeTime from 'dayjs/plugin/relativeTime'
+import interactionStore from '../../../store/InteractionStore'
+import calendar from 'dayjs/plugin/calendar'
+
+dayjs.extend(calendar)
 
 function highlightBlock(str: string, lang?: string) {
   return `<pre class="code-block-wrapper"><code class="hljs code-block-body ${lang}">${str}</code></pre>`
@@ -31,12 +37,17 @@ const mdi = new MarkdownIt({
 mdi.use(mila, { attrs: { target: '_blank', rel: 'noopener' } })
 mdi.use(mdKatex, { blockClass: 'katexmath-block rounded-md p-[10px]', errorColor: ' #cc0000' })
 
-const ChatBubble = (props: MessageItem) => {
-  const { message = '正在思考中...', role } = props
+interface ChatBubbleProps extends MessageItem {
+  // 重试
+  retry: (id: MessageItem['id']) => void
+}
+
+const ChatBubble = (props: ChatBubbleProps) => {
+  const { id, message = '正在思考中...', role, createdAt, retry, exclude } = props
   const isAssistant = role === 'assistant'
 
   return (
-    <div className={`loading chat ${isAssistant ? 'chat-start' : 'chat-end'}`}>
+    <div className={`group chat ${isAssistant ? 'chat-start' : 'chat-end'}`}>
       {isAssistant ? (
         <div className='chat-image avatar'>
           <div className='w-10 rounded-full text-white bg-black p-1.5'>
@@ -46,12 +57,39 @@ const ChatBubble = (props: MessageItem) => {
       ) : (
         <Avatar className='chat-image w-10 rounded-full overflow-hidden' email={userStore.email} />
       )}
+      {/* <div className='chat-header opacity-50 text-xs pb-1'>
+        <span>{dayjs(createdAt).format('YY/MM/DD HH:mm')}</span>
+      </div> */}
       <div
         className={classNames(
           'prose-sm lg:prose chat-bubble bg-base-100 text-base-content markdown-body dark p-3 shadow'
         )}
         dangerouslySetInnerHTML={{ __html: mdi.render(message) }}
-      ></div>
+      />
+      <div className='group-hover:visible chat-footer opacity-40 pt-1 text-xs'>
+        {/* <span>{dayjs(createdAt).format('YY/MM/DD HH:mm')}</span> */}
+        <span>{dayjs().calendar(dayjs(createdAt))}</span>
+        {!exclude && (
+          <button
+            className='ml-2 text-xs hover:text-primary'
+            onClick={() => {
+              interactionStore.deleteMessage(id)
+            }}
+          >
+            删除
+          </button>
+        )}
+        {role === 'assistant' && !exclude && (
+          <button
+            className='ml-2 text-xs hover:text-primary'
+            onClick={() => {
+              retry(id)
+            }}
+          >
+            重试
+          </button>
+        )}
+      </div>
     </div>
   )
 }
