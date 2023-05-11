@@ -5,8 +5,8 @@ import Interactions from './Interactions'
 const InteractionList = () => {
   return (
     <>
-      {interactionStore.interactions.map((item, index) => (
-        <Interactions key={index} {...item} />
+      {interactionStore.interactions.map(interactions => (
+        <Interactions key={interactions.id} interactions={interactions} />
       ))}
     </>
   )
