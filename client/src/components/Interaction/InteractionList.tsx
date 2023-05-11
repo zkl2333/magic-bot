@@ -16,7 +16,7 @@ const InteractionList = () => {
             interactionStore.setCurrentInteractionId(item.id)
           }}
         >
-          <div className='truncate flex-1 text-left'>{item.title || '未命名对话'}</div>
+          <div className='truncate overflow-hidden flex-1 text-left'>{item.title || '未命名对话'}</div>
           <div
             className='btn btn-xs btn-ghost'
             onClick={e => {

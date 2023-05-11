@@ -55,12 +55,12 @@ const Navbar: React.FC = () => {
           </svg>
         </label>
       </div>
-      <div className='flex-1'>
-        <div className='pl-5 font-bold normal-case text-xl'>
+      <div className='flex-1 truncate'>
+        <div className='pl-5 font-bold normal-case text-xl truncate'>
           {interactionStore.currentInteraction?.title || '未命名对话'}
         </div>
       </div>
-      <div title='Change Theme' className='dropdown dropdown-end'>
+      <div title='Change Theme' className='flex-none dropdown dropdown-end'>
         <div tabIndex={0} className='btn gap-1 normal-case btn-ghost'>
           <svg
             width='20'
@@ -122,7 +122,7 @@ const Navbar: React.FC = () => {
                 )
               })}
             </div>
-          </div>{' '}
+          </div>
         </div>
       </div>
     </div>
