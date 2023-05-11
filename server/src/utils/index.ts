@@ -1,4 +1,4 @@
-import createStream from './createStream'
-import formatResponse from './formatResponse'
+import { formatChatErrorResponse } from './formatResponse'
+import { chatCompletionsStreamFormatResponse, streamToString } from './stream'
 
-export { createStream, formatResponse }
+export { formatChatErrorResponse, chatCompletionsStreamFormatResponse, streamToString }
