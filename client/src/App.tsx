@@ -24,7 +24,7 @@ function App() {
   }, [isLogin])
 
   return (
-    <div data-theme={userStore.settings.theme} className='h-full w-full transition-all p-0 lg:p-4'>
+    <div data-theme={userStore.settings.theme} id='app' className='h-full w-full transition-all p-0 lg:p-4'>
       <div className='h-full w-full overflow-hidden border-base-200 lg:border lg:rounded-md lg:shadow-md'>
         <div className='drawer drawer-mobile h-full'>
           <input id='side-drawer' type='checkbox' className='drawer-toggle' />
