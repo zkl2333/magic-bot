@@ -12,7 +12,7 @@ function md5(str: string) {
 
 function generateAvatarUrl(emailAddress: string) {
   const emailHash = md5(emailAddress)
-  return `https://cravatar.cn/avatar/${emailHash}`
+  return `https://dn-qiniu-avatar.qbox.me/avatar/${emailHash}`
 }
 
 const Avatar = ({ className, email }: AvatarProps) => {
