@@ -13,19 +13,21 @@ const chatCompletionsStreamFormatResponse = (stream: Readable) => {
 
     for (const line of lines) {
       const message = line.replace(/^data:/, '').trim()
-      if (message === '[DONE]') {
-        readable.push(null) // Signal the end of the stream
-        return
-      }
-
-      try {
-        const parsed = JSON.parse(message)
-        const content = parsed.choices[0].delta.content
-        if (content) {
-          readable.push(content)
+      if (message) {
+        if (message === '[DONE]') {
+          readable.push(null) // Signal the end of the stream
+          return
         }
-      } catch (error) {
-        console.error('Could not JSON parse stream message', message, error)
+
+        try {
+          const parsed = JSON.parse(message)
+          const content = parsed.choices[0].delta.content
+          if (content) {
+            readable.push(content)
+          }
+        } catch (error) {
+          console.error('Could not JSON parse stream message', message, error)
+        }
       }
     }
   })

@@ -2,18 +2,16 @@ import { Context } from 'koa'
 import * as bcrypt from 'bcrypt'
 import * as jwt from 'jsonwebtoken'
 import { PrismaClient, User } from '@prisma/client'
+import { jwtSecret } from '../constence'
 
 const prisma = new PrismaClient()
-
-// 生成 JWT
-const jwtSecret = process.env.JWT_SECRET || 'your-secret-key'
 
 const generateToken = (user: User) => {
   const token = jwt.sign(
     {
-      id: user.id,
-      username: user.username,
-      email: user.email
+      id: user.id
+      // username: user.username,
+      // email: user.email
     },
     jwtSecret,
     { expiresIn: '15d' }

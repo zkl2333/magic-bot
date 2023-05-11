@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react'
 import { MessageItem } from '../../../types'
 import { v4 as uuidv4 } from 'uuid'
 import classNames from 'classnames'
+import userStore from '../../../store/UserStore'
 
 const Chat = () => {
   const [inputText, setInputText] = useState('')
@@ -76,7 +77,8 @@ const Chat = () => {
     return fetch('/api/chat/completions', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${userStore.token}`
       },
       body: JSON.stringify({ chatList })
     })
