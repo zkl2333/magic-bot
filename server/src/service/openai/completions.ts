@@ -19,6 +19,7 @@ const configuration = new Configuration({
 const openai = new OpenAIApi(configuration)
 
 const completions = async (chatList: ChatListItem[]) => {
+  console.log('message', chatList[chatList.length - 1]?.message)
   try {
     const response = await openai.createChatCompletion(
       {
