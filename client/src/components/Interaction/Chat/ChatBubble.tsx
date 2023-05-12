@@ -43,7 +43,7 @@ interface ChatBubbleProps extends MessageItem {
 }
 
 const ChatBubble = (props: ChatBubbleProps) => {
-  const { id, message = '正在思考中...', role, createdAt, retry, exclude } = props
+  const { id, message = '正在思考中...', role, updatedAt, retry, exclude } = props
   const isAssistant = role === 'assistant'
 
   return (
@@ -67,10 +67,18 @@ const ChatBubble = (props: ChatBubbleProps) => {
         dangerouslySetInnerHTML={{ __html: mdi.render(message) }}
       />
       <div className='group-hover:visible chat-footer pt-1 text-xs'>
-        {/* <span>{dayjs(createdAt).format('YY/MM/DD HH:mm')}</span> */}
         {!exclude && (
           <>
-            <span className='opacity-40'>{dayjs().calendar(dayjs(createdAt))}</span>
+            <span className='opacity-40 mr-2'>
+              {dayjs(updatedAt).calendar(null, {
+                sameDay: '[今天] A h:mm',
+                nextDay: '[明天] A h:mm',
+                nextWeek: 'ddd A h:mm',
+                lastDay: '[昨天] A h:mm',
+                lastWeek: '[上]ddd A h:mm',
+                sameElse: 'DD/MM/YYYY A h:mm'
+              })}
+            </span>
             <button
               className='ml-2 opacity-50 text-xs hover:text-primary hover:opacity-100'
               onClick={() => {

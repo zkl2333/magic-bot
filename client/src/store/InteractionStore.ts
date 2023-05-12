@@ -32,8 +32,16 @@ class InteractionStore {
   }
 
   private _saveInteractionsToLocalStorage() {
-    localStorage.setItem(InteractionsKey, JSON.stringify(this.interactions))
-    localStorage.setItem(MessagesKey, JSON.stringify(this.messages))
+    localStorage.setItem(
+      InteractionsKey,
+      JSON.stringify(
+        this.interactions.map(interaction => {
+          const { loading, ...rest } = interaction
+          return rest
+        })
+      )
+    )
+    localStorage.setItem(MessagesKey, JSON.stringify(this.messages ))
   }
 
   private _initCurrentInteraction() {
