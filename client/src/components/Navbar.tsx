@@ -5,37 +5,7 @@ import interactionStore from '../store/InteractionStore'
 
 // 导航栏
 const Navbar: React.FC = () => {
-  const themeList = [
-    'light',
-    'dark',
-    'cupcake',
-    'bumblebee',
-    'emerald',
-    'corporate',
-    'synthwave',
-    'retro',
-    'cyberpunk',
-    'valentine',
-    'halloween',
-    'garden',
-    'forest',
-    'aqua',
-    'lofi',
-    'pastel',
-    'fantasy',
-    'wireframe',
-    'black',
-    'luxury',
-    'dracula',
-    'cmyk',
-    'autumn',
-    'business',
-    'acid',
-    'lemonade',
-    'night',
-    'coffee',
-    'winter'
-  ]
+  const themeList = ['', 'light', 'dark']
   return (
     <div className='w-full navbar border-b border-base-300'>
       <div className='flex-none lg:hidden'>
@@ -89,7 +59,7 @@ const Navbar: React.FC = () => {
           </svg>
         </div>
 
-        <div className='dropdown-content bg-base-300 text-base-content rounded-box top-px max-h-96 h-[70vh] w-60 overflow-y-hidden shadow-2xl mt-16'>
+        <div className='dropdown-content bg-base-300 text-base-content rounded-box top-px max-h-96 w-60 overflow-y-hidden shadow-2xl mt-16'>
           <div className='h-full overflow-y-auto'>
             <div className='grid grid-cols-1 gap-3 p-3' tabIndex={0}>
               {themeList.map(theme => {
@@ -108,7 +78,7 @@ const Navbar: React.FC = () => {
                       <div className='grid grid-cols-5 grid-rows-3 h-12'>
                         <div className='col-span-5 row-span-3 row-start-1 flex gap-2 py-3 px-4 items-center'>
                           <div className='w-5'>{userStore.settings.theme === theme ? '👉' : null}</div>
-                          <div className='flex-grow text-sm font-bold'>{theme}</div>
+                          <div className='flex-grow text-sm font-bold'>{theme || '自动切换'}</div>
                           <div className='flex flex-shrink-0 flex-wrap gap-1 h-full'>
                             <div className='bg-primary w-2 rounded'></div>
                             <div className='bg-secondary w-2 rounded'></div>

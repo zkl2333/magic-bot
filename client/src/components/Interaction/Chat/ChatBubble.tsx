@@ -13,9 +13,6 @@ import './chatBubble.less'
 import dayjs from 'dayjs'
 // import relativeTime from 'dayjs/plugin/relativeTime'
 import interactionStore from '../../../store/InteractionStore'
-import calendar from 'dayjs/plugin/calendar'
-
-dayjs.extend(calendar)
 
 function highlightBlock(str: string, lang?: string) {
   return `<pre class="code-block-wrapper"><code class="hljs code-block-body ${lang}">${str}</code></pre>`
@@ -69,16 +66,7 @@ const ChatBubble = (props: ChatBubbleProps) => {
       <div className='group-hover:visible chat-footer pt-1 text-xs'>
         {!exclude && (
           <>
-            <span className='opacity-40 mr-2'>
-              {dayjs(updatedAt).calendar(null, {
-                sameDay: '[今天] A h:mm',
-                nextDay: '[明天] A h:mm',
-                nextWeek: 'ddd A h:mm',
-                lastDay: '[昨天] A h:mm',
-                lastWeek: '[上]ddd A h:mm',
-                sameElse: 'DD/MM/YYYY A h:mm'
-              })}
-            </span>
+            <span className='opacity-40'>{dayjs(updatedAt).format('YY/MM/DD HH:mm')}</span>
             <button
               className='ml-2 opacity-50 text-xs hover:text-primary hover:opacity-100'
               onClick={() => {
