@@ -89,6 +89,22 @@ const ChatBubble = (props: ChatBubbleProps) => {
             重试
           </button>
         )}
+        {role === 'user' && (
+          <button
+            className='ml-2 opacity-50 text-xs hover:text-primary hover:opacity-100'
+            onClick={() => {
+              const newMessage = prompt('编辑您消息', message)
+              if (newMessage) {
+                interactionStore.createOrUpdateMessage({
+                  id,
+                  message: newMessage
+                })
+              }
+            }}
+          >
+            编辑
+          </button>
+        )}
       </div>
     </div>
   )
