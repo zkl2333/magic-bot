@@ -1,4 +1,4 @@
-import classNames from 'classnames'
+import classnames from 'classnames'
 import CryptoJS from 'crypto-js'
 
 interface AvatarProps {
@@ -17,7 +17,7 @@ function generateAvatarUrl(emailAddress: string) {
 
 const Avatar = ({ className, email }: AvatarProps) => {
   return (
-    <div className={classNames('avatar', className)}>
+    <div className={classnames('avatar', className)}>
       <img src={generateAvatarUrl(email)} />
     </div>
   )

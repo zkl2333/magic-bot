@@ -1,4 +1,4 @@
-import classNames from 'classnames'
+import classnames from 'classnames'
 import userStore from '../../../store/UserStore'
 import { MessageItem } from '../../../types'
 import Avatar from '../../Avatar'
@@ -53,12 +53,22 @@ const ChatBubble = (props: ChatBubbleProps) => {
       ) : (
         <Avatar className='chat-image w-10 rounded-full overflow-hidden' email={userStore.email} />
       )}
-      <div
-        className={classNames(
-          'prose prose-lg md:prose-md sm:prose-sm chat-bubble bg-base-100 text-base-content markdown-body dark p-3 shadow'
-        )}
-        dangerouslySetInnerHTML={{ __html: mdi.render(message) }}
-      />
+      {isAssistant ? (
+        <div
+          className={classnames(
+            'prose prose-sm md:prose-md lg:prose-lg chat-bubble bg-base-100 text-base-content markdown-body dark p-3 shadow'
+          )}
+          dangerouslySetInnerHTML={{ __html: mdi.render(message) }}
+        />
+      ) : (
+        <div
+          className={classnames(
+            'prose prose-sm md:prose-md lg:prose-lg chat-bubble bg-base-100 text-base-content markdown-body dark p-3 shadow whitespace-pre-wrap'
+          )}
+        >
+          {message}
+        </div>
+      )}
       <div className='group-hover:visible chat-footer pt-1 text-xs'>
         <span className='opacity-40'>{dayjs(updatedAt).format('YY/MM/DD HH:mm')}</span>
         {!exclude && (

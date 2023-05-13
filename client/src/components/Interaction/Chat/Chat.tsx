@@ -5,7 +5,7 @@ import ChatBubble from './ChatBubble'
 import { useEffect, useState } from 'react'
 import { MessageItem } from '../../../types'
 import { v4 as uuidv4 } from 'uuid'
-import classNames from 'classnames'
+import classnames from 'classnames'
 import userStore from '../../../store/UserStore'
 
 const Chat = () => {
@@ -54,7 +54,7 @@ const Chat = () => {
       interactionStore.createOrUpdateInteraction({
         id: interactionStore.currentInteractionId,
         title: inputText,
-        type: interactionStore.currentInteraction.type
+        mode: interactionStore.currentInteraction.mode
       })
     }
 
@@ -135,7 +135,7 @@ const Chat = () => {
           onEnter={submitHandler}
         />
         <button
-          className={classNames('btn btn-primary', {
+          className={classnames('btn btn-primary', {
             'loading btn-disabled': interactionStore.currentInteraction?.loading
           })}
           onClick={submitHandler}

@@ -1,15 +1,15 @@
 import { observer } from 'mobx-react-lite'
 import interactionStore from '../../store/InteractionStore'
 import Chat from './Chat/Chat'
-import SelectInteractionType from './SelectInteractionType/SelectInteractionType'
+import SelectInteractionMode from './SelectInteractionType/SelectInteractionType'
 
 const Interaction = () => {
   {
-    switch (interactionStore.currentInteraction?.type) {
+    switch (interactionStore.currentInteraction?.mode) {
       case 'chat':
         return <Chat />
       default:
-        return <SelectInteractionType />
+        return <SelectInteractionMode />
     }
   }
 }

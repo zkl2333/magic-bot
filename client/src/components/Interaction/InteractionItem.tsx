@@ -1,5 +1,5 @@
 import interactionStore from '../../store/InteractionStore'
-import classNames from 'classnames'
+import classnames from 'classnames'
 import Popper from '@mui/base/Popper'
 import { useState } from 'react'
 import ClickAwayListener from '@mui/base/ClickAwayListener'
@@ -21,7 +21,7 @@ const InteractionItem = ({ interactions }: { interactions: Interaction }) => {
     <>
       <ClickAwayListener onClickAway={() => setAnchorEl(null)}>
         <button
-          className={classNames('btn w-full h-auto px-4 flex justify-between items-center', {
+          className={classnames('btn w-full h-auto px-4 flex justify-between items-center', {
             'btn-ghost': interactionStore.currentInteractionId !== interactions.id,
             'btn-primary': interactionStore.currentInteractionId === interactions.id
           })}

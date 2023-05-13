@@ -2,7 +2,9 @@ type UUID = string
 type Timestamp = number
 
 export enum SESSION_TYPE {
-  CHAT = 'chat'
+  CHAT = 'chat',
+  REVISION = 'revision',
+  GENERATOR = 'generator'
 }
 
 export type MessageItem = {
@@ -18,6 +20,6 @@ export type MessageItem = {
 export interface Interaction {
   loading: boolean
   id: UUID
-  type?: string
+  mode?: string
   title: string
 }
