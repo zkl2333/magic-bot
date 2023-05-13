@@ -67,12 +67,6 @@ class InteractionStore {
     } else {
       const defaultInteraction = { id, title: '', loading: false }
       this.interactions.push({ ...defaultInteraction, ...rest })
-      // this.createOrUpdateMessage({
-      //   interactionId: id,
-      //   message: '你好，有什么可以帮到你的吗？',
-      //   role: 'assistant',
-      //   exclude: true
-      // })
     }
 
     this.setCurrentInteractionId(id)
@@ -119,6 +113,7 @@ class InteractionStore {
       const defaultMessageItem = {
         id,
         interactionId: this.currentInteractionId,
+        isFinish: true,
         exclude: false,
         message: '',
         role: 'user',

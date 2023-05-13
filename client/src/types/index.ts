@@ -10,7 +10,8 @@ export enum SESSION_TYPE {
 export type MessageItem = {
   id: UUID
   interactionId: Interaction['id']
-  exclude?: boolean
+  exclude: boolean
+  isFinish: boolean
   message: string
   role: string
   createdAt: Timestamp

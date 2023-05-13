@@ -71,16 +71,14 @@ const ChatBubble = (props: ChatBubbleProps) => {
       )}
       <div className='group-hover:visible chat-footer pt-1 text-xs'>
         <span className='opacity-40'>{dayjs(updatedAt).format('YY/MM/DD HH:mm')}</span>
-        {!exclude && (
-          <button
-            className='ml-2 opacity-50 text-xs hover:text-primary hover:opacity-100'
-            onClick={() => {
-              interactionStore.deleteMessage(id)
-            }}
-          >
-            删除
-          </button>
-        )}
+        <button
+          className='ml-2 opacity-50 text-xs hover:text-primary hover:opacity-100'
+          onClick={() => {
+            interactionStore.deleteMessage(id)
+          }}
+        >
+          删除
+        </button>
         {role === 'assistant' && !exclude && !interactionStore.currentInteraction?.loading && (
           <button
             className='ml-2 opacity-50 text-xs hover:text-primary hover:opacity-100'

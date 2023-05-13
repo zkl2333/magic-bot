@@ -2,117 +2,17 @@ import { observer } from 'mobx-react-lite'
 import interactionStore from '../../../store/InteractionStore'
 import AutoResizeTextarea from '../../AutoResizeTextarea'
 import ChatBubble from './ChatBubble'
-import { useEffect, useState } from 'react'
-import { MessageItem } from '../../../types'
-import { v4 as uuidv4 } from 'uuid'
-import classnames from 'classnames'
-import userStore from '../../../store/UserStore'
+import { useEffect } from 'react'
+import useChat from './useChat'
 
 const Chat = () => {
-  const [inputText, setInputText] = useState('')
-
-  const setAssistantMessage = async (messageId: string, interactionId: string, response: Response) => {
-    try {
-      const reader = response.body?.pipeThrough(new TextDecoderStream()).getReader()
-      if (reader) {
-        let answer = ''
-        while (true) {
-          const { value, done } = await reader.read()
-          if (done) {
-            interactionStore.createOrUpdateMessage({
-              id: messageId,
-              interactionId: interactionId,
-              role: 'assistant',
-              exclude: false,
-              message: answer
-            })
-            break
-          }
-          answer += value
-          interactionStore.createOrUpdateMessage({
-            id: messageId,
-            interactionId: interactionId,
-            role: 'assistant',
-            message: answer
-          })
-        }
-      }
-    } catch (error) {}
-    interactionStore.setInteractionLoading(interactionStore.currentInteractionId, false)
-  }
-
-  const submitHandler = async () => {
-    if (inputText === '') return
-    if (interactionStore.currentInteraction?.loading) return
-    interactionStore.createOrUpdateMessage({
-      interactionId: interactionStore.currentInteractionId,
-      message: inputText,
-      role: 'user'
-    })
-
-    if (interactionStore.currentInteraction?.title === '') {
-      interactionStore.createOrUpdateInteraction({
-        id: interactionStore.currentInteractionId,
-        title: inputText,
-        mode: interactionStore.currentInteraction.mode
-      })
-    }
-
-    setInputText('')
-
-    const messageId = uuidv4()
-    interactionStore.createOrUpdateMessage({
-      id: messageId,
-      interactionId: interactionStore.currentInteractionId,
-      exclude: true,
-      message: '思考中...',
-      role: 'assistant'
-    })
-
-    setTimeout(() => {
-      // 滚动到底部
-      const chatBox = document.querySelector('#chat-list')
-      if (chatBox) {
-        chatBox.scrollTop = chatBox.scrollHeight
-      }
-    }, 30)
-    const response = await getAnswer(interactionStore.currentInteractionIncludeMessages)
-    setAssistantMessage(messageId, interactionStore.currentInteractionId, response)
-  }
-
-  const getAnswer = async (chatList: MessageItem[]) => {
-    interactionStore.setInteractionLoading(interactionStore.currentInteractionId, true)
-    return fetch('/api/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${userStore.token}`
-      },
-      body: JSON.stringify({ chatList })
-    })
-  }
+  const { inputText, setInputText, stopAssistant, submitHandler, retryHandler } = useChat()
 
   const scrollToBottom = () => {
     const chatBox = document.querySelector('#chat-list')
     if (chatBox) {
       chatBox.scrollTop = chatBox.scrollHeight
     }
-  }
-
-  const retryHandler = async (messageId: string) => {
-    const messageIndex = interactionStore.currentInteractionIncludeMessages.findIndex(
-      item => item.id === messageId
-    )
-    const messageList = interactionStore.currentInteractionIncludeMessages.slice(0, messageIndex)
-    interactionStore.createOrUpdateMessage({
-      id: messageId,
-      interactionId: interactionStore.currentInteractionId,
-      exclude: true,
-      message: '重新思考中...',
-      role: 'assistant'
-    })
-    const response = await getAnswer(messageList)
-    setAssistantMessage(messageId, interactionStore.currentInteractionId, response)
   }
 
   useEffect(() => {
@@ -122,26 +22,80 @@ const Chat = () => {
   return (
     <>
       {/* 聊天框 */}
-      <div id='chat-list' className='flex flex-1 flex-col p-3 lg:p-4 overflow-y-auto overflow-x-hidden'>
+      <div
+        id='chat-list'
+        className='flex flex-1 flex-col p-3 lg:p-4 overflow-y-auto overflow-x-hidden pb-[50px]'
+      >
         {interactionStore.currentInteractionMessages.map(item => (
           <ChatBubble {...item} key={item.id} retry={retryHandler} />
         ))}
       </div>
       {/* 输入框 */}
-      <div className='flex-shrink-0 flex flex-row justify-between items-end m-2'>
+      <div className='flex-shrink-0 flex flex-row justify-between items-center p-2 bg-transparent'>
         <AutoResizeTextarea
           onChange={inputText => setInputText(inputText)}
           value={inputText}
-          onEnter={submitHandler}
+          onSubmit={submitHandler}
         />
-        <button
-          className={classnames('btn btn-primary', {
-            'loading btn-disabled': interactionStore.currentInteraction?.loading
-          })}
-          onClick={submitHandler}
-        >
-          发送
-        </button>
+        {!interactionStore.currentInteraction?.loading &&
+          interactionStore.currentInteractionIncludeMessages[
+            interactionStore.currentInteractionIncludeMessages.length - 1
+          ]?.role === 'assistant' && (
+            <div className='ml-2 h-full inline-flex rounded-md items-center justify-center hover:bg-base-300 min-w-[40px] relative'>
+              <button
+                className='h-full flex w-full gap-2 items-center justify-center'
+                onClick={() => {
+                  const interaction = interactionStore.currentInteractionMessages
+                    .filter(item => item.role === 'assistant')
+                    .pop()
+                  if (interaction) {
+                    retryHandler(interaction.id)
+                  }
+                }}
+              >
+                <svg
+                  stroke='currentColor'
+                  fill='none'
+                  strokeWidth='2'
+                  viewBox='0 0 24 24'
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  className='h-4 w-4 flex-shrink-0'
+                  height='1em'
+                  width='1em'
+                  xmlns='http://www.w3.org/2000/svg'
+                >
+                  <polyline points='1 4 1 10 7 10'></polyline>
+                  <polyline points='23 20 23 14 17 14'></polyline>
+                  <path d='M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15'></path>
+                </svg>
+              </button>
+            </div>
+          )}
+
+        {interactionStore.currentInteraction?.loading && (
+          <div className='ml-2 h-full inline-flex rounded-md items-center justify-center hover:bg-base-300 min-w-[40px] relative'>
+            <button
+              className='h-full flex w-full gap-2 items-center justify-center'
+              onClick={() => stopAssistant()}
+            >
+              <svg
+                stroke='currentColor'
+                fill='none'
+                strokeWidth='2'
+                viewBox='0 0 24 24'
+                strokeLinecap='round'
+                strokeLinejoin='round'
+                className='h-4 w-4'
+                height='1em'
+                width='1em'
+                xmlns='http://www.w3.org/2000/svg'
+              >
+                <rect x='3' y='3' width='18' height='18' rx='2' ry='2'></rect>
+              </svg>
+            </button>
+          </div>
+        )}
       </div>
     </>
   )
