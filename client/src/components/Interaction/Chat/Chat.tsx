@@ -41,7 +41,7 @@ const Chat = () => {
           interactionStore.currentInteractionIncludeMessages[
             interactionStore.currentInteractionIncludeMessages.length - 1
           ]?.role === 'assistant' && (
-            <div className='ml-2 h-full inline-flex rounded-md items-center justify-center hover:bg-base-300 min-w-[40px] relative'>
+            <div className='ml-1 md:ml-2 h-full inline-flex rounded-md items-center justify-center hover:bg-base-300 min-w-[25px] md:min-w-[40px] relative'>
               <button
                 className='h-full flex w-full gap-2 items-center justify-center'
                 onClick={() => {
@@ -74,7 +74,7 @@ const Chat = () => {
           )}
 
         {interactionStore.currentInteraction?.loading && (
-          <div className='ml-2 h-full inline-flex rounded-md items-center justify-center hover:bg-base-300 min-w-[40px] relative'>
+          <div className='ml-2 h-full inline-flex rounded-md items-center justify-center hover:bg-base-300 min-w-[25px] md:min-w-[40px] relative'>
             <button
               className='h-full flex w-full gap-2 items-center justify-center'
               onClick={() => stopAssistant()}
