@@ -23,8 +23,7 @@ const completions = async (chatList: ChatListItem[]) => {
   try {
     const response = await openai.createChatCompletion(
       {
-        model: 'gpt-4',
-        max_tokens: 1500,
+        model: 'gpt-3.5-turbo',
         stream: true,
         messages: createMessage(chatList)
       },
