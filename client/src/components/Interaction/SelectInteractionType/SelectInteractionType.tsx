@@ -64,16 +64,19 @@ function SelectInteractionMode() {
                     'btn-disabled glass text-base-300': mode.disabled
                   })}
                   onClick={() => {
-                    const interactionId = interactionStore.createOrUpdateInteraction({
+                    interactionStore.createOrUpdateInteraction({
                       id: interactionStore.currentInteractionId,
                       mode: SESSION_TYPE['CHAT']
                     })
-                    interactionStore.createOrUpdateMessage({
-                      interactionId: interactionId,
-                      message: '你好，有什么可以帮到你的吗？',
-                      role: 'assistant',
-                      exclude: true
-                    })
+                    // 兼容处理
+                    if (interactionStore.currentInteractionMessages.length === 0) {
+                      interactionStore.createOrUpdateMessage({
+                        interactionId: interactionStore.currentInteractionId,
+                        message: '你好，有什么可以帮到你的吗？',
+                        role: 'assistant',
+                        exclude: true
+                      })
+                    }
                   }}
                 >
                   {mode.disabled ? '敬请期待' : '立即开始'}
