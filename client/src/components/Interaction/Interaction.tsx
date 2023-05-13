@@ -1,5 +1,7 @@
+import { observer } from 'mobx-react-lite'
 import interactionStore from '../../store/InteractionStore'
 import Chat from './Chat/Chat'
+import SelectInteractionType from './SelectInteractionType/SelectInteractionType'
 
 const Interaction = () => {
   {
@@ -7,9 +9,9 @@ const Interaction = () => {
       case 'chat':
         return <Chat />
       default:
-        return <div>未知的交互类型</div>
+        return <SelectInteractionType />
     }
   }
 }
 
-export default Interaction
+export default observer(Interaction)

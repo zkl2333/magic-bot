@@ -27,7 +27,7 @@ const Navbar: React.FC = () => {
       </div>
       <div className='flex-1 truncate'>
         <div className='pl-5 font-bold normal-case text-xl truncate'>
-          {interactionStore.currentInteraction?.title || '未命名对话'}
+          {interactionStore.currentInteraction?.title || '未命名'}
         </div>
       </div>
       <div title='Change Theme' className='flex-none dropdown dropdown-end'>

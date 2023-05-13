@@ -18,6 +18,6 @@ export type MessageItem = {
 export interface Interaction {
   loading: boolean
   id: UUID
-  type: string
+  type?: string
   title: string
 }

@@ -1,12 +1,12 @@
 import { observer } from 'mobx-react-lite'
 import interactionStore from '../../store/InteractionStore'
-import Interactions from './Interactions'
+import InteractionItem from './InteractionItem'
 
 const InteractionList = () => {
   return (
     <>
       {interactionStore.interactions.map(interactions => (
-        <Interactions key={interactions.id} interactions={interactions} />
+        <InteractionItem key={interactions.id} interactions={interactions} />
       ))}
     </>
   )

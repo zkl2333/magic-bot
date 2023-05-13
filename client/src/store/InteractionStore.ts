@@ -1,6 +1,6 @@
 import { makeAutoObservable, autorun } from 'mobx'
 import { v4 as uuidv4 } from 'uuid'
-import { MessageItem, SESSION_TYPE, Interaction } from '../types'
+import { MessageItem, Interaction } from '../types'
 
 const InteractionsKey = 'Interactions'
 const MessagesKey = 'Messages'
@@ -41,7 +41,7 @@ class InteractionStore {
         })
       )
     )
-    localStorage.setItem(MessagesKey, JSON.stringify(this.messages ))
+    localStorage.setItem(MessagesKey, JSON.stringify(this.messages))
   }
 
   private _initCurrentInteraction() {
@@ -54,24 +54,27 @@ class InteractionStore {
     }
   }
 
-  createOrUpdateInteraction({
-    id = uuidv4(),
-    title = '',
-    type = SESSION_TYPE.CHAT
-  }: Partial<Interaction> = {}) {
-    const interaction = this.interactions.find(interaction => interaction.id === id)
-    if (interaction) {
-      interaction.title = title
-      interaction.type = type
+  createOrUpdateInteraction(interactionItem?: Omit<Interaction, 'id'>): string
+  createOrUpdateInteraction(interactionItem: Pick<Interaction, 'id'> | Partial<Interaction>): string
+  createOrUpdateInteraction(interactionItem: Interaction | Partial<Interaction> = {}) {
+    const { id = uuidv4(), ...rest } = interactionItem
+    const interactionIndex = this.interactions.findIndex(interaction => interaction.id === id)
+    const interactionExists = interactionIndex !== -1
+
+    if (interactionExists) {
+      const updatedInteraction = { ...this.interactions[interactionIndex], ...rest }
+      this.interactions[interactionIndex] = updatedInteraction
     } else {
-      this.interactions.push({ id, title, type, loading: false })
-      this.createOrUpdateMessage({
-        interactionId: id,
-        message: '你好，有什么可以帮到你的吗？',
-        role: 'assistant',
-        exclude: true
-      })
+      const defaultInteraction = { id, title: '', loading: false }
+      this.interactions.push({ ...defaultInteraction, ...rest })
+      // this.createOrUpdateMessage({
+      //   interactionId: id,
+      //   message: '你好，有什么可以帮到你的吗？',
+      //   role: 'assistant',
+      //   exclude: true
+      // })
     }
+
     this.setCurrentInteractionId(id)
     return id
   }
@@ -102,33 +105,31 @@ class InteractionStore {
     return this.currentInteractionMessages.filter(message => !message.exclude)
   }
 
-  createOrUpdateMessage({
-    id = uuidv4(),
-    interactionId = this.currentInteractionId,
-    exclude = false,
-    message = '',
-    role = 'user'
-  }: Partial<MessageItem>) {
-    const messageItem = this.messages.find(message => message.id === id)
-    if (messageItem) {
-      messageItem.message = message
-      messageItem.exclude = exclude
-      messageItem.role = role
-      messageItem.updatedAt = Date.now()
+  createOrUpdateMessage(messageItem: Omit<MessageItem, 'id'>): string
+  createOrUpdateMessage(messageItem: Pick<MessageItem, 'id'> | Partial<MessageItem>): string
+  createOrUpdateMessage(messageItem: MessageItem | Partial<MessageItem>) {
+    const { id = uuidv4(), ...rest } = messageItem
+    const messageItemIndex = this.messages.findIndex(m => m.id === id)
+    const messageItemExists = messageItemIndex !== -1
+
+    if (messageItemExists) {
+      const updatedMessageItem = { ...this.messages[messageItemIndex], ...rest }
+      this.messages[messageItemIndex] = { ...updatedMessageItem, updatedAt: Date.now() }
     } else {
-      this.messages.push({
+      const defaultMessageItem = {
         id,
-        interactionId,
-        exclude,
-        message,
-        role,
+        interactionId: this.currentInteractionId,
+        exclude: false,
+        message: '',
+        role: 'user',
         createdAt: Date.now(),
         updatedAt: Date.now()
-      })
+      }
+      this.messages.push({ ...defaultMessageItem, ...rest })
     }
+
     return id
   }
-
   deleteMessage(id: string) {
     this.messages = this.messages.filter(message => message.id !== id)
   }

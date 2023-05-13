@@ -19,6 +19,13 @@ const Chat = () => {
         while (true) {
           const { value, done } = await reader.read()
           if (done) {
+            interactionStore.createOrUpdateMessage({
+              id: messageId,
+              interactionId: interactionId,
+              role: 'assistant',
+              exclude: false,
+              message: answer
+            })
             break
           }
           answer += value
@@ -57,6 +64,7 @@ const Chat = () => {
     interactionStore.createOrUpdateMessage({
       id: messageId,
       interactionId: interactionStore.currentInteractionId,
+      exclude: true,
       message: '思考中...',
       role: 'assistant'
     })
@@ -99,6 +107,7 @@ const Chat = () => {
     interactionStore.createOrUpdateMessage({
       id: messageId,
       interactionId: interactionStore.currentInteractionId,
+      exclude: true,
       message: '重新思考中...',
       role: 'assistant'
     })

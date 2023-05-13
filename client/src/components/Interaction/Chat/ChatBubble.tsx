@@ -11,7 +11,6 @@ import 'katex/dist/katex.min.css'
 import '../../../common/highlight.less'
 import './chatBubble.less'
 import dayjs from 'dayjs'
-// import relativeTime from 'dayjs/plugin/relativeTime'
 import interactionStore from '../../../store/InteractionStore'
 
 function highlightBlock(str: string, lang?: string) {
@@ -54,30 +53,25 @@ const ChatBubble = (props: ChatBubbleProps) => {
       ) : (
         <Avatar className='chat-image w-10 rounded-full overflow-hidden' email={userStore.email} />
       )}
-      {/* <div className='chat-header opacity-50 text-xs pb-1'>
-        <span>{dayjs(createdAt).format('YY/MM/DD HH:mm')}</span>
-      </div> */}
       <div
         className={classNames(
-          'prose-sm lg:prose chat-bubble bg-base-100 text-base-content markdown-body dark p-3 shadow'
+          'prose prose-lg md:prose-md sm:prose-sm chat-bubble bg-base-100 text-base-content markdown-body dark p-3 shadow'
         )}
         dangerouslySetInnerHTML={{ __html: mdi.render(message) }}
       />
       <div className='group-hover:visible chat-footer pt-1 text-xs'>
+        <span className='opacity-40'>{dayjs(updatedAt).format('YY/MM/DD HH:mm')}</span>
         {!exclude && (
-          <>
-            <span className='opacity-40'>{dayjs(updatedAt).format('YY/MM/DD HH:mm')}</span>
-            <button
-              className='ml-2 opacity-50 text-xs hover:text-primary hover:opacity-100'
-              onClick={() => {
-                interactionStore.deleteMessage(id)
-              }}
-            >
-              删除
-            </button>
-          </>
+          <button
+            className='ml-2 opacity-50 text-xs hover:text-primary hover:opacity-100'
+            onClick={() => {
+              interactionStore.deleteMessage(id)
+            }}
+          >
+            删除
+          </button>
         )}
-        {role === 'assistant' && !exclude && (
+        {role === 'assistant' && !exclude && !interactionStore.currentInteraction?.loading && (
           <button
             className='ml-2 opacity-50 text-xs hover:text-primary hover:opacity-100'
             onClick={() => {

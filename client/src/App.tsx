@@ -44,7 +44,7 @@ function App() {
                       interactionStore.createOrUpdateInteraction()
                     }}
                   >
-                    新建对话
+                    新建交互
                   </button>
                 </div>
                 <div className='p-4 flex-1 overflow-y-auto'>

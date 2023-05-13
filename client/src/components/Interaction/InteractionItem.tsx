@@ -7,7 +7,7 @@ import { Interaction } from '../../types'
 import { observer } from 'mobx-react-lite'
 import HighlightOffTwoToneIcon from '@mui/icons-material/HighlightOffTwoTone'
 
-const Interactions = ({ interactions }: { interactions: Interaction }) => {
+const InteractionItem = ({ interactions }: { interactions: Interaction }) => {
   const [anchorEl, setAnchorEl] = useState(null)
 
   const handleDelete = (event: any) => {
@@ -30,7 +30,7 @@ const Interactions = ({ interactions }: { interactions: Interaction }) => {
           }}
         >
           <div className='truncate overflow-hidden flex-1 text-left'>
-            {interactions.title || '未命名对话'}
+            {interactions.title || '未命名'}
           </div>
           <HighlightOffTwoToneIcon
             className='opacity-20 hover:opacity-70'
@@ -77,4 +77,4 @@ const Interactions = ({ interactions }: { interactions: Interaction }) => {
   )
 }
 
-export default observer(Interactions)
+export default observer(InteractionItem)
