@@ -19,7 +19,7 @@ const AutoResizeTextarea = (props: AutoResizeTextareaProps) => {
     <div className='flex flex-col w-full py-2 flex-grow md:py-3 md:pl-4 relative border border-base-300 bg-base-100 rounded-md shadow-lg'>
       <TextareaAutosize
         value={value}
-        placeholder='Send a message.'
+        placeholder='Enter 发送，Ctrl+Enter 换行'
         className='m-0 outline-none w-full resize-none border-0 bg-transparent p-0 pr-9 focus:ring-0 focus-visible:ring-0 pl-2 md:pl-0 overflow-y-hidden'
         onChange={handleChange}
         onKeyDown={event => {
