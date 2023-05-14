@@ -1,9 +1,9 @@
 import interactionStore from '../../../store/InteractionStore'
 import { SESSION_TYPE } from '../../../types'
-import chatImage from './chat.jpg'
-import unfinishedImage from './unfinished.png'
-import generatorImage from './generator.jpg'
-import revisionImage from './revision.jpg'
+import chatImage from '../../../assets/chat.jpg'
+import unfinishedImage from '../../../assets/unfinished.png'
+import generatorImage from '../../../assets/generator.jpg'
+import revisionImage from '../../../assets/revision.jpg'
 import classnames from 'classnames'
 
 function SelectInteractionMode() {

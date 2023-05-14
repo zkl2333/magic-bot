@@ -1,7 +1,7 @@
 import { observer } from 'mobx-react-lite'
 import interactionStore from '../../store/InteractionStore'
 import Chat from './Chat/Chat'
-import SelectInteractionMode from './SelectInteractionType/SelectInteractionType'
+import SelectInteractionMode from './SelectInteractionMode/SelectInteractionMode'
 
 const Interaction = () => {
   {

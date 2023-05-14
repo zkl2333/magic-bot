@@ -1,18 +1,17 @@
 import { useEffect } from 'react'
 import interactionStore from '../store/InteractionStore'
-import { openLoginModal } from './LoginModal'
+// import { openLoginModal } from './LoginModal'
 import Avatar from './Avatar'
 import userStore from '../store/UserStore'
 import InteractionList from './Interaction/InteractionList'
+import { useNavigate } from 'react-router-dom'
 
 const Sidebar = ({ isLogin }: { isLogin: boolean }) => {
+  const navigate = useNavigate()
+
   useEffect(() => {
-    let close = () => {}
     if (!isLogin) {
-      close = openLoginModal()
-    }
-    return () => {
-      close()
+      navigate('/login', { replace: true })
     }
   }, [isLogin])
 
@@ -35,13 +34,17 @@ const Sidebar = ({ isLogin }: { isLogin: boolean }) => {
         {isLogin && (
           <>
             <div className='flex justify-between items-center p-4 border-base-300 border-t'>
-              <Avatar className='w-10 rounded-full mr-2 overflow-hidden' email={userStore.email} />
-              <div className='flex-1'>{userStore.username}</div>
+              <Avatar
+                className='flex-shrink-0 w-10 rounded-full mr-2 overflow-hidden'
+                email={userStore.email}
+              />
+              <div className='flex-1 truncate'>{userStore.username}</div>
               {/* 退出登录 */}
               <button
-                className='btn btn-ghost btn-sm'
+                className='flex-shrink-0 btn btn-ghost btn-sm'
                 onClick={() => {
                   userStore.logout()
+                  navigate('/login', { replace: true })
                 }}
               >
                 退出
