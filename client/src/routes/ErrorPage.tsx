@@ -9,8 +9,17 @@ export default function ErrorPage() {
       <h1 className='text-2xl mb-6'>Oops!</h1>
       <p className='mb-4'>Sorry, an unexpected error has occurred.</p>
       <p className='opacity-50'>
-        <i>{error.statusText || error.message}</i>
+        <i>{error?.statusText || error?.message}</i>
       </p>
+      {/* 返回首页 */}
+      <button
+        className='btn btn-primary mt-4'
+        onClick={() => {
+          window.location.href = '/'
+        }}
+      >
+        返回首页
+      </button>
     </div>
   )
 }

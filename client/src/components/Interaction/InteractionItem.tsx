@@ -6,7 +6,7 @@ import ClickAwayListener from '@mui/base/ClickAwayListener'
 import { Interaction } from '../../types'
 import { observer } from 'mobx-react-lite'
 import HighlightOffTwoToneIcon from '@mui/icons-material/HighlightOffTwoTone'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 
 const InteractionItem = ({ interactions }: { interactions: Interaction }) => {
   const [anchorEl, setAnchorEl] = useState(null)
@@ -18,6 +18,7 @@ const InteractionItem = ({ interactions }: { interactions: Interaction }) => {
   const open = Boolean(anchorEl)
   const id = open ? 'delete-interactions-popper' : undefined
 
+  let navigate = useNavigate()
   return (
     <>
       <ClickAwayListener onClickAway={() => setAnchorEl(null)}>
@@ -63,6 +64,7 @@ const InteractionItem = ({ interactions }: { interactions: Interaction }) => {
                   onClick={e => {
                     e.stopPropagation()
                     interactionStore.deleteInteraction(interactions.id)
+                    navigate(`/interaction/${interactionStore.currentInteractionId}`)
                     setAnchorEl(null)
                   }}
                 >

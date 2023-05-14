@@ -14,12 +14,10 @@ const Index = () => {
         <input id='side-drawer' type='checkbox' className='drawer-toggle' />
         <div className='safe-area drawer-content flex flex-col bg-base-200'>
           <Navbar />
-          {/* <Interaction /> */}
           <Outlet />
         </div>
         <div className='drawer-side'>
           <label htmlFor='side-drawer' className='drawer-overlay'></label>
-          {/* 侧边栏 */}
           <Sidebar isLogin={isLogin} />
         </div>
       </div>

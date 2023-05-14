@@ -1,6 +1,4 @@
-import { useEffect } from 'react'
 import interactionStore from '../store/InteractionStore'
-// import { openLoginModal } from './LoginModal'
 import Avatar from './Avatar'
 import userStore from '../store/UserStore'
 import InteractionList from './Interaction/InteractionList'
@@ -9,12 +7,6 @@ import { useNavigate } from 'react-router-dom'
 const Sidebar = ({ isLogin }: { isLogin: boolean }) => {
   const navigate = useNavigate()
 
-  useEffect(() => {
-    if (!isLogin) {
-      navigate('/login', { replace: true })
-    }
-  }, [isLogin])
-
   return (
     <div className='overflow-hidden h-full w-60 text-base-content border-base-300 border-r bg-base-200'>
       <div className='h-full flex flex-col justify-between safe-area'>
@@ -22,7 +14,9 @@ const Sidebar = ({ isLogin }: { isLogin: boolean }) => {
           <button
             className='btn btn-primary w-full'
             onClick={() => {
-              interactionStore.createOrUpdateInteraction()
+              const id = interactionStore.createOrUpdateInteraction()
+              console.log('new interaction id', id)
+              navigate(`/interaction/${id}`)
             }}
           >
             新建交互
