@@ -1,25 +1,28 @@
 import './common/App.css'
-import { Observer, observer } from 'mobx-react-lite'
+import { observer } from 'mobx-react-lite'
 import './common/daisyUI.less'
 import userStore from './store/UserStore'
-import modalStore from './store/ModalStore'
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
-import Index from './view/Index'
-import Login from './view/Login'
-import ErrorPage from './view/ErrorPage'
+import Index from './routes/Index'
+import Login from './routes/Login'
+import ErrorPage from './routes/ErrorPage'
+import Interaction from './components/Interaction/Interaction'
 
 function App() {
   const router = createBrowserRouter([
     {
       path: '/',
       element: <Index />,
-      errorElement: <ErrorPage />
-      // children: [
-      //   {
-      //     path: 'interaction/:interaction',
-      //     element: <Interaction />
-      //   }
-      // ]
+      ErrorBoundary: ErrorPage,
+      children: [
+        {
+          path: 'interaction/:interactionId',
+          element: <Interaction />,
+          loader: ({ params }) => {
+            return { interactionID: params.interactionId }
+          }
+        }
+      ]
     },
     {
       path: '/login',
@@ -33,16 +36,6 @@ function App() {
       <div className='h-full w-full overflow-hidden border-base-200 lg:border lg:rounded-md lg:shadow-md'>
         <RouterProvider router={router} />
       </div>
-      <Observer>
-        {() => (
-          <>
-            {modalStore.modals.map((modal, index) => {
-              const { Component, props } = modal
-              return <Component key={index} {...props} />
-            })}
-          </>
-        )}
-      </Observer>
     </div>
   )
 }

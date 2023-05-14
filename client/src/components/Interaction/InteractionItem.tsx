@@ -6,6 +6,7 @@ import ClickAwayListener from '@mui/base/ClickAwayListener'
 import { Interaction } from '../../types'
 import { observer } from 'mobx-react-lite'
 import HighlightOffTwoToneIcon from '@mui/icons-material/HighlightOffTwoTone'
+import { NavLink } from 'react-router-dom'
 
 const InteractionItem = ({ interactions }: { interactions: Interaction }) => {
   const [anchorEl, setAnchorEl] = useState(null)
@@ -20,18 +21,17 @@ const InteractionItem = ({ interactions }: { interactions: Interaction }) => {
   return (
     <>
       <ClickAwayListener onClickAway={() => setAnchorEl(null)}>
-        <button
-          className={classnames('btn w-full h-auto px-4 flex justify-between items-center', {
-            'btn-ghost': interactionStore.currentInteractionId !== interactions.id,
-            'btn-primary': interactionStore.currentInteractionId === interactions.id
-          })}
-          onClick={() => {
-            interactionStore.setCurrentInteractionId(interactions.id)
+        <NavLink
+          to={`interaction/${interactions.id}`}
+          className={({ isActive, isPending }) => {
+            return classnames('btn w-full h-auto px-4 flex justify-between items-center', {
+              'btn-ghost': !isActive,
+              'btn-primary': isActive,
+              'btn-secondary': isPending
+            })
           }}
         >
-          <div className='truncate overflow-hidden flex-1 text-left'>
-            {interactions.title || '未命名'}
-          </div>
+          <div className='truncate overflow-hidden flex-1 text-left'>{interactions.title || '未命名'}</div>
           <HighlightOffTwoToneIcon
             className='opacity-20 hover:opacity-70'
             fontSize='small'
@@ -71,7 +71,7 @@ const InteractionItem = ({ interactions }: { interactions: Interaction }) => {
               </div>
             </div>
           </Popper>
-        </button>
+        </NavLink>
       </ClickAwayListener>
     </>
   )

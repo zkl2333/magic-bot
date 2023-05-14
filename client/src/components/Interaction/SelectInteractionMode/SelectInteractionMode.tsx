@@ -53,7 +53,9 @@ function SelectInteractionMode() {
                 {mode.examples &&
                   mode.examples.map(example => {
                     return (
-                      <div className='badge badge-outline glass p-3 m-1 whitespace-nowrap'>{example}</div>
+                      <div key={example} className='badge badge-outline glass p-3 m-1 whitespace-nowrap'>
+                        {example}
+                      </div>
                     )
                   })}
               </div>
