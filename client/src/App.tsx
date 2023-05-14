@@ -3,17 +3,16 @@ import { observer } from 'mobx-react-lite'
 import './common/daisyUI.less'
 import userStore from './store/UserStore'
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
-import Index from './routes/Index'
-import Login from './routes/Login'
+import InteractionLayout from './routes/InteractionLayout/InteractionLayout'
+import Login from './routes/Login/Login'
 import ErrorPage from './routes/ErrorPage'
-import Interaction from './components/Interaction/Interaction'
+import Interaction from './routes/InteractionLayout/Interaction/Interaction'
 import interactionStore from './store/InteractionStore'
 import { redirect } from 'react-router-dom'
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <Index />,
     errorElement: <ErrorPage />,
     loader: ({ params }) => {
       if (!userStore.isLogin) {
@@ -27,6 +26,7 @@ const router = createBrowserRouter([
     },
     children: [
       {
+        element: <InteractionLayout />,
         errorElement: <ErrorPage />,
         path: 'interaction',
         children: [

@@ -1,9 +1,9 @@
-import interactionStore from '../../store/InteractionStore'
+import interactionStore from '../../../store/InteractionStore'
 import classnames from 'classnames'
 import Popper from '@mui/base/Popper'
 import { useState } from 'react'
 import ClickAwayListener from '@mui/base/ClickAwayListener'
-import { Interaction } from '../../types'
+import { Interaction } from '../../../types'
 import { observer } from 'mobx-react-lite'
 import HighlightOffTwoToneIcon from '@mui/icons-material/HighlightOffTwoTone'
 import { NavLink, useNavigate } from 'react-router-dom'
@@ -23,7 +23,7 @@ const InteractionItem = ({ interactions }: { interactions: Interaction }) => {
     <>
       <ClickAwayListener onClickAway={() => setAnchorEl(null)}>
         <NavLink
-          to={`interaction/${interactions.id}`}
+          to={`/interaction/${interactions.id}`}
           className={({ isActive, isPending }) => {
             return classnames('btn w-full h-auto px-4 flex justify-between items-center', {
               'btn-ghost': !isActive,

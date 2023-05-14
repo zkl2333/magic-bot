@@ -1,8 +1,8 @@
 import { useRef, useState } from 'react'
 import { v4 as uuidv4 } from 'uuid'
-import interactionStore from '../../../store/InteractionStore'
-import userStore from '../../../store/UserStore'
-import { MessageItem } from '../../../types'
+import interactionStore from '../../../../store/InteractionStore'
+import userStore from '../../../../store/UserStore'
+import { MessageItem } from '../../../../types'
 
 const useChat = () => {
   const [inputText, setInputText] = useState<string>('')

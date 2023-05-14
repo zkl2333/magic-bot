@@ -1,5 +1,5 @@
 import { observer } from 'mobx-react-lite'
-import interactionStore from '../../store/InteractionStore'
+import interactionStore from '../../../store/InteractionStore'
 import Chat from './Chat/Chat'
 import SelectInteractionMode from './SelectInteractionMode/SelectInteractionMode'
 

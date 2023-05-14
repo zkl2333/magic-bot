@@ -1,6 +1,6 @@
 import { observer } from 'mobx-react-lite'
-import interactionStore from '../../../store/InteractionStore'
-import AutoResizeTextarea from '../../AutoResizeTextarea'
+import interactionStore from '../../../../store/InteractionStore'
+import AutoResizeTextarea from '../../../../components/AutoResizeTextarea'
 import ChatBubble from './ChatBubble'
 import { useEffect } from 'react'
 import useChat from './useChat'

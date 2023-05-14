@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import userStore from '../store/UserStore'
-import LoginImg from '../assets/login.jpg'
+import userStore from '../../store/UserStore'
+import LoginImg from './login.jpg'
 import { useNavigate } from 'react-router-dom'
 import { useSnackbar } from 'notistack'
 
@@ -10,7 +10,6 @@ const Login = () => {
   const [password, setPassword] = useState('')
   const navigate = useNavigate()
   const { enqueueSnackbar } = useSnackbar()
-  //   const [error, setError] = useState('')
 
   const setError = (message: string) => {
     enqueueSnackbar(message, {

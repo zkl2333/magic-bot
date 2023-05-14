@@ -1,6 +1,6 @@
-import interactionStore from '../store/InteractionStore'
-import Avatar from './Avatar'
-import userStore from '../store/UserStore'
+import interactionStore from '../../store/InteractionStore'
+import Avatar from '../../components/Avatar'
+import userStore from '../../store/UserStore'
 import InteractionList from './Interaction/InteractionList'
 import { useNavigate } from 'react-router-dom'
 

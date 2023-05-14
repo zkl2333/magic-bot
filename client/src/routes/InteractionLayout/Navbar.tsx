@@ -1,7 +1,7 @@
 import React from 'react'
-import userStore from '../store/UserStore'
+import userStore from '../../store/UserStore'
 import { observer } from 'mobx-react-lite'
-import interactionStore from '../store/InteractionStore'
+import interactionStore from '../../store/InteractionStore'
 
 // 导航栏
 const Navbar: React.FC = () => {
