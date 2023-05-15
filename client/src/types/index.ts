@@ -21,6 +21,13 @@ export type MessageItem = {
 export interface Interaction {
   loading: boolean
   id: UUID
-  mode?: string
+  mode?: SESSION_TYPE
   title: string
+}
+
+export interface IAssistant {
+  id: UUID
+  name: string
+  description: string
+  avatar: string
 }

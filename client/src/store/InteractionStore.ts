@@ -1,6 +1,6 @@
 import { makeAutoObservable, autorun } from 'mobx'
 import { v4 as uuidv4 } from 'uuid'
-import { MessageItem, Interaction } from '../types'
+import { MessageItem, Interaction, SESSION_TYPE } from '../types'
 
 const InteractionsKey = 'Interactions'
 const MessagesKey = 'Messages'
@@ -65,8 +65,14 @@ class InteractionStore {
       const updatedInteraction = { ...this.interactions[interactionIndex], ...rest }
       this.interactions[interactionIndex] = updatedInteraction
     } else {
-      const defaultInteraction = { id, title: '', loading: false }
+      const defaultInteraction = { id, title: '', loading: false, mode: SESSION_TYPE.CHAT }
       this.interactions.push({ ...defaultInteraction, ...rest })
+      interactionStore.createOrUpdateMessage({
+        interactionId: id,
+        message: '你好，有什么可以帮到你的吗？',
+        role: 'assistant',
+        exclude: true
+      })
     }
 
     this.setCurrentInteractionId(id)
