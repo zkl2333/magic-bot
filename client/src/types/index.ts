@@ -30,4 +30,13 @@ export interface IAssistant {
   name: string
   description: string
   avatar: string
+  modelConfig: {
+    model: string
+    context_size: number
+    temperature: number
+    top_p: number
+    max_tokens: number
+    presence_penalty: number
+    frequency_penalty: number
+  }
 }
