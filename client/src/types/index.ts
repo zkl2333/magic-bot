@@ -30,6 +30,7 @@ export interface IAssistant {
   name: string
   description: string
   avatar: string
+  initialMessage?: string
   modelConfig: {
     model: string
     context_size: number

@@ -22,6 +22,7 @@ const AssistantSidebar = ({ assistantList }: { assistantList: IAssistant[] }) =>
           </NavLink>
           {assistantList.map(assistant => (
             <NavLink
+              key={assistant.id}
               to={assistant.id}
               className={({ isActive, isPending }) =>
                 classNames('px-4 py-3 block', {
@@ -30,9 +31,7 @@ const AssistantSidebar = ({ assistantList }: { assistantList: IAssistant[] }) =>
                 })
               }
             >
-              {({ isActive }) => (
-                <AssistantItem isActive={isActive} key={assistant.id} assistant={assistant} />
-              )}
+              {({ isActive }) => <AssistantItem isActive={isActive} assistant={assistant} />}
             </NavLink>
           ))}
         </div>

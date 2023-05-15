@@ -1,10 +1,11 @@
 import localforage from 'localforage'
-import { defaultAssistantList } from '../../constence'
+import { defaultAssistant, defaultAssistantList } from '../../constence'
 import interactionStore from '../../store/InteractionStore'
 import { IAssistant } from '../../types'
 import { getAllItems } from '../../utils'
+import { LoaderFunction } from 'react-router-dom'
 
-async function assistantLoader() {
+export const assistantLoader: LoaderFunction = async () => {
   const store = localforage.createInstance({
     name: 'assistant'
   })
@@ -31,4 +32,33 @@ async function assistantLoader() {
   }
 }
 
-export default assistantLoader
+export const assistantInteractionLoader: LoaderFunction = async ({ params }) => {
+  console.log(params)
+  const { assistantId, interactionId } = params
+
+  const assistantStore = localforage.createInstance({
+    name: 'assistant'
+  })
+
+  const interactionStore = localforage.createInstance({
+    name: `interaction`
+  })
+
+  const getAssistant = async (assistantId: string) => {
+    if (assistantId === 'chatGpt') {
+      return defaultAssistant
+    }
+    const assistant = await assistantStore.getItem<IAssistant>(assistantId)
+    return assistant
+  }
+
+  const [assistant, interaction] = await Promise.all([
+    assistantId ? getAssistant(assistantId) : null,
+    interactionId ? interactionStore.getItem(`assistant-${assistantId}-interaction-${interactionId}`) : null
+  ])
+
+  return {
+    assistant,
+    interaction
+  }
+}
