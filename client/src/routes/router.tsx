@@ -8,6 +8,7 @@ import interactionStore from '../store/InteractionStore'
 import { redirect } from 'react-router-dom'
 import AssistantLayout from './Assistant/AssistantLayout'
 import AssistantInteraction from './Assistant/AssistantInteraction'
+import assistantLoader from './Assistant/loader'
 
 export const router = createBrowserRouter([
   {
@@ -27,18 +28,7 @@ export const router = createBrowserRouter([
       {
         path: 'assistant',
         element: <AssistantLayout />,
-        loader: () => {
-          return {
-            assistantList: [
-              {
-                id: '1',
-                name: 'test',
-                description: 'test',
-                avatar: 'https://i.pravatar.cc/300'
-              }
-            ]
-          }
-        },
+        loader: assistantLoader,
         children: [
           {
             index: true,

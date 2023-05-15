@@ -8,13 +8,13 @@ function AssistantLayout() {
   return (
     <>
       <div className='drawer drawer-mobile h-full'>
-        <input id='side-drawer' type='checkbox' className='drawer-toggle' />
+        <input id='assistant-side-drawer' type='checkbox' className='drawer-toggle' />
         <div className='safe-area drawer-content flex flex-col bg-base-200'>
           {/* <Navbar /> */}
           <Outlet />
         </div>
         <div className='drawer-side'>
-          <label htmlFor='side-drawer' className='drawer-overlay'></label>
+          <label htmlFor='assistant-side-drawer' className='drawer-overlay'></label>
           <AssistantSidebar assistantList={assistantList} />
         </div>
       </div>

@@ -1,4 +1,6 @@
-const OpenaiIcon = () => {
+import { SVGProps } from 'react'
+
+const OpenaiIcon = (props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) => {
   return (
     <svg
       width='100%'
@@ -8,6 +10,7 @@ const OpenaiIcon = () => {
       xmlns='http://www.w3.org/2000/svg'
       strokeWidth='1.5'
       role='img'
+      {...props}
     >
       <title>ChatGPT</title>
       <text x='-9999' y='-9999'>
