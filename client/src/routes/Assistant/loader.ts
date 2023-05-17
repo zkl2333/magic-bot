@@ -1,15 +1,14 @@
-import interactionStore from '../../store/InteractionStore'
 import { LoaderFunction, redirect } from 'react-router-dom'
 import { v4 as uuidv4 } from 'uuid'
-import { addInteraction, getAllAssistants, getAssistant, getInteraction, initialize } from './Service'
+import { getAllAssistants, initialize, getAssistant } from './service/assistant'
+import { getInteraction, addInteraction } from './service/interaction'
 
 export const assistantLoader: LoaderFunction = async () => {
   const assistantList = await getAllAssistants()
 
   if (assistantList.length > 0) {
     return {
-      assistantList,
-      interactions: interactionStore.interactions
+      assistantList
     }
   }
   await initialize()

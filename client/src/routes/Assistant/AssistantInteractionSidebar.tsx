@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
-import { Assistant, Interaction, getInteraction } from './Service'
+import { getInteraction } from './Service'
+import { Assistant, Interaction } from './types'
 import { NavLink } from 'react-router-dom'
 
 const AssistantInteractionSidebar = ({ assistant }: { assistant: Assistant }) => {

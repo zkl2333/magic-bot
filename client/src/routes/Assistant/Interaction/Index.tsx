@@ -2,7 +2,8 @@ import { useLoaderData } from 'react-router-dom'
 import AssistantInteractionSidebar from '../AssistantInteractionSidebar'
 import TextareaAutosize from '@mui/base/TextareaAutosize'
 import { useEffect, useState } from 'react'
-import { Message, getMessage, addMessage, Assistant, Interaction } from '../Service'
+import { Message, Assistant, Interaction } from '../types'
+import { getMessage, addMessage } from '../service/message'
 
 const AssistantInteraction = () => {
   const { interaction, assistant } = useLoaderData() as { assistant: Assistant; interaction: Interaction }
