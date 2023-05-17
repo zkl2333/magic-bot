@@ -4,12 +4,14 @@ export interface Message {
   id: string
   interactionId: string
   text: string
-  timestamp: number
+  createdAt: number
 }
 
 export interface Interaction {
   id: string
   assistantId: string
+  title: string
+  createdAt: number
   messageIds: string[]
 }
 

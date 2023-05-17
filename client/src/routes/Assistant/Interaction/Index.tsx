@@ -1,23 +1,34 @@
-import { useLoaderData } from 'react-router-dom'
-import AssistantInteractionSidebar from '../AssistantInteractionSidebar'
+import { useLoaderData, useNavigate } from 'react-router-dom'
+import AssistantInteractionSidebar from './AssistantInteractionSidebar'
 import TextareaAutosize from '@mui/base/TextareaAutosize'
 import { useEffect, useState } from 'react'
 import { Message, Assistant, Interaction } from '../types'
 import { getMessage, addMessage } from '../service/message'
+import { getInteraction } from '../service/interaction'
+import { v4 as uuidv4 } from 'uuid'
 
 const AssistantInteraction = () => {
   const { interaction, assistant } = useLoaderData() as { assistant: Assistant; interaction: Interaction }
   const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState('')
+  const [interactions, setInteractions] = useState<Interaction[]>([])
+  const navigate = useNavigate()
+
+  const fetchMessages = async () => {
+    const fetchedMessages = await Promise.all(interaction.messageIds.map(getMessage))
+    setMessages(fetchedMessages.filter(item => item !== null) as Message[])
+  }
+
+  const fetchInteractions = async () => {
+    const fetchedInteractions = await Promise.all(
+      assistant.interactionIds.map(interactionId => getInteraction(interactionId))
+    )
+    setInteractions(fetchedInteractions.filter(item => item !== null) as Interaction[])
+  }
 
   // 获取聊天记录
   useEffect(() => {
-    console.log(interaction)
-    async function fetchMessages() {
-      const fetchedMessages = await Promise.all(interaction.messageIds.map(getMessage))
-      setMessages(fetchedMessages.filter(item => item !== null) as Message[])
-    }
-
+    fetchInteractions()
     fetchMessages()
   }, [interaction?.id])
 
@@ -27,6 +38,7 @@ const AssistantInteraction = () => {
       const message = await addMessage(interaction.id, input)
       setMessages([...messages, message])
       setInput('')
+      fetchInteractions()
     }
   }
 
@@ -40,7 +52,7 @@ const AssistantInteraction = () => {
             {messages.map(message => (
               <li key={message.id}>
                 <p>{message.text}</p>
-                <small>{new Date(message.timestamp).toLocaleString()}</small>
+                <small>{new Date(message.createdAt).toLocaleString()}</small>
               </li>
             ))}
           </ul>
@@ -48,10 +60,18 @@ const AssistantInteraction = () => {
         {/* 文本框 */}
         <div className='flex flex-col'>
           {/* 操作 */}
-          <div>
+          <div className='flex space-x-2'>
             <label htmlFor='assistant-interaction-side-drawer' className='btn btn-primary drawer-button'>
               查看历史
             </label>
+            <div
+              className='btn btn-primary'
+              onClick={async () => {
+                navigate(`/assistant/${assistant.id}/${uuidv4()}`)
+              }}
+            >
+              新话题
+            </div>
           </div>
           {/* 输入 */}
           <TextareaAutosize minRows={4} value={input} onChange={e => setInput(e.target.value)} />
@@ -65,7 +85,7 @@ const AssistantInteraction = () => {
       </div>
       <div className='drawer-side'>
         <label htmlFor='assistant-interaction-side-drawer' className='drawer-overlay'></label>
-        <AssistantInteractionSidebar assistant={assistant} />
+        <AssistantInteractionSidebar interactions={interactions} />
       </div>
     </div>
   )

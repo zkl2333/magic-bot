@@ -9,10 +9,13 @@ export const addMessage = async (interactionId: string, text: string): Promise<M
     id,
     interactionId,
     text,
-    timestamp: Date.now()
+    createdAt: Date.now()
   }
   const interaction = await getInteraction(interactionId)
   if (interaction) {
+    if (!interaction.title || interaction.title === '') {
+      interaction.title = text
+    }
     interaction.messageIds.push(id)
     await setItem(`interactions.${interactionId}`, interaction)
     await setItem(`messages.${id}`, message)

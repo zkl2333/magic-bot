@@ -7,8 +7,10 @@ export const addInteraction = async (assistantId: string, interactionId?: string
   const id = interactionId || uuidv4()
   const interaction: Interaction = {
     id,
+    title: '',
     assistantId,
-    messageIds: []
+    messageIds: [],
+    createdAt: Date.now()
   }
 
   const assistant = await getAssistant(assistantId)
