@@ -1,6 +1,6 @@
 import classnames from 'classnames'
 import userStore from '../../../../store/UserStore'
-import { MessageItem } from '../../../../types'
+import { IMessage } from '../../../../types'
 import Avatar from '../../../../components/Avatar'
 import OpenaiIcon from '../../../../components/OpenaiIcon'
 import MarkdownIt from 'markdown-it'
@@ -33,9 +33,9 @@ const mdi = new MarkdownIt({
 mdi.use(mila, { attrs: { target: '_blank', rel: 'noopener' } })
 mdi.use(mdKatex, { blockClass: 'katexmath-block rounded-md p-[10px]', errorColor: ' #cc0000' })
 
-interface ChatBubbleProps extends MessageItem {
+interface ChatBubbleProps extends IMessage {
   // 重试
-  retry: (id: MessageItem['id']) => void
+  retry: (id: IMessage['id']) => void
 }
 
 const ChatBubble = (props: ChatBubbleProps) => {

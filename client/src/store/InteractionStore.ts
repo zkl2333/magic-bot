@@ -1,13 +1,13 @@
 import { makeAutoObservable, autorun } from 'mobx'
 import { v4 as uuidv4 } from 'uuid'
-import { MessageItem, Interaction, SESSION_TYPE } from '../types'
+import { IMessage, IInteraction, SESSION_TYPE } from '../types'
 
 const InteractionsKey = 'Interactions'
 const MessagesKey = 'Messages'
 
 class InteractionStore {
-  interactions: Interaction[] = []
-  messages: MessageItem[] = []
+  interactions: IInteraction[] = []
+  messages: IMessage[] = []
   currentInteractionId = ''
 
   constructor() {
@@ -54,9 +54,9 @@ class InteractionStore {
     }
   }
 
-  createOrUpdateInteraction(interactionItem?: Omit<Interaction, 'id'>): string
-  createOrUpdateInteraction(interactionItem: Pick<Interaction, 'id'> | Partial<Interaction>): string
-  createOrUpdateInteraction(interactionItem: Interaction | Partial<Interaction> = {}) {
+  createOrUpdateInteraction(interactionItem?: Omit<IInteraction, 'id'>): string
+  createOrUpdateInteraction(interactionItem: Pick<IInteraction, 'id'> | Partial<IInteraction>): string
+  createOrUpdateInteraction(interactionItem: IInteraction | Partial<IInteraction> = {}) {
     const { id = uuidv4(), ...rest } = interactionItem
     const interactionIndex = this.interactions.findIndex(interaction => interaction.id === id)
     const interactionExists = interactionIndex !== -1
@@ -105,9 +105,9 @@ class InteractionStore {
     return this.currentInteractionMessages.filter(message => !message.exclude)
   }
 
-  createOrUpdateMessage(messageItem: Omit<MessageItem, 'id'>): string
-  createOrUpdateMessage(messageItem: Pick<MessageItem, 'id'> | Partial<MessageItem>): string
-  createOrUpdateMessage(messageItem: MessageItem | Partial<MessageItem>) {
+  createOrUpdateMessage(messageItem: Omit<IMessage, 'id'>): string
+  createOrUpdateMessage(messageItem: Pick<IMessage, 'id'> | Partial<IMessage>): string
+  createOrUpdateMessage(messageItem: IMessage | Partial<IMessage>) {
     const { id = uuidv4(), ...rest } = messageItem
     const messageItemIndex = this.messages.findIndex(m => m.id === id)
     const messageItemExists = messageItemIndex !== -1

@@ -2,7 +2,7 @@ import { useRef, useState } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 import interactionStore from '../../../../store/InteractionStore'
 import userStore from '../../../../store/UserStore'
-import { MessageItem } from '../../../../types'
+import { IMessage } from '../../../../types'
 
 const useChat = () => {
   const [inputText, setInputText] = useState<string>('')
@@ -79,7 +79,7 @@ const useChat = () => {
     setAssistantMessage(messageId, interactionStore.currentInteractionId, response)
   }
 
-  const getAnswer = async (chatList: MessageItem[]) => {
+  const getAnswer = async (chatList: IMessage[]) => {
     abortController.current = new AbortController()
     interactionStore.setInteractionLoading(interactionStore.currentInteractionId, true)
     return fetch('/api/chat/completions', {

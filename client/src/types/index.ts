@@ -7,9 +7,9 @@ export enum SESSION_TYPE {
   GENERATOR = 'generator'
 }
 
-export type MessageItem = {
+export interface IMessage {
   id: UUID
-  interactionId: Interaction['id']
+  interactionId: IInteraction['id']
   exclude: boolean
   isFinish: boolean
   message: string
@@ -18,11 +18,12 @@ export type MessageItem = {
   updatedAt: Timestamp
 }
 
-export interface Interaction {
-  loading: boolean
+export interface IInteraction {
   id: UUID
+  loading: boolean
   mode?: SESSION_TYPE
   title: string
+  messages?: IMessage[]
 }
 
 export interface IAssistant {

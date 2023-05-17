@@ -7,13 +7,13 @@ import Interaction from './InteractionLayout/Interaction/Interaction'
 import interactionStore from '../store/InteractionStore'
 import { redirect } from 'react-router-dom'
 import AssistantLayout from './Assistant/AssistantLayout'
-import AssistantInteraction from './Assistant/AssistantInteraction'
+import AssistantInteraction from './Assistant/Interaction/Index'
 import { assistantInteractionLoader, assistantLoader } from './Assistant/loader'
 
 export const router = createBrowserRouter([
   {
     index: true,
-    element: <Navigate to='/interaction' />
+    element: <Navigate to='/assistant' />
   },
   {
     path: '/',
@@ -31,27 +31,9 @@ export const router = createBrowserRouter([
         loader: assistantLoader,
         children: [
           {
-            index: true,
-            element: <Navigate to={`chatGpt`} />
-          },
-          {
-            path: ':assistantId',
+            path: ':assistantId?/:interactionId?',
             element: <AssistantInteraction />,
-            loader: assistantInteractionLoader,
-            children: [
-              {
-                index: true,
-                element: <Navigate to={`1`} />
-              },
-              {
-                path: ':interactionId',
-                element: <div />,
-                loader: ({ params }) => {
-                  console.log(params)
-                  return { interactionId: params.interactionId }
-                }
-              }
-            ]
+            loader: assistantInteractionLoader
           }
         ]
       },

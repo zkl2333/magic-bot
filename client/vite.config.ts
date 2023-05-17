@@ -27,7 +27,7 @@ export default defineConfig(({ mode }) => {
           enabled: true
         },
         workbox: {
-          globPatterns: ['**/*.{js,css,html,ico,png,svg}']
+          globPatterns: ['**/*.{js,css,html,ico,png,svg}', 'index.html']
         }
       }),
       react()

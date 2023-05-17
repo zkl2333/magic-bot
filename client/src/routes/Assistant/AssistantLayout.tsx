@@ -1,5 +1,4 @@
 import { Outlet, useLoaderData } from 'react-router-dom'
-// import Navbar from '../InteractionLayout/Navbar'
 import AssistantSidebar from './AssistantSidebar'
 import { IAssistant } from '../../types'
 

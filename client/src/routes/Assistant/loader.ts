@@ -1,61 +1,46 @@
-import localforage from 'localforage'
-import { defaultAssistant, defaultAssistantList } from '../../constence'
 import interactionStore from '../../store/InteractionStore'
-import { IAssistant } from '../../types'
-import { getAllItems } from '../../utils'
-import { LoaderFunction } from 'react-router-dom'
+import { LoaderFunction, redirect } from 'react-router-dom'
+import { v4 as uuidv4 } from 'uuid'
+import { addInteraction, getAllAssistants, getAssistant, getInteraction, initialize } from './Service'
 
 export const assistantLoader: LoaderFunction = async () => {
-  const store = localforage.createInstance({
-    name: 'assistant'
-  })
+  const assistantList = await getAllAssistants()
 
-  const length = await store.length()
-
-  if (length === 0) {
-    await Promise.all(
-      defaultAssistantList.map(assistant =>
-        store.setItem(assistant.id, { ...assistant, createdAt: Date.now(), updatedAt: Date.now() })
-      )
-    )
+  if (assistantList.length > 0) {
     return {
-      assistantList: defaultAssistantList,
+      assistantList,
       interactions: interactionStore.interactions
     }
   }
-
-  const assistantList = await getAllItems<IAssistant>(store)
-
-  return {
-    assistantList,
-    interactions: interactionStore.interactions
-  }
+  await initialize()
+  return redirect(`/assistant/chatGpt/${uuidv4()}`)
 }
 
 export const assistantInteractionLoader: LoaderFunction = async ({ params }) => {
-  console.log(params)
   const { assistantId, interactionId } = params
 
-  const assistantStore = localforage.createInstance({
-    name: 'assistant'
-  })
-
-  const interactionStore = localforage.createInstance({
-    name: `interaction`
-  })
-
-  const getAssistant = async (assistantId: string) => {
-    if (assistantId === 'chatGpt') {
-      return defaultAssistant
-    }
-    const assistant = await assistantStore.getItem<IAssistant>(assistantId)
-    return assistant
+  if (!assistantId) {
+    return redirect(`/assistant/chatGpt/${uuidv4()}`)
   }
 
-  const [assistant, interaction] = await Promise.all([
-    assistantId ? getAssistant(assistantId) : null,
-    interactionId ? interactionStore.getItem(`assistant-${assistantId}-interaction-${interactionId}`) : null
-  ])
+  const assistant = await getAssistant(assistantId)
+
+  if (!interactionId) {
+    if (assistant && assistant.interactionIds.length > 0) {
+      return redirect(`/assistant/${assistantId}/${assistant.interactionIds[0]}`)
+    }
+    return redirect(`/assistant/${assistantId}/${uuidv4()}`)
+  }
+
+  const interaction = await getInteraction(interactionId)
+
+  if (!interaction) {
+    const interaction = await addInteraction(assistantId, interactionId)
+    return {
+      assistant,
+      interaction
+    }
+  }
 
   return {
     assistant,

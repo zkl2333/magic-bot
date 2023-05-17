@@ -3,12 +3,12 @@ import classnames from 'classnames'
 import Popper from '@mui/base/Popper'
 import { useState } from 'react'
 import ClickAwayListener from '@mui/base/ClickAwayListener'
-import { Interaction } from '../../../types'
+import { IInteraction } from '../../../types'
 import { observer } from 'mobx-react-lite'
 import HighlightOffTwoToneIcon from '@mui/icons-material/HighlightOffTwoTone'
 import { NavLink, useNavigate } from 'react-router-dom'
 
-const InteractionItem = ({ interactions }: { interactions: Interaction }) => {
+const InteractionItem = ({ interactions }: { interactions: IInteraction }) => {
   const [anchorEl, setAnchorEl] = useState(null)
 
   const handleDelete = (event: any) => {

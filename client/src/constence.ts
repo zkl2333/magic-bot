@@ -1,3 +1,5 @@
+import { IAssistant } from './types'
+
 export const modelConfig = {
   model: 'gpt-3.5-turbo',
   // 上下文数量
@@ -15,19 +17,21 @@ export const modelConfig = {
 }
 
 // 通用GPT
-export const defaultAssistant = {
+export const defaultAssistant: IAssistant = {
   id: 'chatGpt',
   name: '通用GPT',
   description: '通用ChatGPT助手',
   avatar: '',
+  initialMessage: '你好，我是通用GPT助手',
   modelConfig: modelConfig
 }
 
-export const defaultAssistantList = [
+export const defaultAssistantList: IAssistant[] = [
   {
     id: '1',
     name: 'Bob',
     description: '你好我叫Bob',
+    initialMessage: '你好我叫Bob',
     avatar: 'https://api.multiavatar.com/bob.png',
     modelConfig: modelConfig
   },
@@ -35,6 +39,7 @@ export const defaultAssistantList = [
     id: '2',
     name: 'jerry',
     description: '你好我叫Jerry',
+    initialMessage: '你好我叫Jerry',
     avatar: 'https://api.multiavatar.com/jerry.png',
     modelConfig: modelConfig
   },
