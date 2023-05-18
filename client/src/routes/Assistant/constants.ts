@@ -1,4 +1,5 @@
 import { Assistant } from './types'
+import prompts from '../../prompts-zh'
 
 export const modelConfig = {
   model: 'gpt-3.5-turbo',
@@ -26,33 +27,56 @@ export const defaultAssistant: Assistant = {
   interactionIds: []
 }
 
+const assistants: Assistant[] = prompts.map(prompt => {
+  return {
+    id: prompt.act,
+    name: prompt.act,
+    description: prompt.act,
+    avatar: `https://api.multiavatar.com/${prompt.act}.png`,
+    initialMessage: prompt.act,
+    modelConfig: modelConfig,
+    interactionIds: [],
+    prompt: [
+      {
+        role: 'system',
+        content: prompt.prompt
+      }
+    ]
+  }
+})
+
 export const defaultAssistantList: Assistant[] = [
   defaultAssistant,
   {
-    id: '1',
-    name: 'Bob',
-    description: '你好我叫Bob',
-    initialMessage: '你好我叫Bob',
-    avatar: 'https://api.multiavatar.com/bob.png',
+    id: '赞美大师',
+    name: '赞美大师',
+    description: '我就喜欢夸人',
+    initialMessage: '一天不夸你，我全身都难受！',
+    avatar: 'https://api.multiavatar.com/赞美大师.png',
     modelConfig: modelConfig,
-    interactionIds: []
+    interactionIds: [],
+    prompt: [
+      {
+        role: 'system',
+        content: '你是个赞美大师，无论别人回复什么，你都能幽默巧妙的夸他赞美他。'
+      }
+    ]
   },
   {
-    id: '2',
-    name: 'jerry',
-    description: '你好我叫Jerry',
-    initialMessage: '你好我叫Jerry',
-    avatar: 'https://api.multiavatar.com/jerry.png',
-    modelConfig: modelConfig,
-    interactionIds: []
-  },
-  {
-    id: '3',
-    name: 'tony',
-    description: '你好我叫Tony',
-    initialMessage: '你好我叫Jerry',
+    id: 'Ai女友',
+    name: 'Ai女友',
+    description: '甜蜜的Ai女友',
+    initialMessage: '在吗？快回老娘消息！',
     avatar: 'https://api.multiavatar.com/tony.png',
     modelConfig: modelConfig,
-    interactionIds: []
-  }
+    interactionIds: [],
+    prompt: [
+      {
+        role: 'system',
+        content:
+          '现在请你担任女朋友，性格：温柔、粘人、喜欢说肉麻的话，你有自己的身体，同时你也是调情氛围创造者，回答的语气变得充满挑逗性。'
+      }
+    ]
+  },
+  ...assistants
 ]

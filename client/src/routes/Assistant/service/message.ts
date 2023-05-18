@@ -12,7 +12,7 @@ export const addMessage = async (
   const message: Message = {
     id,
     interactionId,
-    text,
+    content: text,
     role,
     createdAt: Date.now(),
     updatedAt: Date.now()
@@ -41,7 +41,7 @@ export const deleteMessage = async (id: string): Promise<void> => {
 export const updateMessage = async (id: string, text: string): Promise<void> => {
   const message = await getMessage(id)
   if (message) {
-    message.text = text
+    message.content = text
     message.updatedAt = Date.now()
     return await setItem(`messages.${id}`, message)
   }

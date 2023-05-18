@@ -37,13 +37,13 @@ interface ChatBubbleProps extends Message {
   assistant: Assistant
   onRetry?: (id: Message['id']) => void
   onDeleted?: (id: Message['id']) => void
-  onUpdate?: (id: Message['id'], text: Message['text']) => void
+  onUpdate?: (id: Message['id'], text: Message['content']) => void
 }
 
 const ChatBubble = (props: ChatBubbleProps) => {
   const {
     id,
-    text = '正在思考中...',
+    content: text = '正在思考中...',
     role,
     updatedAt,
     loading,

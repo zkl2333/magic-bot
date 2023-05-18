@@ -1,10 +1,13 @@
 type UUID = string
 
-export interface Message {
+interface BaseMessage {
+  role: 'user' | 'assistant' | 'system'
+  content: string
+}
+
+export interface Message extends BaseMessage {
   id: string
   interactionId: string
-  text: string
-  role: 'user' | 'assistant'
   createdAt: number
   updatedAt: number
 }
@@ -33,4 +36,5 @@ export interface Assistant {
     frequency_penalty: number
   }
   interactionIds: string[]
+  prompt?: BaseMessage[]
 }

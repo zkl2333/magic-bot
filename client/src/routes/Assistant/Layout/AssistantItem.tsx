@@ -27,7 +27,7 @@ const AssistantItem = ({ assistant, isActive }: IAssistantItemProps) => {
         )}
       </div>
       <div className='overflow-hidden'>
-        <div className='text-md font-extrabold'>{assistant.name}</div>
+        <div className='text-md font-extrabold truncate'>{assistant.name}</div>
         <div className='text-base-content/70 text-xs truncate'>{assistant.description}</div>
       </div>
     </div>

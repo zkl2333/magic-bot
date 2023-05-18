@@ -7,7 +7,7 @@ import { v4 as uuidv4 } from 'uuid'
 const New = () => {
   const fetcher = useFetcher()
   return (
-    <div className='h-full flex justify-center items-center'>
+    <div className='h-full grid justify-center grid-cols-[repeat(auto-fill,200px)] gap-4 p-4'>
       {defaultAssistantList.map(assistant => (
         <div
           key={assistant.id}

@@ -59,7 +59,7 @@ const AssistantInteraction = () => {
             <ChatBubble
               id={'0'}
               interactionId={interaction.id}
-              text={assistant.initialMessage}
+              content={assistant.initialMessage}
               role='assistant'
               loading={false}
               createdAt={interaction.createdAt}
