@@ -28,5 +28,15 @@ export const getInteraction = async (id: string): Promise<Interaction | null> =>
 }
 
 export const deleteInteraction = async (id: string): Promise<void> => {
-  await removeItem(`interactions.${id}`)
+  const interaction = await getInteraction(id)
+  if (!interaction) {
+    return
+  }
+  removeItem(`interactions.${id}`)
+  const assistant = await getAssistant(interaction.assistantId)
+  if (!assistant) {
+    return
+  }
+  assistant.interactionIds = assistant.interactionIds.filter(interactionId => interactionId !== id)
+  await setItem(`assistants.${assistant.id}`, assistant)
 }

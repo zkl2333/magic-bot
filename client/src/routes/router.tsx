@@ -6,6 +6,7 @@ import { redirect } from 'react-router-dom'
 import AssistantLayout from './Assistant/AssistantLayout'
 import AssistantInteraction from './Assistant/Interaction/Index'
 import { assistantInteractionLoader, assistantLoader } from './Assistant/loader'
+import { deleteInteraction } from './Assistant/service/interaction'
 
 export const router = createBrowserRouter([
   {
@@ -32,6 +33,15 @@ export const router = createBrowserRouter([
             element: <AssistantInteraction />,
             loader: assistantInteractionLoader
           }
+          // {
+          //   path: ':assistantId/:interactionId/delete',
+          //   action: async ({ request, params }) => {
+          //     console.log(request, params)
+          //     // const { assistantId, interactionId } = params
+          //     // await deleteInteraction(interactionId!)
+          //     // return redirect(`/assistant/${assistantId}`)
+          //   }
+          // }
         ]
       }
     ]

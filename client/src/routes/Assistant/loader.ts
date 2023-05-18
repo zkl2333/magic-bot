@@ -26,7 +26,9 @@ export const assistantInteractionLoader: LoaderFunction = async ({ params }) => 
 
   if (!interactionId) {
     if (assistant && assistant.interactionIds.length > 0) {
-      return redirect(`/assistant/${assistantId}/${assistant.interactionIds[0]}`)
+      return redirect(
+        `/assistant/${assistantId}/${assistant.interactionIds[assistant.interactionIds.length - 1]}`
+      )
     }
     return redirect(`/assistant/${assistantId}/${uuidv4()}`)
   }

@@ -4,7 +4,7 @@ import TextareaAutosize from '@mui/base/TextareaAutosize'
 import { useEffect, useState } from 'react'
 import { Message, Assistant, Interaction } from '../types'
 import { getMessage, addMessage, deleteMessage, updateMessage } from '../service/message'
-import { getInteraction } from '../service/interaction'
+import { deleteInteraction, getInteraction } from '../service/interaction'
 import { v4 as uuidv4 } from 'uuid'
 import ChatBubble from './ChatBubble'
 
@@ -25,15 +25,16 @@ const AssistantInteraction = () => {
     const fetchedInteractions = await Promise.all(
       assistant.interactionIds.map(interactionId => getInteraction(interactionId))
     )
-    console.log(fetchedInteractions)
     setInteractions(fetchedInteractions.filter(item => item !== null) as Interaction[])
   }
 
   // 获取聊天记录
   useEffect(() => {
-    fetchInteractions()
-    fetchMessages()
-  }, [interaction?.id])
+    if (interaction.id) {
+      fetchInteractions()
+      fetchMessages()
+    }
+  }, [interaction.id])
 
   // 发送消息
   const sendMessage = async () => {
@@ -47,7 +48,7 @@ const AssistantInteraction = () => {
 
   return (
     <div className='drawer h-full'>
-      <input checked={showSidebar} type='checkbox' className='drawer-toggle' />
+      <input readOnly checked={showSidebar} type='checkbox' className='drawer-toggle' />
       <div className='safe-area drawer-content flex flex-col justify-between'>
         {/* 对话列表 */}
         <div
@@ -124,7 +125,14 @@ const AssistantInteraction = () => {
       </div>
       <div className='drawer-side'>
         <label onClick={() => setShowSidebar(false)} className='drawer-overlay'></label>
-        <AssistantInteractionSidebar interactions={interactions} />
+        <AssistantInteractionSidebar
+          interactions={interactions}
+          onDelete={async id => {
+            await deleteInteraction(id)
+            await fetchInteractions()
+            navigate(`/assistant/${interaction.assistantId}`)
+          }}
+        />
       </div>
     </div>
   )
