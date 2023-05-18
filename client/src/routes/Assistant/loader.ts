@@ -20,6 +20,10 @@ export const assistantInteractionLoader: LoaderFunction = async ({ params }) => 
 
   const assistant = await getAssistant(assistantId)
 
+  if (!assistant) {
+    return redirect(`/assistant/new`)
+  }
+
   if (!interactionId) {
     if (assistant && assistant.interactionIds.length > 0) {
       return redirect(

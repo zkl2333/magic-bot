@@ -12,7 +12,7 @@ function AssistantLayout() {
           {/* <Navbar /> */}
           <Outlet />
         </div>
-        {assistantList && (
+        {assistantList.length > 0 && (
           <div className='drawer-side'>
             <label htmlFor='assistant-side-drawer' className='drawer-overlay'></label>
             <AssistantSidebar assistantList={assistantList} />
