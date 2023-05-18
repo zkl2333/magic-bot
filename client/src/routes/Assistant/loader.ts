@@ -1,25 +1,21 @@
 import { LoaderFunction, redirect } from 'react-router-dom'
 import { v4 as uuidv4 } from 'uuid'
-import { getAllAssistants, initialize, getAssistant } from './service/assistant'
+import { getAllAssistants, getAssistant } from './service/assistant'
 import { getInteraction, addInteraction } from './service/interaction'
 
 export const assistantLoader: LoaderFunction = async () => {
   const assistantList = await getAllAssistants()
 
-  if (assistantList.length > 0) {
-    return {
-      assistantList
-    }
+  return {
+    assistantList
   }
-  await initialize()
-  return redirect(`/assistant/chatGpt/${uuidv4()}`)
 }
 
 export const assistantInteractionLoader: LoaderFunction = async ({ params }) => {
   const { assistantId, interactionId } = params
 
   if (!assistantId) {
-    return redirect(`/assistant/chatGpt/${uuidv4()}`)
+    return redirect(`/assistant/new`)
   }
 
   const assistant = await getAssistant(assistantId)

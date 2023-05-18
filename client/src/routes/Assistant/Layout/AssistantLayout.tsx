@@ -12,10 +12,12 @@ function AssistantLayout() {
           {/* <Navbar /> */}
           <Outlet />
         </div>
-        <div className='drawer-side'>
-          <label htmlFor='assistant-side-drawer' className='drawer-overlay'></label>
-          <AssistantSidebar assistantList={assistantList} />
-        </div>
+        {assistantList && (
+          <div className='drawer-side'>
+            <label htmlFor='assistant-side-drawer' className='drawer-overlay'></label>
+            <AssistantSidebar assistantList={assistantList} />
+          </div>
+        )}
       </div>
     </>
   )

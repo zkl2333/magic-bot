@@ -3,9 +3,11 @@ import { createBrowserRouter, Navigate } from 'react-router-dom'
 import Login from './Login/Login'
 import ErrorPage from './ErrorPage'
 import { redirect } from 'react-router-dom'
-import AssistantLayout from './Assistant/Layout/AssistantLayout' 
+import AssistantLayout from './Assistant/Layout/AssistantLayout'
 import AssistantInteraction from './Assistant/Interaction/Index'
 import { assistantInteractionLoader, assistantLoader } from './Assistant/loader'
+import New from './Assistant/New/New'
+import { addAssistant } from './Assistant/service/assistant'
 
 export const router = createBrowserRouter([
   {
@@ -28,19 +30,25 @@ export const router = createBrowserRouter([
         loader: assistantLoader,
         children: [
           {
+            path: 'new',
+            action: async ({ request }) => {
+              let formData = await request.formData()
+              try {
+                const assistant = JSON.parse(formData.get('assistant') as string)
+                await addAssistant(assistant)
+                return redirect(`/assistant/${assistant.id}`)
+              } catch (error) {
+                console.log(error)
+              }
+              return null
+            },
+            element: <New />
+          },
+          {
             path: ':assistantId?/:interactionId?',
             element: <AssistantInteraction />,
             loader: assistantInteractionLoader
           }
-          // {
-          //   path: ':assistantId/:interactionId/delete',
-          //   action: async ({ request, params }) => {
-          //     console.log(request, params)
-          //     // const { assistantId, interactionId } = params
-          //     // await deleteInteraction(interactionId!)
-          //     // return redirect(`/assistant/${assistantId}`)
-          //   }
-          // }
         ]
       }
     ]

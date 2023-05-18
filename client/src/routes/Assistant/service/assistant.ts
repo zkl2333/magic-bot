@@ -11,10 +11,9 @@ export const initialize = async (): Promise<void> => {
   await Promise.all(defaultAssistantList.map(assistant => setItem(`assistants.${assistant.id}`, assistant)))
 }
 
-export const addAssistant = async (assistantId?: string): Promise<Assistant> => {
-  const id = assistantId || uuidv4()
-  const assistant: Assistant = {
-    id,
+export const addAssistant = async (assistant?: Assistant): Promise<Assistant> => {
+  const newAssistant = assistant || {
+    id: uuidv4(),
     name: 'New Assistant',
     description: 'New Assistant',
     avatar: '',
@@ -24,10 +23,10 @@ export const addAssistant = async (assistantId?: string): Promise<Assistant> => 
   }
 
   const assistants = await getAllAssistantsIds()
-  assistants.push(id)
+  assistants.push(newAssistant.id)
   await setItem('assistantsIds', assistants)
-  await setItem(`assistants.${id}`, assistant)
-  return assistant
+  await setItem(`assistants.${newAssistant.id}`, newAssistant)
+  return newAssistant
 }
 
 export const getAllAssistantsIds = async (): Promise<string[]> => {

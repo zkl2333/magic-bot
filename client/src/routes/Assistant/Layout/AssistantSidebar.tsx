@@ -8,6 +8,17 @@ const AssistantSidebar = ({ assistantList }: { assistantList: IAssistant[] }) =>
     <div className='overflow-hidden h-full text-base-content border-base-300 border-r bg-base-200'>
       <div className='h-full flex justify-between safe-area'>
         <div className='flex-1 overflow-y-auto'>
+          <NavLink
+            to='new'
+            className={({ isActive, isPending }) =>
+              classNames('px-4 py-3 block text-center', {
+                'opacity-20': isPending,
+                'bg-base-300': isActive
+              })
+            }
+          >
+            添加
+          </NavLink>
           {assistantList.map(assistant => (
             <NavLink
               key={assistant.id}
