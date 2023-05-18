@@ -6,6 +6,7 @@ import { Message, Assistant, Interaction } from '../types'
 import { getMessage, addMessage } from '../service/message'
 import { getInteraction } from '../service/interaction'
 import { v4 as uuidv4 } from 'uuid'
+import ChatBubble from './ChatBubble'
 
 const AssistantInteraction = () => {
   const { interaction, assistant } = useLoaderData() as { assistant: Assistant; interaction: Interaction }
@@ -35,7 +36,7 @@ const AssistantInteraction = () => {
   // 发送消息
   const sendMessage = async () => {
     if (input.trim() !== '') {
-      const message = await addMessage(interaction.id, input)
+      const message = await addMessage(interaction.id, 'user', input)
       setMessages([...messages, message])
       setInput('')
       fetchInteractions()
@@ -47,15 +48,31 @@ const AssistantInteraction = () => {
       <input id='assistant-interaction-side-drawer' type='checkbox' className='drawer-toggle' />
       <div className='safe-area drawer-content flex flex-col justify-between'>
         {/* 对话列表 */}
-        <div>
-          <ul>
-            {messages.map(message => (
-              <li key={message.id}>
-                <p>{message.text}</p>
-                <small>{new Date(message.createdAt).toLocaleString()}</small>
-              </li>
-            ))}
-          </ul>
+        <div
+          id='chat-list'
+          className='flex flex-1 flex-col p-3 lg:p-4 overflow-y-auto overflow-x-hidden pb-[50px]'
+        >
+          {assistant.initialMessage && (
+            <ChatBubble
+              id={'0'}
+              interactionId={interaction.id}
+              text={assistant.initialMessage}
+              role='assistant'
+              loading={false}
+              createdAt={interaction.createdAt}
+              updatedAt={interaction.createdAt}
+            />
+          )}
+          {messages.map(message => (
+            <ChatBubble
+              {...message}
+              loading={false}
+              key={message.id}
+              onRetry={() => {}}
+              onDeleted={() => {}}
+              onUpdate={() => {}}
+            />
+          ))}
         </div>
         {/* 文本框 */}
         <div className='flex flex-col'>

@@ -3,13 +3,19 @@ import { setItem, getItem, removeItem } from './storage'
 import { getInteraction } from './interaction'
 import { v4 as uuidv4 } from 'uuid'
 
-export const addMessage = async (interactionId: string, text: string): Promise<Message> => {
+export const addMessage = async (
+  interactionId: string,
+  role: Message['role'],
+  text: string
+): Promise<Message> => {
   const id = uuidv4()
   const message: Message = {
     id,
     interactionId,
     text,
-    createdAt: Date.now()
+    role,
+    createdAt: Date.now(),
+    updatedAt: Date.now()
   }
   const interaction = await getInteraction(interactionId)
   if (interaction) {

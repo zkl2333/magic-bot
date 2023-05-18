@@ -4,7 +4,9 @@ export interface Message {
   id: string
   interactionId: string
   text: string
+  role: 'user' | 'assistant'
   createdAt: number
+  updatedAt: number
 }
 
 export interface Interaction {
