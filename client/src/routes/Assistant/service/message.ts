@@ -37,3 +37,12 @@ export const getMessage = async (id: string): Promise<Message | null> => {
 export const deleteMessage = async (id: string): Promise<void> => {
   await removeItem(`messages.${id}`)
 }
+
+export const updateMessage = async (id: string, text: string): Promise<void> => {
+  const message = await getMessage(id)
+  if (message) {
+    message.text = text
+    message.updatedAt = Date.now()
+    return await setItem(`messages.${id}`, message)
+  }
+}

@@ -3,7 +3,7 @@ import AssistantInteractionSidebar from './AssistantInteractionSidebar'
 import TextareaAutosize from '@mui/base/TextareaAutosize'
 import { useEffect, useState } from 'react'
 import { Message, Assistant, Interaction } from '../types'
-import { getMessage, addMessage } from '../service/message'
+import { getMessage, addMessage, deleteMessage, updateMessage } from '../service/message'
 import { getInteraction } from '../service/interaction'
 import { v4 as uuidv4 } from 'uuid'
 import ChatBubble from './ChatBubble'
@@ -70,22 +70,22 @@ const AssistantInteraction = () => {
               loading={false}
               key={message.id}
               onRetry={() => {}}
-              onDeleted={() => {}}
-              onUpdate={() => {}}
+              onDeleted={async id => {
+                await deleteMessage(id)
+                fetchMessages()
+              }}
+              onUpdate={async (id, input) => {
+                await updateMessage(id, input)
+                fetchMessages()
+              }}
               assistant={assistant}
             />
           ))}
         </div>
         {/* 文本框 */}
-        <div className='flex flex-col'>
+        <div className='flex flex-col p-2'>
           {/* 操作 */}
-          <div className='flex p-2 space-x-2'>
-            <label
-              htmlFor='assistant-interaction-side-drawer'
-              className='btn btn-primary btn-xs drawer-button'
-            >
-              查看历史
-            </label>
+          <div className='flex space-x-2 mb-2'>
             <div
               className='btn btn-xs btn-primary'
               onClick={async () => {
@@ -94,12 +94,23 @@ const AssistantInteraction = () => {
             >
               新话题
             </div>
+            <label
+              htmlFor='assistant-interaction-side-drawer'
+              className='btn btn-primary btn-xs drawer-button'
+            >
+              查看历史
+            </label>
           </div>
           {/* 输入 */}
-          <TextareaAutosize minRows={4} value={input} onChange={e => setInput(e.target.value)} />
+          <TextareaAutosize
+            className='outline-none mb-2'
+            minRows={4}
+            value={input}
+            onChange={e => setInput(e.target.value)}
+          />
           {/* 发送 */}
           <div className='flex flex-row-reverse overflow-hidden'>
-            <button className='btn btn-primary' onClick={sendMessage}>
+            <button className='btn btn-sm lg:btn-md btn-primary' onClick={sendMessage}>
               发送
             </button>
           </div>

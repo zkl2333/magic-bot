@@ -44,6 +44,7 @@ export const defaultAssistantList: Assistant[] = [
     id: '3',
     name: 'tony',
     description: '你好我叫Tony',
+    initialMessage: '你好我叫Jerry',
     avatar: 'https://api.multiavatar.com/tony.png',
     modelConfig: modelConfig,
     interactionIds: []

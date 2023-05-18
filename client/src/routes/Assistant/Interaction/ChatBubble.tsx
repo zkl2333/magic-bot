@@ -61,8 +61,13 @@ const ChatBubble = (props: ChatBubbleProps) => {
           <Avatar className='chat-image w-10 rounded-full overflow-hidden' url={assistant.avatar} />
         ) : (
           <div className='chat-image avatar'>
-            <div className='w-10 rounded-full text-white bg-black p-1.5'>
-              <OpenaiIcon />
+            <div className='shrink-0 avatar w-10 h-10 rounded-full overflow-hidden'>
+              <OpenaiIcon
+                style={{
+                  backgroundColor: 'rgb(16, 163, 127)'
+                }}
+                className='p-1.5 text-[#fff]'
+              />
             </div>
           </div>
         )
