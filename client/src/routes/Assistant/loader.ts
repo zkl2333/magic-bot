@@ -35,6 +35,7 @@ export const assistantInteractionLoader: LoaderFunction = async ({ params }) => 
 
   if (!interaction) {
     const interaction = await addInteraction(assistantId, interactionId)
+    const assistant = await getAssistant(assistantId)
     return {
       assistant,
       interaction

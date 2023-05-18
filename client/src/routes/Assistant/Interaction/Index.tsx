@@ -13,6 +13,7 @@ const AssistantInteraction = () => {
   const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState('')
   const [interactions, setInteractions] = useState<Interaction[]>([])
+  const [showSidebar, setShowSidebar] = useState(false)
   const navigate = useNavigate()
 
   const fetchMessages = async () => {
@@ -24,6 +25,7 @@ const AssistantInteraction = () => {
     const fetchedInteractions = await Promise.all(
       assistant.interactionIds.map(interactionId => getInteraction(interactionId))
     )
+    console.log(fetchedInteractions)
     setInteractions(fetchedInteractions.filter(item => item !== null) as Interaction[])
   }
 
@@ -45,7 +47,7 @@ const AssistantInteraction = () => {
 
   return (
     <div className='drawer h-full'>
-      <input id='assistant-interaction-side-drawer' type='checkbox' className='drawer-toggle' />
+      <input checked={showSidebar} type='checkbox' className='drawer-toggle' />
       <div className='safe-area drawer-content flex flex-col justify-between'>
         {/* 对话列表 */}
         <div
@@ -95,8 +97,12 @@ const AssistantInteraction = () => {
               新话题
             </div>
             <label
-              htmlFor='assistant-interaction-side-drawer'
+              // htmlFor='assistant-interaction-side-drawer'
               className='btn btn-primary btn-xs drawer-button'
+              onClick={() => {
+                fetchInteractions()
+                setShowSidebar(true)
+              }}
             >
               查看历史
             </label>
@@ -117,7 +123,7 @@ const AssistantInteraction = () => {
         </div>
       </div>
       <div className='drawer-side'>
-        <label htmlFor='assistant-interaction-side-drawer' className='drawer-overlay'></label>
+        <label onClick={() => setShowSidebar(false)} className='drawer-overlay'></label>
         <AssistantInteractionSidebar interactions={interactions} />
       </div>
     </div>
