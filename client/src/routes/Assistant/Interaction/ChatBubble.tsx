@@ -7,7 +7,7 @@ import 'katex/dist/katex.min.css'
 import '../../../common/highlight.less'
 import './chatBubble.less'
 import dayjs from 'dayjs'
-import { Message } from '../types'
+import { Assistant, Message } from '../types'
 import OpenaiIcon from '../../../components/OpenaiIcon'
 import Avatar from '../../../components/Avatar'
 import userStore from '../../../store/UserStore'
@@ -34,23 +34,38 @@ mdi.use(mdKatex, { blockClass: 'katexmath-block rounded-md p-[10px]', errorColor
 
 interface ChatBubbleProps extends Message {
   loading: boolean
+  assistant: Assistant
   onRetry?: (id: Message['id']) => void
   onDeleted?: (id: Message['id']) => void
   onUpdate?: (id: Message['id'], text: Message['text']) => void
 }
 
 const ChatBubble = (props: ChatBubbleProps) => {
-  const { id, text = '正在思考中...', role, updatedAt, loading, onRetry, onDeleted, onUpdate } = props
+  const {
+    id,
+    text = '正在思考中...',
+    role,
+    updatedAt,
+    loading,
+    assistant,
+    onRetry,
+    onDeleted,
+    onUpdate
+  } = props
   const isAssistant = role === 'assistant'
 
   return (
     <div className={`group chat ${isAssistant ? 'chat-start' : 'chat-end'}`}>
       {isAssistant ? (
-        <div className='chat-image avatar'>
-          <div className='w-10 rounded-full text-white bg-black p-1.5'>
-            <OpenaiIcon />
+        assistant.avatar ? (
+          <Avatar className='chat-image w-10 rounded-full overflow-hidden' url={assistant.avatar} />
+        ) : (
+          <div className='chat-image avatar'>
+            <div className='w-10 rounded-full text-white bg-black p-1.5'>
+              <OpenaiIcon />
+            </div>
           </div>
-        </div>
+        )
       ) : (
         <Avatar className='chat-image w-10 rounded-full overflow-hidden' email={userStore.email} />
       )}

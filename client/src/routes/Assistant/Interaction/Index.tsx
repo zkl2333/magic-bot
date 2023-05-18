@@ -61,6 +61,7 @@ const AssistantInteraction = () => {
               loading={false}
               createdAt={interaction.createdAt}
               updatedAt={interaction.createdAt}
+              assistant={assistant}
             />
           )}
           {messages.map(message => (
@@ -71,18 +72,22 @@ const AssistantInteraction = () => {
               onRetry={() => {}}
               onDeleted={() => {}}
               onUpdate={() => {}}
+              assistant={assistant}
             />
           ))}
         </div>
         {/* 文本框 */}
         <div className='flex flex-col'>
           {/* 操作 */}
-          <div className='flex space-x-2'>
-            <label htmlFor='assistant-interaction-side-drawer' className='btn btn-primary drawer-button'>
+          <div className='flex p-2 space-x-2'>
+            <label
+              htmlFor='assistant-interaction-side-drawer'
+              className='btn btn-primary btn-xs drawer-button'
+            >
               查看历史
             </label>
             <div
-              className='btn btn-primary'
+              className='btn btn-xs btn-primary'
               onClick={async () => {
                 navigate(`/assistant/${assistant.id}/${uuidv4()}`)
               }}

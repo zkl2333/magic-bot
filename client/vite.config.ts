@@ -23,11 +23,8 @@ export default defineConfig(({ mode }) => {
             }
           ]
         },
-        devOptions: {
-          enabled: true
-        },
         workbox: {
-          globPatterns: ['**/*.{js,css,html,ico,png,svg}', 'index.html']
+          globPatterns: ['**/*.{js,css,html,ico,png,svg}']
         }
       }),
       react()

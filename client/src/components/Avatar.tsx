@@ -2,7 +2,8 @@ import classnames from 'classnames'
 import CryptoJS from 'crypto-js'
 
 interface AvatarProps {
-  email: string
+  email?: string
+  url?: string
   className?: string
 }
 
@@ -15,10 +16,11 @@ function generateAvatarUrl(emailAddress: string) {
   return `https://dn-qiniu-avatar.qbox.me/avatar/${emailHash}`
 }
 
-const Avatar = ({ className, email }: AvatarProps) => {
+const Avatar = ({ className, email, url }: AvatarProps) => {
   return (
     <div className={classnames('avatar', className)}>
-      <img src={generateAvatarUrl(email)} />
+      {email && <img src={generateAvatarUrl(email)} />}
+      {url && <img src={url} />}
     </div>
   )
 }
