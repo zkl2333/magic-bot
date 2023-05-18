@@ -1,5 +1,5 @@
 import classNames from 'classnames'
-import { IAssistant } from '../../types'
+import { IAssistant } from '../../../types'
 import AssistantItem from './AssistantItem'
 import { NavLink } from 'react-router-dom'
 

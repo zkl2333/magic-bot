@@ -1,6 +1,6 @@
 import classnames from 'classnames'
-import { IAssistant } from '../../types'
-import OpenaiIcon from '../../components/OpenaiIcon'
+import OpenaiIcon from '../../../components/OpenaiIcon'
+import { IAssistant } from '../../../types'
 
 interface IAssistantItemProps {
   assistant: IAssistant

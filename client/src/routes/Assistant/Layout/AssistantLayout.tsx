@@ -1,6 +1,6 @@
 import { Outlet, useLoaderData } from 'react-router-dom'
 import AssistantSidebar from './AssistantSidebar'
-import { IAssistant } from '../../types'
+import { IAssistant } from '../../../types'
 
 function AssistantLayout() {
   const { assistantList } = useLoaderData() as { assistantList: IAssistant[] }

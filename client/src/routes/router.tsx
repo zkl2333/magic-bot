@@ -3,10 +3,9 @@ import { createBrowserRouter, Navigate } from 'react-router-dom'
 import Login from './Login/Login'
 import ErrorPage from './ErrorPage'
 import { redirect } from 'react-router-dom'
-import AssistantLayout from './Assistant/AssistantLayout'
+import AssistantLayout from './Assistant/Layout/AssistantLayout' 
 import AssistantInteraction from './Assistant/Interaction/Index'
 import { assistantInteractionLoader, assistantLoader } from './Assistant/loader'
-import { deleteInteraction } from './Assistant/service/interaction'
 
 export const router = createBrowserRouter([
   {
