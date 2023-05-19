@@ -33,7 +33,7 @@ export const router = createBrowserRouter([
         loader: assistantLayoutLoader,
         children: [
           {
-            path: 'new',
+            index: true,
             action: AssistantLayoutAction,
             element: <New />
           },
@@ -43,6 +43,10 @@ export const router = createBrowserRouter([
             loader: assistantLoader,
             element: <AssistantId />,
             children: [
+              {
+                index: true,
+                loader: assistantLoader
+              },
               {
                 path: ':interactionId',
                 element: <AssistantInteraction />,

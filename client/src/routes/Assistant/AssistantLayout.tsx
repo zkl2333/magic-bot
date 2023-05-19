@@ -33,7 +33,7 @@ function AssistantLayout() {
             setAssistantLayoutShowSidebar(e.target.checked)
           }}
         />
-        <div className='drawer-content safe-area flex flex-col bg-base-200'>
+        <div className='safe-area drawer-content flex flex-col bg-base-200'>
           <div className='navbar bg-base-200 border-b border-base-300'>
             <button
               className='btn btn-square btn-ghost lg:hidden'
@@ -85,9 +85,7 @@ function AssistantLayout() {
                 setAssistantLayoutShowSidebar(false)
               }}
             ></label>
-            <div className='w-60'>
-              <AssistantSidebar assistantList={assistantList} />
-            </div>
+            <AssistantSidebar assistantList={assistantList} />
           </div>
         )}
       </div>

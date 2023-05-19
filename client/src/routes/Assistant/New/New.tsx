@@ -18,11 +18,13 @@ const New = () => {
   }, [setTitle])
 
   return (
-    <div className='h-full grid justify-center grid-cols-[repeat(auto-fill,200px)] gap-4 p-6 overflow-y-auto'>
+    <div className='h-full grid justify-center grid-cols-[repeat(auto-fill,minmax(200px,auto))] gap-4 p-6 overflow-y-auto'>
       {defaultAssistantList.map(assistant => (
         <div
           key={assistant.id}
-          className={classNames('px-4 py-3 block')}
+          className={classNames(
+            'px-4 py-3 block shadow bg-base-100 hover:bg-base-300 rounded-xl cursor-pointer'
+          )}
           onClick={() => {
             let formData = new FormData()
             formData.append('assistant', JSON.stringify({ ...assistant, id: uuidv4() }))

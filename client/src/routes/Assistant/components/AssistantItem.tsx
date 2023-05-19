@@ -3,13 +3,14 @@ import OpenaiIcon from '../../../components/OpenaiIcon'
 import { IAssistant } from '../../../types'
 
 interface IAssistantItemProps {
+  className?: string
   assistant: IAssistant
   isActive: boolean
 }
 
-const AssistantItem = ({ assistant, isActive }: IAssistantItemProps) => {
+const AssistantItem = ({ assistant, isActive, className }: IAssistantItemProps) => {
   return (
-    <div className='flex w-48 items-center space-x-4'>
+    <div className={classnames(className, 'flex items-center space-x-4')}>
       <div
         className={classnames('shrink-0 avatar w-10 h-10 rounded-full overflow-hidden', {
           'ring ring-primary': isActive

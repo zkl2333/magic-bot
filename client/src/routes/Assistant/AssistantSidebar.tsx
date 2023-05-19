@@ -1,34 +1,46 @@
 import classNames from 'classnames'
-import { IAssistant } from '../../types'
 import AssistantItem from './components/AssistantItem'
 import { NavLink } from 'react-router-dom'
+import { Assistant } from './types'
+import HighlightOffTwoToneIcon from '@mui/icons-material/HighlightOffTwoTone'
 
-const AssistantSidebar = ({ assistantList }: { assistantList: IAssistant[] }) => {
+const AssistantSidebar = ({ assistantList }: { assistantList: Assistant[] }) => {
   return (
-    <div className='overflow-hidden h-full text-base-content border-base-300 border-r bg-base-200'>
-      <div className='h-full flex justify-between safe-area'>
-        <div className='flex-1 overflow-y-auto'>
+    <div className='overflow-hidden h-full w-60 text-base-content border-base-300 border-r bg-base-200'>
+      <div className='h-full flex flex-col justify-between safe-area'>
+        <div className='border-b border-base-300 flex justify-center items-center p-3 text-center h-16'>
           <NavLink
             to='new'
             className={({ isActive }) =>
-              classNames('px-4 py-3 block text-center', {
+              classNames('btn btn-ghost normal-case text-xl w-full h-full', {
                 'bg-base-300': isActive
               })
             }
           >
             添加
           </NavLink>
+        </div>
+        <div className='flex-1 overflow-auto'>
           {assistantList.map(assistant => (
             <NavLink
               key={assistant.id}
-              to={assistant.id}
+              to={`/assistant/${assistant.id}`}
               className={({ isActive }) =>
                 classNames('px-4 py-3 block', {
                   'bg-base-300': isActive
                 })
               }
             >
-              {({ isActive }) => <AssistantItem isActive={isActive} assistant={assistant} />}
+              {({ isActive }) => (
+                <div className='flex justify-between items-center '>
+                  <AssistantItem className='w-0 flex-1' isActive={isActive} assistant={assistant} />
+                  <HighlightOffTwoToneIcon
+                    className='flex-shrink-0 opacity-20 hover:opacity-70'
+                    fontSize='small'
+                    onClick={() => {}}
+                  />
+                </div>
+              )}
             </NavLink>
           ))}
         </div>
