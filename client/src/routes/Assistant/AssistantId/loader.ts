@@ -2,14 +2,6 @@ import { LoaderFunction, redirect } from 'react-router-dom'
 import { getAssistant } from '../service/assistant'
 import { v4 as uuidv4 } from 'uuid'
 
-function redirectTo(url: string) {
-  return redirect(url)
-}
-
-function getUrlForNewAssistant() {
-  return '/assistant/new'
-}
-
 function getUrlForLastInteraction(assistantId: string, interactionIds: string[]) {
   if (interactionIds.length > 0) {
     const lastInteractionId = interactionIds[interactionIds.length - 1]
@@ -19,16 +11,12 @@ function getUrlForLastInteraction(assistantId: string, interactionIds: string[])
 }
 
 export const assistantLoader: LoaderFunction = async ({ params }) => {
-  const { assistantId, interactionId } = params
-
-  if (!assistantId) {
-    return redirectTo(getUrlForNewAssistant())
-  }
+  const { assistantId, interactionId } = params as { assistantId: string; interactionId: string }
 
   const assistant = await getAssistant(assistantId)
 
   if (!assistant) {
-    return redirectTo(getUrlForNewAssistant())
+    return redirect('/assistant/new')
   }
 
   if (interactionId) {
@@ -36,5 +24,5 @@ export const assistantLoader: LoaderFunction = async ({ params }) => {
   }
 
   const url = getUrlForLastInteraction(assistantId, assistant.interactionIds)
-  return redirectTo(url)
+  return redirect(url)
 }

@@ -1,6 +1,6 @@
 import classNames from 'classnames'
-import { IAssistant } from '../../../types'
-import AssistantItem from '../components/AssistantItem'
+import { IAssistant } from '../../types'
+import AssistantItem from './components/AssistantItem'
 import { NavLink } from 'react-router-dom'
 
 const AssistantSidebar = ({ assistantList }: { assistantList: IAssistant[] }) => {
