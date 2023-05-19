@@ -3,6 +3,7 @@ import { Outlet, useLoaderData, useFetcher, useOutletContext } from 'react-route
 import { getInteraction, deleteInteraction } from '../service/interaction'
 import { Assistant, Interaction } from '../types'
 import AssistantInteractionSidebar from './AssistantIdSidebar'
+import { AssistantLayoutContextProps } from '../AssistantLayout'
 
 export type AssistantIdContentProps = {
   showAssistantIdSidebar: boolean
@@ -32,7 +33,16 @@ const AssistantId = () => {
     fetchInteractions()
   }, [assistant.interactionIds])
 
-  const context = useOutletContext() as any
+  const context = useOutletContext<AssistantLayoutContextProps>()
+
+  const { setTitle } = context
+
+  useEffect(() => {
+    setTitle(assistant.name)
+    return () => {
+      setTitle('')
+    }
+  }, [assistant.name])
 
   return (
     <div className='drawer h-full'>

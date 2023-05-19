@@ -1,11 +1,22 @@
 import classNames from 'classnames'
 import AssistantItem from '../components/AssistantItem'
 import { defaultAssistantList } from '../constants'
-import { useFetcher } from 'react-router-dom'
+import { useFetcher, useOutletContext } from 'react-router-dom'
 import { v4 as uuidv4 } from 'uuid'
+import { AssistantLayoutContextProps } from '../AssistantLayout'
+import { useEffect } from 'react'
 
 const New = () => {
   const fetcher = useFetcher()
+  const { setTitle } = useOutletContext<AssistantLayoutContextProps>()
+
+  useEffect(() => {
+    setTitle('新建助手')
+    return () => {
+      setTitle('')
+    }
+  }, [setTitle])
+
   return (
     <div className='h-full grid justify-center grid-cols-[repeat(auto-fill,200px)] gap-4 p-6 overflow-y-auto'>
       {defaultAssistantList.map(assistant => (
