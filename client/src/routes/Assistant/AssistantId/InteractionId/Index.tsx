@@ -18,7 +18,7 @@ const AssistantInteraction = observer(() => {
   const navigate = useNavigate()
   const abortController = useRef(new AbortController())
 
-  const getReply = async (messages: BaseMessage[]) => {
+  const getAssistantReply = async (messages: BaseMessage[]) => {
     abortController.current = new AbortController()
     return fetch('/api/chat/completions', {
       method: 'POST',
@@ -43,21 +43,21 @@ const AssistantInteraction = observer(() => {
   }, [interaction.id])
 
   // 发送消息
-  const sendMessage = async () => {
+  const sendUserMessage = async () => {
     if (chatStore.input.trim() !== '') {
       const message = await addMessage(interaction.id, 'user', chatStore.input)
       const newMessages = [...chatStore.messages, message]
       chatStore.setMessages(newMessages)
       chatStore.setInput('')
       const context = newMessages.slice(-assistant.modelConfig.context_size)
-      generateReply(context)
+      generateAssistantReply(context)
     }
   }
 
   // 生成回复 异步流
-  const generateReply = async (context: Message[]) => {
+  const generateAssistantReply = async (context: Message[]) => {
     const realContext = assistant.prompt ? [...assistant.prompt, ...context] : context
-    const response = await getReply(realContext)
+    const response = await getAssistantReply(realContext)
     let messageId = null
     try {
       const reader = response.body?.pipeThrough(new TextDecoderStream()).getReader()
@@ -96,7 +96,7 @@ const AssistantInteraction = observer(() => {
     const needDeleteMessages = chatStore.messages.slice(index)
     await Promise.all(needDeleteMessages.map(item => deleteMessage(item.id)))
     chatStore.removeMessages(needDeleteMessages.map(item => item.id))
-    generateReply(context.reverse())
+    generateAssistantReply(context.reverse())
   }
 
   return (
@@ -181,7 +181,7 @@ const AssistantInteraction = observer(() => {
             if (event.key === 'Enter') {
               if (!event.ctrlKey) {
                 event.preventDefault()
-                sendMessage()
+                sendUserMessage()
               } else {
                 chatStore.setInput(chatStore.input + '\n')
               }
@@ -190,7 +190,7 @@ const AssistantInteraction = observer(() => {
         />
         {/* 发送 */}
         <div className='flex flex-row-reverse overflow-hidden'>
-          <button className='btn btn-sm lg:btn-md btn-primary' onClick={sendMessage}>
+          <button className='btn btn-sm lg:btn-md btn-primary' onClick={sendUserMessage}>
             发送
           </button>
         </div>
