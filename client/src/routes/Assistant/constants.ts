@@ -53,7 +53,15 @@ export const defaultAssistantList: Assistant[] = [
     description: '我就喜欢夸人',
     initialMessage: '一天不夸你，我全身都难受！',
     avatar: 'https://api.multiavatar.com/赞美大师.png',
-    modelConfig: modelConfig,
+    modelConfig: {
+      ...modelConfig,
+      context_size: 10,
+      max_tokens: 300,
+      temperature: 0.9,
+      top_p: 1,
+      presence_penalty: 0.7,
+      frequency_penalty: 1.6
+    },
     interactionIds: [],
     prompt: [
       {

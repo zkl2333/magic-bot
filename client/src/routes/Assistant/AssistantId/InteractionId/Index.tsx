@@ -176,6 +176,17 @@ const AssistantInteraction = observer(() => {
           maxRows={3}
           value={chatStore.input}
           onChange={e => chatStore.setInput(e.target.value)}
+          placeholder='Enter 发送，Ctrl+Enter 换行'
+          onKeyDown={event => {
+            if (event.key === 'Enter') {
+              if (!event.ctrlKey) {
+                event.preventDefault()
+                sendMessage()
+              } else {
+                chatStore.setInput(chatStore.input + '\n')
+              }
+            }
+          }}
         />
         {/* 发送 */}
         <div className='flex flex-row-reverse overflow-hidden'>
