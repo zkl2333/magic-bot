@@ -1,6 +1,7 @@
 import { NavLink } from 'react-router-dom'
 import { Interaction } from '../types'
 import classNames from 'classnames'
+import HighlightOffTwoToneIcon from '@mui/icons-material/HighlightOffTwoTone'
 
 const AssistantInteractionSidebar = ({
   interactions,
@@ -23,15 +24,16 @@ const AssistantInteractionSidebar = ({
             <div className='text-lg truncate'>{interaction.title || '未命名'}</div>
             <div className='text-sm'>{new Date(interaction.createdAt).toLocaleString()}</div>
           </div>
-          <div
-            className='flex-shrink-0  p-2 opacity-40 hover:opacity-90 text-sm'
-            onClick={async e => {
-              e.preventDefault()
-              onDelete(interaction.id)
-            }}
-          >
-            删除
-          </div>
+          {interactions.length > 1 && (
+            <HighlightOffTwoToneIcon
+              className='flex-shrink-0 opacity-20 hover:opacity-70'
+              fontSize='small'
+              onClick={async e => {
+                e.preventDefault()
+                onDelete(interaction.id)
+              }}
+            />
+          )}
         </NavLink>
       ))}
     </div>
