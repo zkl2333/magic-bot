@@ -31,6 +31,10 @@ export const router = createBrowserRouter([
         path: 'assistant',
         element: <AssistantLayout />,
         loader: assistantLayoutLoader,
+        action: a => {
+          console.log(a)
+          return null
+        },
         children: [
           {
             index: true,

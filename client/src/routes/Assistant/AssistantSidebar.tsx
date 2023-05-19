@@ -1,10 +1,12 @@
 import classNames from 'classnames'
 import AssistantItem from './components/AssistantItem'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useFetcher } from 'react-router-dom'
 import { Assistant } from './types'
 import HighlightOffTwoToneIcon from '@mui/icons-material/HighlightOffTwoTone'
 
 const AssistantSidebar = ({ assistantList }: { assistantList: Assistant[] }) => {
+  const fetcher = useFetcher()
+
   return (
     <div className='overflow-hidden h-full w-60 text-base-content border-base-300 border-r bg-base-200'>
       <div className='h-full flex flex-col justify-between safe-area'>
@@ -37,7 +39,16 @@ const AssistantSidebar = ({ assistantList }: { assistantList: Assistant[] }) => 
                   <HighlightOffTwoToneIcon
                     className='flex-shrink-0 opacity-20 hover:opacity-70'
                     fontSize='small'
-                    onClick={() => {}}
+                    onClick={async e => {
+                      e.stopPropagation()
+                      e.preventDefault()
+                      const data = new FormData()
+                      data.append('assistantId', assistant.id)
+                      fetcher.submit(data, {
+                        method: 'delete',
+                        action: '/assistant?index'
+                      })
+                    }}
                   />
                 </div>
               )}

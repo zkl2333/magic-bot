@@ -11,7 +11,6 @@ function getUrlForLastInteraction(assistantId: string, interactionIds: string[])
 }
 
 export const assistantLoader: LoaderFunction = async ({ params }) => {
-  console.log('assistantLoader', params)
   const { assistantId, interactionId } = params as { assistantId: string; interactionId: string }
 
   const assistant = await getAssistant(assistantId)

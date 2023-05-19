@@ -1,5 +1,5 @@
+import localforage from 'localforage'
 import { Message } from '../types'
-import { setItem, getItem, removeItem } from './storage'
 import { getInteraction } from './interaction'
 import { v4 as uuidv4 } from 'uuid'
 
@@ -23,26 +23,27 @@ export const addMessage = async (
       interaction.title = text
     }
     interaction.messageIds.push(id)
-    await setItem(`interactions.${interactionId}`, interaction)
-    await setItem(`messages.${id}`, message)
+    await localforage.setItem(`interactions.${interactionId}`, interaction)
+    await localforage.setItem(`messages.${id}`, message)
   }
 
   return message
 }
 
 export const getMessage = async (id: string): Promise<Message | null> => {
-  return await getItem(`messages.${id}`)
+  return await localforage.getItem(`messages.${id}`)
 }
 
 export const deleteMessage = async (id: string): Promise<void> => {
-  await removeItem(`messages.${id}`)
+  await localforage.removeItem(`messages.${id}`)
 }
 
-export const updateMessage = async (id: string, text: string): Promise<void> => {
+export const updateMessage = async (id: string, text: string): Promise<Message | null> => {
   const message = await getMessage(id)
   if (message) {
     message.content = text
     message.updatedAt = Date.now()
-    return await setItem(`messages.${id}`, message)
+    return await localforage.setItem(`messages.${id}`, message)
   }
+  return null
 }
