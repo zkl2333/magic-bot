@@ -9,6 +9,7 @@ import userStore from '../../../../store/UserStore'
 import { AssistantIdContentProps } from '../AssistantId'
 import { observer } from 'mobx-react-lite'
 import chatStore from './store'
+import classNames from 'classnames'
 
 const AssistantInteraction = observer(() => {
   const { assistant } = useRouteLoaderData('assistant') as { assistant: Assistant }
@@ -81,6 +82,23 @@ const AssistantInteraction = observer(() => {
     } catch (error) {}
   }
 
+  const onRetry = async (id: string) => {
+    const index = chatStore.messages.findIndex(item => item.id === id)
+    const context: Message[] = []
+    for (let i = index - 1; i >= 0; i--) {
+      if (chatStore.messages[i].role === 'user') {
+        context.push(chatStore.messages[i])
+      }
+      if (context.length === assistant.modelConfig.context_size) {
+        break
+      }
+    }
+    const needDeleteMessages = chatStore.messages.slice(index)
+    await Promise.all(needDeleteMessages.map(item => deleteMessage(item.id)))
+    chatStore.removeMessages(needDeleteMessages.map(item => item.id))
+    generateReply(context.reverse())
+  }
+
   return (
     <>
       {/* 对话列表 */}
@@ -102,14 +120,14 @@ const AssistantInteraction = observer(() => {
             {...message}
             loading={false}
             key={message.id}
-            onRetry={() => {}}
+            onRetry={onRetry}
             onDeleted={async id => {
               await deleteMessage(id)
-              fetchMessages()
+              chatStore.removeMessage(id)
             }}
             onUpdate={async (id, input) => {
               await updateMessage(id, input)
-              fetchMessages()
+              chatStore.updateMessage(id, input)
             }}
             assistant={assistant}
           />
@@ -120,23 +138,35 @@ const AssistantInteraction = observer(() => {
         {/* 操作 */}
         <div className='flex space-x-2 mb-2'>
           <div
-            className='btn btn-xs btn-primary'
+            className={classNames('btn btn-xs btn-primary', {
+              'btn-disabled': chatStore.messages.length === 0
+            })}
             onClick={async () => {
               navigate(`/assistant/${assistant.id}/${uuidv4()}`)
             }}
           >
             新话题
           </div>
-          <label
+          <div
             className='btn btn-primary btn-xs drawer-button'
             onClick={() => {
               setAssistantIdShowSidebar(true)
             }}
           >
             查看历史
-          </label>
+          </div>
           <div className='btn btn-xs btn-primary' onClick={() => abortController.current.abort()}>
             中断
+          </div>
+          <div
+            className={classNames('btn btn-xs btn-primary', {
+              'btn-disabled': chatStore.messages.length === 0
+            })}
+            onClick={() => {
+              onRetry(chatStore.messages.slice(-1)[0].id)
+            }}
+          >
+            重试
           </div>
         </div>
         {/* 输入 */}

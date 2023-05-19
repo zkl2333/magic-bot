@@ -21,6 +21,17 @@ class ChatStore {
     this.messages.push(message)
   }
 
+  removeMessage(id: string) {
+    const index = this.messages.findIndex(m => m.id === id)
+    if (index !== -1) {
+      this.messages.splice(index, 1)
+    }
+  }
+
+  removeMessages(ids: string[]) {
+    this.messages = this.messages.filter(m => !ids.includes(m.id))
+  }
+
   updateMessage(id: string, content: string) {
     const index = this.messages.findIndex(m => m.id === id)
     if (index !== -1) {
