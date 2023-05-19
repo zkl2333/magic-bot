@@ -5,13 +5,18 @@ import { Message, Assistant, Interaction } from '../../types'
 import { getMessage, addMessage, deleteMessage, updateMessage } from '../../service/message'
 import { v4 as uuidv4 } from 'uuid'
 import ChatBubble from './ChatBubble'
+import MenuIcon from '@mui/icons-material/Menu'
+import MenuOpenIcon from '@mui/icons-material/MenuOpen'
+import Avatar from '../../../../components/Avatar'
+import userStore from '../../../../store/UserStore'
+import { AssistantIdContentProps } from '../AssistantId'
+import { AssistantLayoutContextProps } from '../../AssistantLayout'
 
 const AssistantInteraction = () => {
   const { assistant } = useRouteLoaderData('assistant') as { assistant: Assistant }
   const { interaction } = useLoaderData() as { interaction: Interaction }
-  const { setShowSidebar } = useOutletContext<{
-    setShowSidebar: React.Dispatch<React.SetStateAction<boolean>>
-  }>()
+  const { setAssistantIdShowSidebar, showAssistantLayoutSidebar, setAssistantLayoutShowSidebar } =
+    useOutletContext<AssistantIdContentProps & AssistantLayoutContextProps>()
   const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState('')
 
@@ -37,12 +42,46 @@ const AssistantInteraction = () => {
   }
 
   return (
-    <div className='safe-area drawer-content flex flex-col justify-between'>
+    <>
+      <div className='navbar bg-base-200'>
+        <button
+          className='btn btn-square btn-ghost lg:hidden'
+          onClick={() => {
+            setAssistantLayoutShowSidebar(true)
+          }}
+        >
+          <MenuIcon />
+        </button>
+        <div className='flex-1'>
+          <a className='btn btn-ghost normal-case text-xl'>{assistant.name}</a>
+        </div>
+        <div className='flex-none'>
+          <div className='dropdown dropdown-end'>
+            <label tabIndex={0} className='btn btn-ghost btn-circle avatar'>
+              <Avatar className='w-10 rounded-full' email={userStore.email} />
+            </label>
+            <ul
+              tabIndex={0}
+              className='menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52'
+            >
+              <li>
+                <a className='justify-between'>
+                  Profile
+                  <span className='badge'>New</span>
+                </a>
+              </li>
+              <li>
+                <a>Settings</a>
+              </li>
+              <li>
+                <a>Logout</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
       {/* 对话列表 */}
-      <div
-        id='chat-list'
-        className='flex flex-1 flex-col p-3 lg:p-4 overflow-y-auto overflow-x-hidden pb-[50px]'
-      >
+      <div id='chat-list' className='flex flex-1 flex-col p-3 lg:p-4 overflow-y-auto overflow-x-hidden'>
         {assistant.initialMessage && (
           <ChatBubble
             id={'0'}
@@ -88,7 +127,7 @@ const AssistantInteraction = () => {
           <label
             className='btn btn-primary btn-xs drawer-button'
             onClick={() => {
-              setShowSidebar(true)
+              setAssistantIdShowSidebar(true)
             }}
           >
             查看历史
@@ -108,7 +147,7 @@ const AssistantInteraction = () => {
           </button>
         </div>
       </div>
-    </div>
+    </>
   )
 }
 
