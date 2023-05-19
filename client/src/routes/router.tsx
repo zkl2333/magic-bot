@@ -3,11 +3,14 @@ import { createBrowserRouter, Navigate } from 'react-router-dom'
 import Login from './Login/Login'
 import ErrorPage from './ErrorPage'
 import { redirect } from 'react-router-dom'
-import AssistantLayout from './Assistant/Layout/AssistantLayout'
-import AssistantInteraction from './Assistant/Interaction/Index'
-import { assistantInteractionLoader, assistantLoader } from './Assistant/loader'
+import AssistantLayout from './Assistant/Index/AssistantLayout'
+import AssistantInteraction from './Assistant/AssistantId/InteractionId/Index'
+import { assistantLoader } from './Assistant/AssistantId/loader'
 import New from './Assistant/New/New'
 import { addAssistant } from './Assistant/service/assistant'
+import { assistantInteractionLoader } from './Assistant/AssistantId/InteractionId/loader'
+import { assistantLayoutLoader } from './Assistant/Index/loader'
+import AssistantId from './Assistant/AssistantId/AssistantId'
 
 export const router = createBrowserRouter([
   {
@@ -27,7 +30,7 @@ export const router = createBrowserRouter([
       {
         path: 'assistant',
         element: <AssistantLayout />,
-        loader: assistantLoader,
+        loader: assistantLayoutLoader,
         children: [
           {
             path: 'new',
@@ -45,9 +48,22 @@ export const router = createBrowserRouter([
             element: <New />
           },
           {
-            path: ':assistantId?/:interactionId?',
-            element: <AssistantInteraction />,
-            loader: assistantInteractionLoader
+            path: ':assistantId?',
+            id: 'assistant',
+            loader: assistantLoader,
+            element: <AssistantId />,
+            action: async ({ request }) => {
+              let formData = await request.formData()
+              console.log(formData)
+              return null
+            },
+            children: [
+              {
+                path: ':interactionId',
+                element: <AssistantInteraction />,
+                loader: assistantInteractionLoader
+              }
+            ]
           }
         ]
       }

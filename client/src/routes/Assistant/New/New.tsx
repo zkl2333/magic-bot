@@ -1,5 +1,5 @@
 import classNames from 'classnames'
-import AssistantItem from '../Layout/AssistantItem'
+import AssistantItem from '../components/AssistantItem'
 import { defaultAssistantList } from '../constants'
 import { useFetcher } from 'react-router-dom'
 import { v4 as uuidv4 } from 'uuid'

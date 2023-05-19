@@ -1,6 +1,6 @@
 import classNames from 'classnames'
 import { IAssistant } from '../../../types'
-import AssistantItem from './AssistantItem'
+import AssistantItem from '../components/AssistantItem'
 import { NavLink } from 'react-router-dom'
 
 const AssistantSidebar = ({ assistantList }: { assistantList: IAssistant[] }) => {
@@ -10,9 +10,8 @@ const AssistantSidebar = ({ assistantList }: { assistantList: IAssistant[] }) =>
         <div className='flex-1 overflow-y-auto'>
           <NavLink
             to='new'
-            className={({ isActive, isPending }) =>
+            className={({ isActive }) =>
               classNames('px-4 py-3 block text-center', {
-                'opacity-20': isPending,
                 'bg-base-300': isActive
               })
             }
@@ -23,9 +22,8 @@ const AssistantSidebar = ({ assistantList }: { assistantList: IAssistant[] }) =>
             <NavLink
               key={assistant.id}
               to={assistant.id}
-              className={({ isActive, isPending }) =>
+              className={({ isActive }) =>
                 classNames('px-4 py-3 block', {
-                  'opacity-20': isPending,
                   'bg-base-300': isActive
                 })
               }
