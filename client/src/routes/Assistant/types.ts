@@ -1,6 +1,6 @@
 type UUID = string
 
-interface BaseMessage {
+export interface BaseMessage {
   role: 'user' | 'assistant' | 'system'
   content: string
 }

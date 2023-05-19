@@ -1,6 +1,6 @@
-import { ChatCompletionRequestMessageRoleEnum } from "openai"
+import { ChatCompletionRequestMessageRoleEnum } from 'openai'
 
-export type ChatListItem = {
-  message: string
+export type Message = {
+  content: string
   role: ChatCompletionRequestMessageRoleEnum
 }

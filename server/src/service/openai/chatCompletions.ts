@@ -1,8 +1,9 @@
-import { ChatListItem } from '../../types'
+import { ChatCompletionRequest } from '../../controllers/chatController'
+import { Message } from '../../types'
 import { OpenAIApi, Configuration } from 'openai'
 
-const createMessage = (chatList: ChatListItem[]) => {
-  return chatList.map(item => ({ role: item.role, content: item.message }))
+const createMessage = (chatList: Message[]) => {
+  return chatList.map(item => ({ role: item.role, content: item.content }))
 }
 
 const baseUrl = 'https://api.aiproxy.io/v1'
@@ -18,14 +19,14 @@ const configuration = new Configuration({
 
 const openai = new OpenAIApi(configuration)
 
-const completions = async (chatList: ChatListItem[]) => {
-  console.log('message', chatList[chatList.length - 1]?.message)
+const chatCompletions = async ({ messages, modelConfig }: ChatCompletionRequest) => {
+  console.log('message', messages[messages.length - 1]?.content)
   try {
     const response = await openai.createChatCompletion(
       {
-        model: 'gpt-3.5-turbo',
+        ...modelConfig,
         stream: true,
-        messages: createMessage(chatList)
+        messages: createMessage(messages)
       },
       { responseType: 'stream' }
     )
@@ -38,4 +39,4 @@ const completions = async (chatList: ChatListItem[]) => {
   }
 }
 
-export default completions
+export default chatCompletions

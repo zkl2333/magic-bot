@@ -1,18 +1,30 @@
 import { Context } from 'koa'
-import chatCompletions from '../service/openai/completions'
+import chatCompletions from '../service/openai/chatCompletions'
 import { Readable } from 'stream'
 
 import { formatChatErrorResponse, chatCompletionsStreamFormatResponse, streamToString } from '../utils'
-import { ChatListItem } from '../types'
+import { Message } from '../types'
+
+export interface ChatCompletionRequest {
+  messages: Message[]
+  modelConfig: {
+    model: string
+    temperature: number
+    top_p: number
+    max_tokens: number
+    presence_penalty: number
+    frequency_penalty: number
+  }
+}
 
 export const getCompletions = async (ctx: Context) => {
-  const requestBody = ctx.request.body as { chatList: ChatListItem[] }
-  if (typeof requestBody !== 'object' || !requestBody.chatList) {
+  const requestBody = ctx.request.body as ChatCompletionRequest
+  if (typeof requestBody !== 'object' || !requestBody) {
     ctx.body = formatChatErrorResponse({ msg: '请求参数错误' })
     return
   }
   try {
-    const response = await chatCompletions(requestBody.chatList as ChatListItem[])
+    const response = await chatCompletions(requestBody)
     if (response.data instanceof Readable) {
       if (response.status === 200) {
         ctx.body = chatCompletionsStreamFormatResponse(response.data as unknown as Readable)

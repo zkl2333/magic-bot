@@ -1,24 +1,39 @@
 import { useLoaderData, useNavigate, useOutletContext, useRouteLoaderData } from 'react-router-dom'
 import TextareaAutosize from '@mui/base/TextareaAutosize'
-import { useEffect, useState } from 'react'
-import { Message, Assistant, Interaction } from '../../types'
+import { useEffect, useRef } from 'react'
+import { Message, Assistant, Interaction, BaseMessage } from '../../types'
 import { getMessage, addMessage, deleteMessage, updateMessage } from '../../service/message'
 import { v4 as uuidv4 } from 'uuid'
 import ChatBubble from './ChatBubble'
+import userStore from '../../../../store/UserStore'
 import { AssistantIdContentProps } from '../AssistantId'
+import { observer } from 'mobx-react-lite'
+import chatStore from './store'
 
-const AssistantInteraction = () => {
+const AssistantInteraction = observer(() => {
   const { assistant } = useRouteLoaderData('assistant') as { assistant: Assistant }
   const { interaction } = useLoaderData() as { interaction: Interaction }
   const { setAssistantIdShowSidebar } = useOutletContext<AssistantIdContentProps>()
-  const [messages, setMessages] = useState<Message[]>([])
-  const [input, setInput] = useState('')
-
   const navigate = useNavigate()
+  const abortController = useRef(new AbortController())
+
+  const getReply = async (messages: BaseMessage[]) => {
+    abortController.current = new AbortController()
+    return fetch('/api/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${userStore.token}`
+      },
+      body: JSON.stringify({ messages: messages, modelConfig: assistant.modelConfig }),
+      signal: abortController.current.signal
+    })
+  }
 
   const fetchMessages = async () => {
     const fetchedMessages = await Promise.all(interaction.messageIds.map(getMessage))
-    setMessages(fetchedMessages.filter(item => item !== null) as Message[])
+    const nonNullMessages = fetchedMessages.filter(item => item !== null) as Message[]
+    chatStore.setMessages(nonNullMessages)
   }
 
   // 获取聊天记录
@@ -28,11 +43,42 @@ const AssistantInteraction = () => {
 
   // 发送消息
   const sendMessage = async () => {
-    if (input.trim() !== '') {
-      const message = await addMessage(interaction.id, 'user', input)
-      setMessages([...messages, message])
-      setInput('')
+    if (chatStore.input.trim() !== '') {
+      const message = await addMessage(interaction.id, 'user', chatStore.input)
+      const newMessages = [...chatStore.messages, message]
+      chatStore.setMessages(newMessages)
+      chatStore.setInput('')
+      const context = newMessages.slice(-assistant.modelConfig.context_size)
+      generateReply(context)
     }
+  }
+
+  // 生成回复 异步流
+  const generateReply = async (context: Message[]) => {
+    const realContext = assistant.prompt ? [...assistant.prompt, ...context] : context
+    const response = await getReply(realContext)
+    let messageId = null
+    try {
+      const reader = response.body?.pipeThrough(new TextDecoderStream()).getReader()
+      if (reader) {
+        let answer = ''
+        while (true) {
+          const { value, done } = await reader.read()
+          if (done) {
+            break
+          }
+          answer += value
+          if (!messageId) {
+            const message = await addMessage(interaction.id, 'assistant', answer)
+            chatStore.addMessage(message)
+            messageId = message.id
+          } else {
+            await updateMessage(messageId, answer)
+            chatStore.updateMessage(messageId, answer)
+          }
+        }
+      }
+    } catch (error) {}
   }
 
   return (
@@ -51,7 +97,7 @@ const AssistantInteraction = () => {
             assistant={assistant}
           />
         )}
-        {messages.map(message => (
+        {chatStore.messages.map(message => (
           <ChatBubble
             {...message}
             loading={false}
@@ -89,14 +135,17 @@ const AssistantInteraction = () => {
           >
             查看历史
           </label>
+          <div className='btn btn-xs btn-primary' onClick={() => abortController.current.abort()}>
+            中断
+          </div>
         </div>
         {/* 输入 */}
         <TextareaAutosize
           className='outline-none mb-2 p-2 resize-none'
           minRows={1}
           maxRows={3}
-          value={input}
-          onChange={e => setInput(e.target.value)}
+          value={chatStore.input}
+          onChange={e => chatStore.setInput(e.target.value)}
         />
         {/* 发送 */}
         <div className='flex flex-row-reverse overflow-hidden'>
@@ -107,6 +156,6 @@ const AssistantInteraction = () => {
       </div>
     </>
   )
-}
+})
 
 export default AssistantInteraction

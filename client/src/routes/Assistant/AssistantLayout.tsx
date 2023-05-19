@@ -21,8 +21,6 @@ function AssistantLayout() {
     document.title = `${title} - AI Web`
   }
 
-  console.log('AssistantLayout', assistantList)
-
   return (
     <>
       <div className={classNames('drawer drawer-mobile h-full bg-base-200')}>
