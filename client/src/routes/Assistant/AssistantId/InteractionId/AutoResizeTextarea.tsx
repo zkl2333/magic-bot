@@ -38,8 +38,7 @@ const AutoResizeTextarea = (props: AutoResizeTextareaProps) => {
       <div className='absolute right-1 bottom-0 top-0 flex items-center'>
         {props.loading ? (
           <button
-            className='p-1 rounded-md text-base-content disabled:opacity-40'
-            disabled={value.length === 0}
+            className='p-1 rounded-md text-base-content'
           >
             <div className='flex items-center justify-center text-2xl h-4 w-4 m-1'>
               <span className='animate-blink'>·</span>
