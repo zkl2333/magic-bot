@@ -2,8 +2,8 @@ import TextareaAutosize from '@mui/base/TextareaAutosize'
 import SendIcon from './SendIcon'
 
 interface AutoResizeTextareaProps {
-  minHeight?: number
-  maxHeight?: number
+  maxRows?: number
+  minRows?: number
   value: string
   loading: boolean
   onChange: (value: string) => void
@@ -22,8 +22,10 @@ const AutoResizeTextarea = (props: AutoResizeTextareaProps) => {
       <TextareaAutosize
         value={value}
         placeholder='Enter 发送，Ctrl + Enter 换行'
-        className='m-0 outline-none w-full resize-none border-0 bg-transparent p-0 pr-9 focus:ring-0 focus-visible:ring-0 pl-2 md:pl-0 overflow-y-hidden'
+        className='m-0 outline-none w-full resize-none border-0 bg-transparent p-0 pr-9 focus:ring-0 focus-visible:ring-0 pl-2 md:pl-0 overflow-y-auto'
         onChange={handleChange}
+        maxRows={props.maxRows}
+        minRows={props.minRows}
         onKeyDown={event => {
           if (event.key === 'Enter') {
             if (!event.ctrlKey) {
@@ -37,9 +39,7 @@ const AutoResizeTextarea = (props: AutoResizeTextareaProps) => {
       />
       <div className='absolute right-1 bottom-0 top-0 flex items-center'>
         {props.loading ? (
-          <button
-            className='p-1 rounded-md text-base-content'
-          >
+          <button className='p-1 rounded-md text-base-content'>
             <div className='flex items-center justify-center text-2xl h-4 w-4 m-1'>
               <span className='animate-blink'>·</span>
               <span className='animate-blink delay-500'>·</span>

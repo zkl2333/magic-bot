@@ -179,6 +179,7 @@ const AssistantInteraction = observer(() => {
             value={chatStore.input}
             onChange={input => chatStore.setInput(input)}
             onSubmit={sendUserMessage}
+            maxRows={5}
           />
 
           {chatStore.loading ? (
