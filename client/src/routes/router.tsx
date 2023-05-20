@@ -11,7 +11,7 @@ import New from './Assistant/New/New'
 import AssistantId from './Assistant/AssistantId/AssistantId'
 import ErrorPage from './ErrorPage'
 import Login from './Login/Login'
-import { deleteAssistant, getAllAssistants } from './Assistant/service/assistant'
+import { getAllAssistants } from './Assistant/service/assistant'
 
 export const router = createBrowserRouter([
   {
