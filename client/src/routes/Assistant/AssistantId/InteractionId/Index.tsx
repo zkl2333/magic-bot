@@ -1,5 +1,4 @@
 import { useLoaderData, useNavigate, useOutletContext, useRouteLoaderData } from 'react-router-dom'
-import TextareaAutosize from '@mui/base/TextareaAutosize'
 import { useEffect, useRef } from 'react'
 import { Message, Assistant, Interaction, BaseMessage } from '../../types'
 import { getMessage, addMessage, deleteMessage, updateMessage } from '../../service/message'
@@ -10,6 +9,21 @@ import { AssistantIdContentProps } from '../AssistantId'
 import { observer } from 'mobx-react-lite'
 import chatStore from './store'
 import classNames from 'classnames'
+import AutoResizeTextarea from './AutoResizeTextarea'
+import RestartIcon from './RestartIcon'
+import StopIcon from './StopIcon'
+import './index.css'
+
+const IconBtn: React.FC<React.ButtonHTMLAttributes<HTMLButtonElement>> = ({ children, ...props }) => (
+  <div className='ml-1 md:ml-2 h-full inline-flex rounded-md items-center justify-center hover:bg-base-300 min-w-[25px] md:min-w-[40px] relative'>
+    <button
+      {...props}
+      className={classNames('h-full flex w-full gap-2 items-center justify-center', props.className)}
+    >
+      {children}
+    </button>
+  </div>
+)
 
 const AssistantInteraction = observer(() => {
   const { assistant } = useRouteLoaderData('assistant') as { assistant: Assistant }
@@ -59,6 +73,7 @@ const AssistantInteraction = observer(() => {
     const realContext = assistant.prompt ? [...assistant.prompt, ...context] : context
     const response = await getAssistantReply(realContext)
     let messageId = null
+    chatStore.setLoading(true)
     try {
       const reader = response.body?.pipeThrough(new TextDecoderStream()).getReader()
       if (reader) {
@@ -80,6 +95,7 @@ const AssistantInteraction = observer(() => {
         }
       }
     } catch (error) {}
+    chatStore.setLoading(false)
   }
 
   const onRetry = async (id: string) => {
@@ -155,44 +171,31 @@ const AssistantInteraction = observer(() => {
           >
             查看历史
           </div>
-          <div className='btn btn-xs btn-primary' onClick={() => abortController.current.abort()}>
-            中断
-          </div>
-          <div
-            className={classNames('btn btn-xs btn-primary', {
-              'btn-disabled': chatStore.messages.length === 0
-            })}
-            onClick={() => {
-              onRetry(chatStore.messages.slice(-1)[0].id)
-            }}
-          >
-            重试
-          </div>
         </div>
-        {/* 输入 */}
-        <TextareaAutosize
-          className='outline-none mb-2 p-2 resize-none'
-          minRows={1}
-          maxRows={3}
-          value={chatStore.input}
-          onChange={e => chatStore.setInput(e.target.value)}
-          placeholder='Enter 发送，Ctrl+Enter 换行'
-          onKeyDown={event => {
-            if (event.key === 'Enter') {
-              if (!event.ctrlKey) {
-                event.preventDefault()
-                sendUserMessage()
-              } else {
-                chatStore.setInput(chatStore.input + '\n')
-              }
-            }
-          }}
-        />
-        {/* 发送 */}
-        <div className='flex flex-row-reverse overflow-hidden'>
-          <button className='btn btn-sm lg:btn-md btn-primary' onClick={sendUserMessage}>
-            发送
-          </button>
+        {/* 输入框 */}
+        <div className='flex-shrink-0 flex flex-row justify-between items-center bg-transparent'>
+          <AutoResizeTextarea
+            loading={chatStore.loading}
+            value={chatStore.input}
+            onChange={input => chatStore.setInput(input)}
+            onSubmit={sendUserMessage}
+          />
+
+          {chatStore.loading ? (
+            <IconBtn onClick={() => abortController.current.abort()}>
+              <StopIcon />
+            </IconBtn>
+          ) : (
+            chatStore.messages.length > 0 && (
+              <IconBtn
+                onClick={() => {
+                  onRetry(chatStore.messages.slice(-1)[0].id)
+                }}
+              >
+                <RestartIcon />
+              </IconBtn>
+            )
+          )}
         </div>
       </div>
     </>

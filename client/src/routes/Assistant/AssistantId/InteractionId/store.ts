@@ -4,6 +4,7 @@ import { Message } from '../../types'
 class ChatStore {
   messages: Message[] = []
   input = ''
+  loading = false
 
   constructor() {
     makeAutoObservable(this)
@@ -40,6 +41,10 @@ class ChatStore {
         content
       }
     }
+  }
+
+  setLoading(loading: boolean) {
+    this.loading = loading
   }
 }
 
