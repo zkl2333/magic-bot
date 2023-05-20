@@ -32,7 +32,7 @@ const assistants: Assistant[] = prompts.map(prompt => {
     id: prompt.act,
     name: prompt.act,
     description: prompt.act,
-    avatar: `https://api.multiavatar.com/${prompt.act}.png`,
+    avatar: `https://api.multiavatar.com/${prompt.act}.svg`,
     initialMessage: prompt.act,
     modelConfig: modelConfig,
     interactionIds: [],
@@ -52,7 +52,7 @@ export const defaultAssistantList: Assistant[] = [
     name: '赞美大师',
     description: '我就喜欢夸人',
     initialMessage: '一天不夸你，我全身都难受！',
-    avatar: 'https://api.multiavatar.com/赞美大师.png',
+    avatar: 'https://api.multiavatar.com/赞美大师.svg',
     modelConfig: {
       ...modelConfig,
       context_size: 10,
@@ -75,7 +75,7 @@ export const defaultAssistantList: Assistant[] = [
     name: 'Ai女友',
     description: '甜蜜的Ai女友，会说肉麻的话，气氛调情高手',
     initialMessage: '在吗？快回老娘消息！',
-    avatar: 'https://api.multiavatar.com/dfgasd.png',
+    avatar: 'https://api.multiavatar.com/dfgasd.svg',
     modelConfig: {
       model: 'gpt-3.5-turbo',
       context_size: 20,
@@ -99,7 +99,7 @@ export const defaultAssistantList: Assistant[] = [
     name: 'Ai女友(乖巧版)',
     description: '乖巧、听话、善解人意的Ai女友',
     initialMessage: '主人，我在这里等你~',
-    avatar: 'https://api.multiavatar.com/asda.png',
+    avatar: 'https://api.multiavatar.com/asda.svg',
     modelConfig: {
       model: 'gpt-3.5-turbo',
       context_size: 20,
@@ -123,7 +123,7 @@ export const defaultAssistantList: Assistant[] = [
     name: '代码重构大师',
     description: '我会帮你对代码进行重构，使代码更加简洁、可读、可维护。',
     initialMessage: '请提供你需要重构的代码，我将尽我所能帮助你优化。',
-    avatar: 'https://api.multiavatar.com/CodeRefactorMaster.png',
+    avatar: 'https://api.multiavatar.com/CodeRefactorMaster.svg',
     modelConfig: { ...modelConfig, temperature: 0.3, frequency_penalty: -0.5 },
     interactionIds: [],
     prompt: [
@@ -138,7 +138,7 @@ export const defaultAssistantList: Assistant[] = [
     name: '充当 Linux 终端',
     description: '我就像一个 Linux 终端，你输入命令，我返回终端应显示的内容。',
     initialMessage: '你可以向我输入 Linux 命令，我将回复终端应显示的内容。',
-    avatar: 'https://api.multiavatar.com/LinuxTerminal.png',
+    avatar: 'https://api.multiavatar.com/LinuxTerminal.svg',
     modelConfig: modelConfig,
     interactionIds: [],
     prompt: [
@@ -162,7 +162,7 @@ export const defaultAssistantList: Assistant[] = [
     name: '充当英语翻译和改进者',
     description: '我会将你的语言翻译和改进成更为优美和精炼的英语。',
     initialMessage: '你可以用任何语言和我交流，我会识别语言，将其翻译并用更为优美和精炼的英语回答你。',
-    avatar: 'https://api.multiavatar.com/EnglishTranslator.png',
+    avatar: 'https://api.multiavatar.com/EnglishTranslator.svg',
     modelConfig: modelConfig,
     interactionIds: [],
     prompt: [
@@ -186,7 +186,7 @@ export const defaultAssistantList: Assistant[] = [
     name: '充当英英词典(附中文解释)',
     description: '我会将英文单词转换为包括中文翻译、英文释义和一个例句的完整解释。',
     initialMessage: '请给出一个英文单词，我将为你提供包括中文翻译、英文释义和一个例句的完整解释。',
-    avatar: 'https://api.multiavatar.com/EnglishToChineseDictionary.png',
+    avatar: 'https://api.multiavatar.com/EnglishToChineseDictionary.svg',
     modelConfig: { ...modelConfig, context_size: 1 },
     interactionIds: [],
     prompt: [
@@ -210,7 +210,7 @@ export const defaultAssistantList: Assistant[] = [
     name: '充当前端智能思路助手',
     description: '我会帮助你解决关于Js、Node等前端代码问题，提供解决策略，包括建议代码、代码逻辑思路策略。',
     initialMessage: '你可以提供一些关于Js、Node等前端代码问题的具体信息，我将为你想出解决问题的策略。',
-    avatar: 'https://api.multiavatar.com/FrontEndExpert.png',
+    avatar: 'https://api.multiavatar.com/FrontEndExpert.svg',
     modelConfig: modelConfig,
     interactionIds: [],
     prompt: [
