@@ -18,7 +18,7 @@ const AutoResizeTextarea = (props: AutoResizeTextareaProps) => {
   }
 
   return (
-    <div className='flex flex-col w-full py-2 flex-grow md:py-3 md:pl-4 relative border border-base-300 bg-base-100 rounded-md shadow-lg'>
+    <div className='flex flex-col w-full py-2 flex-grow md:py-3 md:pl-4 relative border border-base-300 bg-base-100 rounded-md shadow'>
       <TextareaAutosize
         value={value}
         placeholder='Enter 发送，Ctrl + Enter 换行'

@@ -47,7 +47,7 @@ const AssistantId = () => {
   return (
     <div className='drawer h-full'>
       <input readOnly checked={showAssistantIdSidebar} type='checkbox' className='drawer-toggle' />
-      <div className='safe-area drawer-content flex flex-col justify-between'>
+      <div className='drawer-content flex flex-col justify-between'>
         <Outlet context={{ ...context, showAssistantIdSidebar, setAssistantIdShowSidebar }} />
       </div>
       <div className='drawer-side'>

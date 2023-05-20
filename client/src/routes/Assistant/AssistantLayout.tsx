@@ -23,7 +23,7 @@ function AssistantLayout() {
 
   return (
     <>
-      <div className={classNames('drawer drawer-mobile h-full bg-base-200')}>
+      <div className={classNames('safe-area drawer drawer-mobile h-full bg-base-200')}>
         <input
           className='drawer-toggle'
           id='assistant-side-drawer'
@@ -33,16 +33,18 @@ function AssistantLayout() {
             setAssistantLayoutShowSidebar(e.target.checked)
           }}
         />
-        <div className='safe-area drawer-content flex flex-col bg-base-200'>
+        <div className='drawer-content flex flex-col bg-base-200'>
           <div className='navbar bg-base-200 border-b border-base-300'>
-            <button
-              className='btn btn-square btn-ghost lg:hidden'
-              onClick={() => {
-                setAssistantLayoutShowSidebar(true)
-              }}
-            >
-              <MenuIcon />
-            </button>
+            {assistantList.length > 0 && (
+              <button
+                className='btn btn-square btn-ghost lg:hidden'
+                onClick={() => {
+                  setAssistantLayoutShowSidebar(true)
+                }}
+              >
+                <MenuIcon />
+              </button>
+            )}
             <div className='flex-1'>
               <a className='btn btn-ghost normal-case text-xl'>{title || 'AI Web'}</a>
             </div>

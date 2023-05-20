@@ -9,7 +9,7 @@ const AssistantSidebar = ({ assistantList }: { assistantList: Assistant[] }) => 
 
   return (
     <div className='overflow-hidden h-full w-60 text-base-content border-base-300 border-r bg-base-200'>
-      <div className='h-full flex flex-col justify-between safe-area'>
+      <div className='h-full flex flex-col justify-between'>
         <div className='border-b border-base-300 flex justify-center items-center p-3 text-center h-16'>
           <NavLink
             to='/assistant/new'
