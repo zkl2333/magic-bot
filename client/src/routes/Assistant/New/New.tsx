@@ -29,6 +29,7 @@ const New = () => {
             let formData = new FormData()
             formData.append('assistant', JSON.stringify({ ...assistant, id: uuidv4() }))
             fetcher.submit(formData, {
+              action: '/assistant',
               method: 'post'
             })
           }}

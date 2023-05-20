@@ -11,6 +11,7 @@ import New from './Assistant/New/New'
 import AssistantId from './Assistant/AssistantId/AssistantId'
 import ErrorPage from './ErrorPage'
 import Login from './Login/Login'
+import { deleteAssistant, getAllAssistants } from './Assistant/service/assistant'
 
 export const router = createBrowserRouter([
   {
@@ -31,14 +32,27 @@ export const router = createBrowserRouter([
         path: 'assistant',
         element: <AssistantLayout />,
         loader: assistantLayoutLoader,
-        action: a => {
-          console.log(a)
-          return null
-        },
+        action: AssistantLayoutAction,
         children: [
           {
             index: true,
-            action: AssistantLayoutAction,
+            loader: async ({ params }) => {
+              const { assistantId } = params
+              const assistantList = await getAllAssistants()
+              if (!assistantId) {
+                if (assistantList.length > 0) {
+                  const assistant = assistantList[0]
+                  return redirect(`/assistant/${assistant.id}`)
+                }
+                return redirect('/assistant/new')
+              }
+              return {
+                assistantList
+              }
+            }
+          },
+          {
+            path: 'new',
             element: <New />
           },
           {
