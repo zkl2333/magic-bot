@@ -4,7 +4,7 @@ import { redirect } from 'react-router-dom'
 import { assistantLoader } from './Assistant/AssistantId/loader'
 import { assistantInteractionLoader } from './Assistant/AssistantId/InteractionId/loader'
 import { assistantLayoutLoader } from './Assistant/loader'
-import { AssistantLayoutAction } from './action'
+import { AssistantLayoutAction } from './Assistant/AssistantLayoutAction'
 import AssistantLayout from './Assistant/AssistantLayout'
 import AssistantInteraction from './Assistant/AssistantId/InteractionId/Index'
 import New from './Assistant/New/New'
@@ -12,15 +12,14 @@ import AssistantId from './Assistant/AssistantId/AssistantId'
 import ErrorPage from './ErrorPage'
 import Login from './Login/Login'
 import { getAllAssistants } from './Assistant/service/assistant'
+import Root from './Root/Root'
+import User from './User/User'
 
 export const router = createBrowserRouter([
   {
-    index: true,
-    element: <Navigate to='/assistant' />
-  },
-  {
     path: '/',
     errorElement: <ErrorPage />,
+    element: <Root />,
     loader: () => {
       if (!userStore.isLogin) {
         return redirect('/login')
@@ -29,7 +28,15 @@ export const router = createBrowserRouter([
     },
     children: [
       {
-        path: 'assistant',
+        index: true,
+        element: <Navigate to='/assistant' />
+      },
+      {
+        path: '/user',
+        element: <User />
+      },
+      {
+        path: '/assistant',
         element: <AssistantLayout />,
         loader: assistantLayoutLoader,
         action: AssistantLayoutAction,

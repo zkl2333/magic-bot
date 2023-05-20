@@ -1,5 +1,5 @@
 import { redirect, ActionFunction } from 'react-router-dom'
-import { addAssistant, deleteAssistant } from './Assistant/service/assistant'
+import { addAssistant, deleteAssistant } from './service/assistant'
 
 export const AssistantLayoutAction: ActionFunction = async ({ request }) => {
   try {
