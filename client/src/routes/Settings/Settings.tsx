@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { SidebarLayout } from '../../components/SidebarLayout'
 import MenuIcon from '@mui/icons-material/Menu'
 import { NavLink, Outlet, useOutletContext } from 'react-router-dom'
