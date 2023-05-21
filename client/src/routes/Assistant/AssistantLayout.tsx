@@ -1,4 +1,4 @@
-import { NavLink, Outlet, useLoaderData } from 'react-router-dom'
+import { NavLink, Outlet, useLoaderData, useOutletContext } from 'react-router-dom'
 import AssistantSidebar from './AssistantSidebar'
 import { useState } from 'react'
 import MenuIcon from '@mui/icons-material/Menu'
@@ -6,20 +6,13 @@ import userStore from '../../store/UserStore'
 import Avatar from '../../components/Avatar'
 import { Assistant } from './types'
 import { SidebarLayout } from '../../components/SidebarLayout'
-
-export type AssistantLayoutContextProps = {
-  setTitle: React.Dispatch<React.SetStateAction<string>>
-}
+import { RootContextProps } from '../Root/Root'
 
 function AssistantLayout() {
   const { assistantList } = useLoaderData() as { assistantList: Assistant[] }
   const [showAssistantLayoutSidebar, setAssistantLayoutShowSidebar] = useState(false)
-  const [title, _setTitle] = useState('')
-
-  const setTitle = (title: string) => {
-    _setTitle(title)
-    document.title = `${title} - AI Web`
-  }
+  const context = useOutletContext<RootContextProps>()
+  const { title } = context
 
   return (
     <SidebarLayout
@@ -52,7 +45,7 @@ function AssistantLayout() {
               className='menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-36'
             >
               <li>
-                <NavLink to='/user'>用户设置</NavLink>
+                <NavLink to='/settings'>设置</NavLink>
               </li>
               <li onClick={() => userStore.logout()}>
                 <a>退出登录</a>
@@ -61,11 +54,7 @@ function AssistantLayout() {
           </div>
         </div>
       </div>
-      <Outlet
-        context={{
-          setTitle
-        }}
-      />
+      <Outlet context={context} />
     </SidebarLayout>
   )
 }

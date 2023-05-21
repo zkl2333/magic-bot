@@ -13,7 +13,7 @@ import ErrorPage from './ErrorPage'
 import Login from './Login/Login'
 import { getAllAssistants } from './Assistant/service/assistant'
 import Root from './Root/Root'
-import User from './User/User'
+import Settings from './Settings/Settings'
 
 export const router = createBrowserRouter([
   {
@@ -32,8 +32,30 @@ export const router = createBrowserRouter([
         element: <Navigate to='/assistant' />
       },
       {
-        path: '/user',
-        element: <User />
+        path: '/settings',
+        element: <Settings />,
+        children: [
+          {
+            index: true,
+            element: <Navigate to='/settings/profile' />
+          },
+          {
+            path: 'profile',
+            element: <></>
+          },
+          {
+            path: 'security',
+            element: <></>
+          },
+          {
+            path: 'balance',
+            element: <></>
+          },
+          {
+            path: 'transactions',
+            element: <></>
+          }
+        ]
       },
       {
         path: '/assistant',

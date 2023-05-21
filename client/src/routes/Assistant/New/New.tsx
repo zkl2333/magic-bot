@@ -3,12 +3,12 @@ import AssistantItem from '../components/AssistantItem'
 import { defaultAssistantList } from '../constants'
 import { useFetcher, useOutletContext } from 'react-router-dom'
 import { v4 as uuidv4 } from 'uuid'
-import { AssistantLayoutContextProps } from '../AssistantLayout'
 import { useEffect } from 'react'
+import { RootContextProps } from '../../Root/Root'
 
 const New = () => {
   const fetcher = useFetcher()
-  const { setTitle } = useOutletContext<AssistantLayoutContextProps>()
+  const { setTitle } = useOutletContext<RootContextProps>()
 
   useEffect(() => {
     setTitle('新建助手')
