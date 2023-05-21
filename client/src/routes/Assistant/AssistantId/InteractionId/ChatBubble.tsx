@@ -76,12 +76,14 @@ const ChatBubble = (props: ChatBubbleProps) => {
       )}
       {isAssistant ? (
         <div className='flex w-full'>
-          <div
-            className={classnames(
-              'flex-1 w-0 prose prose-sm md:prose-md lg:prose-lg chat-bubble bg-base-100 text-base-content markdown-body dark p-3 shadow'
-            )}
-            dangerouslySetInnerHTML={{ __html: mdi.render(text) }}
-          />
+          <div className='flex-1 w-0'>
+            <div
+              className={classnames(
+                'prose prose-sm md:prose-md lg:prose-lg chat-bubble bg-base-100 text-base-content markdown-body dark p-3 shadow'
+              )}
+              dangerouslySetInnerHTML={{ __html: mdi.render(text) }}
+            />
+          </div>
         </div>
       ) : (
         <div

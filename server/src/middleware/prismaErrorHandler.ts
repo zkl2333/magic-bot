@@ -18,6 +18,7 @@ const prismaErrorHandler = async (ctx: Koa.Context, next: Koa.Next) => {
         message: `Unknown Prisma error: ${error.message}`
       }
     } else {
+      console.log(error)
       throw error
     }
   }
