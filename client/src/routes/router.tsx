@@ -14,6 +14,11 @@ import Login from './Login/Login'
 import { getAllAssistants } from './Assistant/service/assistant'
 import Root from './Root/Root'
 import Settings from './Settings/Settings'
+import Profile from './Settings/Profile/Profile'
+import Security from './Settings/Security/Security'
+import Balance from './Settings/Balance/Balance'
+import Transactions from './Settings/Transactions/Transactions'
+import { getUserInfo, updateUserInfo } from './Settings/service'
 
 export const router = createBrowserRouter([
   {
@@ -41,19 +46,41 @@ export const router = createBrowserRouter([
           },
           {
             path: 'profile',
-            element: <></>
+            element: <Profile />,
+            loader: () => {
+              return getUserInfo()
+            },
+            action: async ({ request }) => {
+              const formData = await request.formData()
+              const data = {
+                email: formData.get('email') as string,
+                username: formData.get('username') as string,
+                nickname: formData.get('nickname') as string,
+                settings: {
+                  theme: formData.get('theme') as string
+                }
+              }
+              const res = await updateUserInfo(data)
+              if (res.ok) {
+                return res
+              } else {
+                return {
+                  error: await res.json()
+                }
+              }
+            }
           },
           {
             path: 'security',
-            element: <></>
+            element: <Security />
           },
           {
             path: 'balance',
-            element: <></>
+            element: <Balance />
           },
           {
             path: 'transactions',
-            element: <></>
+            element: <Transactions />
           }
         ]
       },

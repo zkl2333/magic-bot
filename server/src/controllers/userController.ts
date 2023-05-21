@@ -142,22 +142,103 @@ export async function login(ctx: Context) {
   }
 }
 
-// 验证 JWT
-export async function verify(ctx: Context) {
-  const token = ctx.request.headers.authorization?.split(' ')[1]
+export async function userInfo(ctx: Context) {
+  const { id } = ctx.state.user
 
-  if (!token) {
-    ctx.status = 400
-    ctx.body = { message: 'Token required' }
+  const user = await prisma.user.findUnique({
+    where: {
+      id: id
+    },
+    select: {
+      id: true,
+      username: true,
+      nickname: true,
+      email: true,
+      createdAt: true,
+      updatedAt: true,
+      settings: true
+    }
+  })
+
+  if (!user) {
+    ctx.status = 404
+    ctx.body = { message: '用户未找到' }
     return
   }
 
+  ctx.status = 200
+  ctx.body = {
+    message: '获取用户信息成功',
+    user: user
+  }
+}
+
+export async function updateUserInfo(ctx: Context) {
+  const { id } = ctx.state.user
+  const { username, nickname, email, settings } = ctx.request.body as {
+    username?: string
+    nickname?: string
+    email?: string
+    settings?: {
+      theme: string
+    }
+  }
+
+  const data: any = {}
+
+  if (username || email) {
+    const existingUsers = await prisma.user.findMany({
+      where: {
+        OR: [{ username }, { email }]
+      }
+    })
+
+    const existingUsernameUser = existingUsers.find(user => user.username === username)
+    const existingEmailUser = existingUsers.find(user => user.email === email)
+
+    if (existingUsernameUser && existingUsernameUser.id !== id) {
+      ctx.status = 400
+      ctx.body = { message: '该用户名已被使用' }
+      return
+    }
+
+    if (existingEmailUser && existingEmailUser.id !== id) {
+      ctx.status = 400
+      ctx.body = { message: '该邮箱已被其他用户绑定' }
+      return
+    }
+
+    if (username) {
+      data.username = username
+    }
+
+    if (nickname) {
+      data.nickname = nickname
+    }
+
+    if (email) {
+      data.email = email
+    }
+  }
+
+  if (settings) {
+    data.settings = {
+      upsert: {
+        create: settings,
+        update: settings
+      }
+    }
+  }
+
   try {
-    const decoded = jwt.verify(token as string, jwtSecret)
+    await prisma.user.update({
+      where: { id: id },
+      data: data
+    })
     ctx.status = 200
-    ctx.body = { message: 'Token verified', verified: true }
+    ctx.body = { message: '更新用户信息成功' }
   } catch (error) {
-    ctx.status = 401
-    ctx.body = { message: 'Invalid token', verified: false, error }
+    ctx.status = 400
+    ctx.body = { message: '更新用户信息失败', error: (error as Error).message }
   }
 }
