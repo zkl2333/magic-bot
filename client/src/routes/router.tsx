@@ -14,7 +14,7 @@ import Login from './Login/Login'
 import { getAllAssistants } from './Assistant/service/assistant'
 import Root from './Root/Root'
 import Settings from './Settings/Settings'
-import Profile from './Settings/Profile/Profile'
+import User from './Settings/User/User'
 import Security from './Settings/Security/Security'
 import Balance from './Settings/Balance/Balance'
 import Transactions from './Settings/Transactions/Transactions'
@@ -42,12 +42,12 @@ export const router = createBrowserRouter([
         children: [
           {
             index: true,
-            element: <Navigate to='/settings/profile' />
+            element: <Navigate to='/settings/user' />
           },
           {
-            path: 'profile',
-            element: <Profile />,
-            loader: () => {
+            path: 'user',
+            element: <User />,
+            loader: async () => {
               return getUserInfo()
             },
             action: async ({ request }) => {

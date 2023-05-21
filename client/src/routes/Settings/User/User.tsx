@@ -1,12 +1,22 @@
-import { Form, useActionData, useLoaderData } from 'react-router-dom'
+import { Form, useActionData, useLoaderData, useOutletContext } from 'react-router-dom'
 import { User, Settings } from '../service'
 import { useSnackbar } from 'notistack'
 import { useEffect } from 'react'
+import { RootContextProps } from '../../Root/Root'
 
-const Profile = () => {
+const User = () => {
   const { user } = useLoaderData() as { user: User & { settings: Settings | null } }
   const res = useActionData() as { error: any } | { message: string }
   const { enqueueSnackbar } = useSnackbar()
+
+  const { setTitle } = useOutletContext<RootContextProps>()
+
+  useEffect(() => {
+    setTitle('个人信息')
+    return () => {
+      setTitle('')
+    }
+  }, [])
 
   useEffect(() => {
     if (res) {
@@ -23,7 +33,7 @@ const Profile = () => {
   }, [res])
 
   return (
-    <Form id='updateUserInfoForm' method='post' action='/settings/profile' className='w-full flex-1 p-4'>
+    <Form id='updateUserInfoForm' method='post' className='w-full flex-1 p-4'>
       <div className='mb-4'>
         <label className='block text-gray-700 font-semibold' htmlFor='username'>
           用户名:
@@ -84,4 +94,4 @@ const Profile = () => {
   )
 }
 
-export default Profile
+export default User

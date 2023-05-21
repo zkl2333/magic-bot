@@ -4,7 +4,13 @@ import { NavLink, useFetcher } from 'react-router-dom'
 import { Assistant } from './types'
 import HighlightOffTwoToneIcon from '@mui/icons-material/HighlightOffTwoTone'
 
-const AssistantSidebar = ({ assistantList }: { assistantList: Assistant[] }) => {
+const AssistantSidebar = ({
+  assistantList,
+  setAssistantLayoutShowSidebar
+}: {
+  assistantList: Assistant[]
+  setAssistantLayoutShowSidebar: React.Dispatch<React.SetStateAction<boolean>>
+}) => {
   const fetcher = useFetcher()
 
   return (
@@ -13,6 +19,7 @@ const AssistantSidebar = ({ assistantList }: { assistantList: Assistant[] }) => 
         <div className='border-b border-base-300 flex justify-center items-center p-3 text-center h-16'>
           <NavLink
             to='/assistant/new'
+            onClick={() => setAssistantLayoutShowSidebar(false)}
             className={({ isActive }) =>
               classNames('btn btn-ghost normal-case text-xl w-full h-full', {
                 'bg-base-300': isActive
@@ -26,6 +33,7 @@ const AssistantSidebar = ({ assistantList }: { assistantList: Assistant[] }) => 
           {assistantList.map(assistant => (
             <NavLink
               key={assistant.id}
+              onClick={() => setAssistantLayoutShowSidebar(false)}
               to={`/assistant/${assistant.id}`}
               className={({ isActive }) =>
                 classNames('px-4 py-3 block', {

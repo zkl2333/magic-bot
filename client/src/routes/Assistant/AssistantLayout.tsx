@@ -19,7 +19,12 @@ function AssistantLayout() {
       hasSidebar={assistantList.length > 0}
       showSidebar={showAssistantLayoutSidebar}
       setShowSidebar={setAssistantLayoutShowSidebar}
-      sidebarContent={<AssistantSidebar assistantList={assistantList} />}
+      sidebarContent={
+        <AssistantSidebar
+          setAssistantLayoutShowSidebar={setAssistantLayoutShowSidebar}
+          assistantList={assistantList}
+        />
+      }
     >
       <div className='navbar bg-base-200 border-b border-base-300'>
         {assistantList.length > 0 && (

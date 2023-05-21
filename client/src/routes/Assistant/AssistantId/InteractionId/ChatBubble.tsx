@@ -77,14 +77,14 @@ const ChatBubble = (props: ChatBubbleProps) => {
       {isAssistant ? (
         <div
           className={classnames(
-            'prose prose-sm md:prose-md lg:prose-lg chat-bubble bg-base-100 text-base-content markdown-body dark p-3 shadow'
+            'prose prose-sm md:prose-md lg:prose-lg chat-bubble bg-base-100 text-base-content markdown-body dark p-3 shadow max-w-full',
           )}
           dangerouslySetInnerHTML={{ __html: mdi.render(text) }}
         />
       ) : (
         <div
           className={classnames(
-            'prose prose-sm md:prose-md lg:prose-lg chat-bubble bg-base-100 text-base-content markdown-body dark p-3 shadow whitespace-pre-wrap'
+            'prose prose-sm md:prose-md lg:prose-lg chat-bubble bg-base-100 text-base-content markdown-body dark p-3 shadow whitespace-pre-wrap max-w-full'
           )}
         >
           {text}
