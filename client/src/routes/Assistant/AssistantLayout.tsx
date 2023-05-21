@@ -1,4 +1,4 @@
-import { NavLink, Outlet, useLoaderData, useOutletContext } from 'react-router-dom'
+import { NavLink, Outlet, useLoaderData, useNavigate, useOutletContext } from 'react-router-dom'
 import AssistantSidebar from './AssistantSidebar'
 import { useState } from 'react'
 import MenuIcon from '@mui/icons-material/Menu'
@@ -13,6 +13,7 @@ function AssistantLayout() {
   const [showAssistantLayoutSidebar, setAssistantLayoutShowSidebar] = useState(false)
   const context = useOutletContext<RootContextProps>()
   const { title } = context
+  const navigate = useNavigate()
 
   return (
     <SidebarLayout
@@ -52,7 +53,12 @@ function AssistantLayout() {
               <li>
                 <NavLink to='/settings'>设置</NavLink>
               </li>
-              <li onClick={() => userStore.logout()}>
+              <li
+                onClick={() => {
+                  userStore.logout()
+                  navigate('/', { replace: true })
+                }}
+              >
                 <a>退出登录</a>
               </li>
             </ul>
