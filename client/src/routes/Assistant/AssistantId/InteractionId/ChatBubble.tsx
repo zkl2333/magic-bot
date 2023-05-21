@@ -75,16 +75,18 @@ const ChatBubble = (props: ChatBubbleProps) => {
         <Avatar className='chat-image w-10 rounded-full overflow-hidden' email={userStore.email} />
       )}
       {isAssistant ? (
-        <div
-          className={classnames(
-            'prose prose-sm md:prose-md lg:prose-lg chat-bubble bg-base-100 text-base-content markdown-body dark p-3 shadow max-w-full',
-          )}
-          dangerouslySetInnerHTML={{ __html: mdi.render(text) }}
-        />
+        <div className='flex w-full'>
+          <div
+            className={classnames(
+              'flex-1 w-0 prose prose-sm md:prose-md lg:prose-lg chat-bubble bg-base-100 text-base-content markdown-body dark p-3 shadow'
+            )}
+            dangerouslySetInnerHTML={{ __html: mdi.render(text) }}
+          />
+        </div>
       ) : (
         <div
           className={classnames(
-            'prose prose-sm md:prose-md lg:prose-lg chat-bubble bg-base-100 text-base-content markdown-body dark p-3 shadow whitespace-pre-wrap max-w-full'
+            'prose prose-sm md:prose-md lg:prose-lg chat-bubble bg-base-100 text-base-content markdown-body dark p-3 shadow whitespace-pre-wrap'
           )}
         >
           {text}
