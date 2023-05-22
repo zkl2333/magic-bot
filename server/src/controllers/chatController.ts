@@ -4,6 +4,7 @@ import { Readable } from 'stream'
 
 import { formatChatErrorResponse, chatCompletionsStreamFormatResponse, streamToString } from '../utils'
 import { Message } from '../types'
+import { getApiKey } from '../service/aiProxy'
 
 export interface ChatCompletionRequest {
   messages: Message[]
@@ -19,12 +20,17 @@ export interface ChatCompletionRequest {
 
 export const getCompletions = async (ctx: Context) => {
   const requestBody = ctx.request.body as ChatCompletionRequest
+  const { id } = ctx.state.user
+
   if (typeof requestBody !== 'object' || !requestBody) {
     ctx.body = formatChatErrorResponse({ msg: '请求参数错误' })
     return
   }
+
+  const apiKey = await getApiKey(id)
+
   try {
-    const response = await chatCompletions(requestBody)
+    const response = await chatCompletions(requestBody, apiKey)
     if (response.data instanceof Readable) {
       if (response.status === 200) {
         ctx.body = chatCompletionsStreamFormatResponse(response.data as unknown as Readable)
