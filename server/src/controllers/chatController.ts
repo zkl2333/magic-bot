@@ -27,9 +27,8 @@ export const getCompletions = async (ctx: Context) => {
     return
   }
 
-  const apiKey = await getApiKey(id)
-
   try {
+    const apiKey = await getApiKey(id)
     const response = await chatCompletions(requestBody, apiKey)
     if (response.data instanceof Readable) {
       if (response.status === 200) {
@@ -45,10 +44,10 @@ export const getCompletions = async (ctx: Context) => {
       }
     }
   } catch (error: any) {
-    console.log(error)
+    console.error(error)
     ctx.body = formatChatErrorResponse({
       msg: '服务端错误',
-      error: error
+      error: error.toString ? error.toString() : JSON.stringify(error)
     })
   }
 }

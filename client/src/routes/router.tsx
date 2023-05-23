@@ -18,7 +18,7 @@ import User from './Settings/User/User'
 import Security from './Settings/Security/Security'
 import Balance from './Settings/Balance/Balance'
 import Transactions from './Settings/Transactions/Transactions'
-import { getUserInfo, updateUserInfo } from './Settings/service'
+import { getBalance, getUserInfo, updateUserInfo } from './Settings/service'
 
 export const router = createBrowserRouter([
   {
@@ -47,9 +47,7 @@ export const router = createBrowserRouter([
           {
             path: 'user',
             element: <User />,
-            loader: async () => {
-              return getUserInfo()
-            },
+            loader: getUserInfo,
             action: async ({ request }) => {
               const formData = await request.formData()
               const data = {
@@ -76,7 +74,8 @@ export const router = createBrowserRouter([
           },
           {
             path: 'balance',
-            element: <Balance />
+            element: <Balance />,
+            loader: getBalance
           },
           {
             path: 'transactions',

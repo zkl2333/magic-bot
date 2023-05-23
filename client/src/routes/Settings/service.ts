@@ -52,3 +52,13 @@ export const updateUserInfo = async (
     body: JSON.stringify(userInfo)
   })
 }
+
+export const getBalance = async () => {
+  return fetch('/api/user/balance', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${userStore.token}`
+    }
+  })
+}

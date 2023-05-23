@@ -49,8 +49,13 @@ export const getPointAccount = async (uid: string) => {
   }
 
   const responseBody = await response.json()
-  console.log(responseBody)
-  return responseBody.data
+
+  if (responseBody.success) {
+    return responseBody.data
+  } else {
+    console.error(responseBody)
+    return null
+  }
 }
 
 export const createApiKey = async (uid: string) => {
@@ -78,7 +83,12 @@ export const createApiKey = async (uid: string) => {
   }
 
   const responseBody = await response.json()
-  console.log(responseBody)
+
+  if (!responseBody.success) {
+    console.error(responseBody)
+    throw new Error(responseBody.message)
+  }
+
   return responseBody.data
 }
 

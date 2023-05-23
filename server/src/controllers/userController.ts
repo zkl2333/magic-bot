@@ -3,6 +3,7 @@ import * as bcrypt from 'bcrypt'
 import * as jwt from 'jsonwebtoken'
 import { PrismaClient, User } from '@prisma/client'
 import { jwtSecret } from '../constence'
+import { getPointAccount } from '../service/aiProxy'
 
 const prisma = new PrismaClient()
 
@@ -240,5 +241,27 @@ export async function updateUserInfo(ctx: Context) {
   } catch (error) {
     ctx.status = 400
     ctx.body = { message: '更新用户信息失败', error: (error as Error).message }
+  }
+}
+
+export const getBalance = async (ctx: Context) => {
+  const { id } = ctx.state.user
+
+  const data = await getPointAccount(id)
+
+  if (data === null) {
+    ctx.status = 404
+    ctx.body = {
+      success: false,
+      message: '获取用户余额失败'
+    }
+    return
+  }
+
+  ctx.status = 200
+  ctx.body = {
+    success: true,
+    message: '获取用户余额成功',
+    data: data
   }
 }
