@@ -2,11 +2,14 @@ import app from './app'
 import findProcess from 'find-process'
 import { exec } from 'child_process'
 import os from 'os'
+import dotenv from 'dotenv'
 
-const port = 3000
+dotenv.config()
+
+const port = process.env.PORT || 3000
 
 // 杀死占用端口的进程
-function killProcessOnPort(port: number) {
+function killProcessOnPort(port: string | number) {
   return new Promise<void>((resolve, reject) => {
     findProcess('port', port)
       .then(processList => {

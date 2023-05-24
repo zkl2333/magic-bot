@@ -156,6 +156,8 @@ export async function userInfo(ctx: Context) {
       username: true,
       nickname: true,
       email: true,
+      role: true,
+      avatarUrl: true,
       createdAt: true,
       updatedAt: true,
       settings: withInfo
