@@ -49,6 +49,12 @@ class UserStore {
     )
   }
 
+  setUser(user: { id: number; username: string; email: string }) {
+    this.id = user.id
+    this.username = user.username
+    this.email = user.email
+  }
+
   login(user: { id: number; username: string; email: string }, token: string) {
     this.isLogin = true
     this.id = user.id

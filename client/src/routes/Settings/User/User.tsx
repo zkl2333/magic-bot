@@ -1,11 +1,12 @@
 import { Form, useActionData, useLoaderData, useOutletContext } from 'react-router-dom'
-import { User, Settings } from '../service'
+
 import { useSnackbar } from 'notistack'
 import { useEffect } from 'react'
 import { RootContextProps } from '../../Root/Root'
+import type { User, Settings } from '../../../service/user'
 
 const User = () => {
-  const { user } = useLoaderData() as { user: User & { settings: Settings | null } }
+  const user = useLoaderData() as User & { settings: Settings | null }
   const res = useActionData() as { error: any } | { message: string }
   const { enqueueSnackbar } = useSnackbar()
 

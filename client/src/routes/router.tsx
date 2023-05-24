@@ -18,18 +18,26 @@ import User from './Settings/User/User'
 import Security from './Settings/Security/Security'
 import Balance from './Settings/Balance/Balance'
 import Transactions from './Settings/Transactions/Transactions'
-import { getBalance, getUserInfo, updateUserInfo } from './Settings/service'
+import { getUserInfo, getBalance, updateUserInfo } from '../service/user'
 
 export const router = createBrowserRouter([
   {
     path: '/',
     errorElement: <ErrorPage />,
     element: <Root />,
-    loader: () => {
+    loader: async () => {
       if (!userStore.isLogin) {
         return redirect('/login')
       }
-      return null
+      try {
+        const user = await getUserInfo()
+        userStore.setUser(user)
+        return {
+          user
+        }
+      } catch (error) {
+        return redirect('/login')
+      }
     },
     children: [
       {
@@ -47,7 +55,7 @@ export const router = createBrowserRouter([
           {
             path: 'user',
             element: <User />,
-            loader: getUserInfo,
+            loader: () => getUserInfo({ withInfo: true }),
             action: async ({ request }) => {
               const formData = await request.formData()
               const data = {

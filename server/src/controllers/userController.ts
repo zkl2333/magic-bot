@@ -145,6 +145,7 @@ export async function login(ctx: Context) {
 
 export async function userInfo(ctx: Context) {
   const { id } = ctx.state.user
+  const withInfo = ctx.query.withInfo === 'true'
 
   const user = await prisma.user.findUnique({
     where: {
@@ -157,18 +158,19 @@ export async function userInfo(ctx: Context) {
       email: true,
       createdAt: true,
       updatedAt: true,
-      settings: true
+      settings: withInfo
     }
   })
 
   if (!user) {
     ctx.status = 404
-    ctx.body = { message: '用户未找到' }
+    ctx.body = { success: false, message: '用户未找到' }
     return
   }
 
   ctx.status = 200
   ctx.body = {
+    success: true,
     message: '获取用户信息成功',
     user: user
   }

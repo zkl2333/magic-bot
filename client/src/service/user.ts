@@ -1,4 +1,4 @@
-import userStore from '../../store/UserStore'
+import userStore from '../store/UserStore'
 
 /**
  * Model User
@@ -26,14 +26,23 @@ export type Settings = {
   updatedAt: Date
 }
 
-export const getUserInfo = async () => {
-  return fetch('/api/user/info', {
+export const getUserInfo = async ({ withInfo }: { withInfo?: boolean } = {}) => {
+  const queryParams = withInfo ? `?withInfo=${withInfo}` : ''
+
+  const user = await fetch(`/api/user/info${queryParams}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${userStore.token}`
     }
   })
+
+  const res = await user.json()
+
+  if (!res.success) {
+    throw new Error(res.message)
+  }
+  return res.user
 }
 
 export const updateUserInfo = async (
