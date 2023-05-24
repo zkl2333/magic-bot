@@ -29,6 +29,12 @@ const defaultModelPermission = [
   'code-davinci-edit-001'
 ]
 
+const printSensitiveLog = (message: string, sensitiveData: string) => {
+  const prefix = sensitiveData.slice(0, 7)
+  const suffix = sensitiveData.slice(-7)
+  console.log(`${message} ${prefix}****${suffix}`)
+}
+
 const createUrl = (path: string) => {
   return `${baseUrl}${path}`
 }
@@ -65,7 +71,7 @@ export const createApiKey = async (uid: string) => {
   }
 
   const data = {
-    name: `web-user-${uid.slice(0, 8)}`,
+    name: `web-user-${uid}`,
     externalId: uid,
     enableSubPointAccount: true,
     initPoint: '1000.00',
@@ -117,33 +123,49 @@ export const listApiKey = async () => {
   return responseBody.data
 }
 
-export const getApiKey = async (uid: string) => {
-  // 判断是否存在AI密钥
-  const existingUserPlatform = await prisma.userPlatform.findFirst({
+export const fetchApiKey = async (userId: string) => {
+  // 提取创建 userPlatform 的逻辑到一个函数中
+  const createUserPlatformAndLog = async (apiKey: string) => {
+    const newUserPlatform = await prisma.userPlatform.create({
+      data: {
+        platform: 'AI Proxy',
+        apiKey: apiKey,
+        user: {
+          connect: { id: userId }
+        }
+      }
+    })
+
+    printSensitiveLog('AI密钥关联成功', newUserPlatform.apiKey)
+
+    return newUserPlatform.apiKey
+  }
+
+  const existingAIKey = await prisma.userPlatform.findFirst({
     where: {
-      userId: uid,
+      userId: userId,
       platform: 'AI Proxy'
     }
   })
 
-  if (existingUserPlatform) {
-    return existingUserPlatform.apiKey
+  if (existingAIKey) {
+    return existingAIKey.apiKey
   }
 
-  const apiKey = await createApiKey(uid)
-  console.log('创建AI密钥', apiKey.slice(0, 8))
+  const allApiKeys = await listApiKey()
 
-  const createdUserPlatform = await prisma.userPlatform.create({
-    data: {
-      platform: 'AI Proxy',
-      apiKey: apiKey,
-      user: {
-        connect: { id: uid }
-      }
-    }
-  })
+  const matchingApiKey = allApiKeys.find((key: any) => key.externalId === userId)
 
-  console.log('AI密钥关联成功', createdUserPlatform.apiKey.slice(0, 8))
+  if (matchingApiKey) {
+    printSensitiveLog('找到关联的 AI密钥', matchingApiKey.apiKey)
 
-  return createdUserPlatform.apiKey
+    // 使用提取的函数
+    return createUserPlatformAndLog(matchingApiKey.apiKey)
+  }
+
+  const newApiKey = await createApiKey(userId)
+  printSensitiveLog('创建AI密钥', newApiKey)
+
+  // 使用提取的函数
+  return createUserPlatformAndLog(newApiKey)
 }

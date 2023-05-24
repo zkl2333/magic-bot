@@ -4,7 +4,7 @@ import { Readable } from 'stream'
 
 import { formatChatErrorResponse, chatCompletionsStreamFormatResponse, streamToString } from '../utils'
 import { Message } from '../types'
-import { getApiKey } from '../service/aiProxy'
+import { fetchApiKey } from '../service/aiProxy'
 
 export interface ChatCompletionRequest {
   messages: Message[]
@@ -28,7 +28,7 @@ export const getCompletions = async (ctx: Context) => {
   }
 
   try {
-    const apiKey = await getApiKey(id)
+    const apiKey = await fetchApiKey(id)
     const response = await chatCompletions(requestBody, apiKey)
     if (response.data instanceof Readable) {
       if (response.status === 200) {

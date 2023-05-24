@@ -3,7 +3,7 @@ import * as bcrypt from 'bcrypt'
 import * as jwt from 'jsonwebtoken'
 import { PrismaClient, User } from '@prisma/client'
 import { jwtSecret } from '../constence'
-import { getApiKey, getPointAccount } from '../service/aiProxy'
+import { fetchApiKey, getPointAccount } from '../service/aiProxy'
 
 const prisma = new PrismaClient()
 
@@ -176,17 +176,26 @@ export async function userInfo(ctx: Context) {
   }
 
   if (user.platforms.length === 0) {
-    const apiKey = await getApiKey(id)
-    console.log('创建AI密钥', apiKey.slice(0, 8))
+    await fetchApiKey(id)
   }
 
-  // delete user.platforms
+  const userResponse = {
+    id: user.id,
+    username: user.username,
+    nickname: user.nickname,
+    email: user.email,
+    role: user.role,
+    avatarUrl: user.avatarUrl,
+    createdAt: user.createdAt,
+    updatedAt: user.updatedAt,
+    settings: user.settings
+  }
 
   ctx.status = 200
   ctx.body = {
     success: true,
     message: '获取用户信息成功',
-    user: user
+    user: userResponse
   }
 }
 
