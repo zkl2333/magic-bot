@@ -1,79 +1,49 @@
-import { makeAutoObservable, autorun } from 'mobx'
+import { makeAutoObservable } from 'mobx'
 
-const UserKey = 'User'
+interface User {
+  id: number
+  username: string
+  nickname: string
+  email: string
+  token: string
+  avatarUrl: string | null
+  settings: {
+    theme: string
+  }
+}
 
 class UserStore {
   isLogin = false
   id = 0
   username = ''
+  nickname = ''
   email = ''
   token = ''
-  settings = {
-    theme: 'light'
-  }
+  settings = { theme: 'light' }
+  avatarUrl: string | null = null
 
   constructor() {
     makeAutoObservable(this)
-    this._initFromLocalStorage()
-    autorun(() => {
-      this._saveUser()
-    })
   }
 
-  private _initFromLocalStorage() {
-    const user = localStorage.getItem(UserKey)
-    if (user) {
-      try {
-        const userObj = JSON.parse(user)
-        if (userObj.token) {
-          this.login(userObj, userObj.token)
-          this.settings = userObj.settings
-        }
-        return
-      } catch (error) {}
-      this.logout()
+  setUser(user: User) {
+    const { id, username, email, avatarUrl, settings } = user
+    this.id = id
+    this.username = username
+    this.nickname = username
+    this.avatarUrl = avatarUrl
+    this.email = email
+    if (settings) {
+      this.settings = user.settings
     }
-    this.logout()
   }
 
-  private _saveUser() {
-    localStorage.setItem(
-      UserKey,
-      JSON.stringify({
-        id: this.id,
-        username: this.username,
-        email: this.email,
-        token: this.token,
-        settings: this.settings
-      })
-    )
-  }
-
-  setUser(user: { id: number; username: string; email: string }) {
-    this.id = user.id
-    this.username = user.username
-    this.email = user.email
-  }
-
-  login(user: { id: number; username: string; email: string }, token: string) {
-    this.isLogin = true
-    this.id = user.id
-    this.username = user.username
-    this.email = user.email
-    this.token = token
-  }
-
-  logout() {
+  clear() {
     this.isLogin = false
     this.id = 0
     this.username = ''
     this.email = ''
     this.token = ''
-    localStorage.removeItem(UserKey)
-  }
-
-  setSettings(settings: typeof this.settings) {
-    this.settings = settings
   }
 }
 

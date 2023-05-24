@@ -1,4 +1,3 @@
-import userStore from '../store/UserStore'
 import request from './request'
 
 /**
@@ -35,7 +34,7 @@ export const getUserInfo = async ({ withInfo }: { withInfo?: boolean } = {}) => 
     },
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${userStore.token}`
+      Authorization: `Bearer ${localStorage.getItem('token')}`
     }
   })
 
@@ -58,7 +57,7 @@ export const updateUserInfo = async (
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${userStore.token}`
+      Authorization: `Bearer ${localStorage.getItem('token')}`
     },
     body: JSON.stringify(userInfo)
   })
@@ -69,7 +68,7 @@ export const getBalance = async () => {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${userStore.token}`
+      Authorization: `Bearer ${localStorage.getItem('token')}`
     }
   })
 }

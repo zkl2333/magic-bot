@@ -55,7 +55,8 @@ function AssistantLayout() {
               </li>
               <li
                 onClick={() => {
-                  userStore.logout()
+                  localStorage.clear()
+                  userStore.clear()
                   navigate('/login', { replace: true })
                 }}
               >

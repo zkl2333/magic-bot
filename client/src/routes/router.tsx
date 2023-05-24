@@ -26,11 +26,14 @@ export const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     element: <Root />,
     loader: async () => {
-      if (!userStore.isLogin) {
+      const token = localStorage.getItem('token')
+      if (!token) {
         return redirect('/login')
       }
       try {
-        const user = await getUserInfo()
+        const user = await getUserInfo({
+          withInfo: true
+        })
         userStore.setUser(user)
         return {
           user
@@ -55,7 +58,7 @@ export const router = createBrowserRouter([
           {
             path: 'user',
             element: <User />,
-            loader: () => getUserInfo({ withInfo: true }),
+            // loader: () => getUserInfo({ withInfo: true }),
             action: async ({ request }) => {
               const formData = await request.formData()
               const data = {

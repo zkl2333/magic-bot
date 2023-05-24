@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import userStore from '../../store/UserStore'
 import LoginImg from './login.jpg'
 import { useNavigate } from 'react-router-dom'
 import { useSnackbar } from 'notistack'
@@ -48,7 +47,7 @@ const Login = () => {
     })
     const data = await response.json()
     if (response.ok) {
-      userStore.login(data.user, data.token)
+      localStorage.setItem('token', data.token)
       setSuccess(data.message)
       navigate('/', { replace: true })
     } else {
@@ -67,7 +66,7 @@ const Login = () => {
     })
     const data = await response.json()
     if (response.ok) {
-      userStore.login(data.user, data.token)
+      localStorage.setItem('token', data.token)
       setSuccess(data.message)
       navigate('/', { replace: true })
     } else {

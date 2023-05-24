@@ -4,7 +4,6 @@ import { Message, Assistant, Interaction, BaseMessage } from '../../types'
 import { getMessage, addMessage, deleteMessage, updateMessage } from '../../service/message'
 import { v4 as uuidv4 } from 'uuid'
 import ChatBubble from './ChatBubble'
-import userStore from '../../../../store/UserStore'
 import { AssistantIdContentProps } from '../AssistantId'
 import { observer } from 'mobx-react-lite'
 import chatStore from './store'
@@ -38,7 +37,7 @@ const AssistantInteraction = observer(() => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${userStore.token}`
+        Authorization: `Bearer ${localStorage.getItem('token')}`
       },
       body: JSON.stringify({ messages: messages, modelConfig: assistant.modelConfig }),
       signal: abortController.current.signal
@@ -71,9 +70,11 @@ const AssistantInteraction = observer(() => {
   // 生成回复 异步流
   const generateAssistantReply = async (context: Message[]) => {
     const realContext = assistant.prompt ? [...assistant.prompt, ...context] : context
-    const response = await getAssistantReply(realContext)
-    let messageId = null
+    const message = await addMessage(interaction.id, 'assistant', '思考中...')
+    chatStore.addMessage(message)
+    const messageId = message.id
     chatStore.setLoading(true)
+    const response = await getAssistantReply(realContext)
     try {
       const reader = response.body?.pipeThrough(new TextDecoderStream()).getReader()
       if (reader) {
@@ -84,35 +85,39 @@ const AssistantInteraction = observer(() => {
             break
           }
           answer += value
-          if (!messageId) {
-            const message = await addMessage(interaction.id, 'assistant', answer)
-            chatStore.addMessage(message)
-            messageId = message.id
-          } else {
-            await updateMessage(messageId, answer)
-            chatStore.updateMessage(messageId, answer)
-          }
+          await updateMessage(messageId, answer)
+          chatStore.updateMessage(messageId, answer)
         }
       }
     } catch (error) {}
     chatStore.setLoading(false)
   }
 
-  const onRetry = async (id: string) => {
-    const index = chatStore.messages.findIndex(item => item.id === id)
-    const context: Message[] = []
-    for (let i = index - 1; i >= 0; i--) {
-      if (chatStore.messages[i].role === 'user') {
+  const onRetry = async (id?: string) => {
+    let context: Message[] = []
+    let needDeleteMessages: Message[] = []
+
+    if (id) {
+      const index = chatStore.messages.findIndex(item => item.id === id)
+      let userMsgIndex = index
+      for (let i = index - 1; i >= 0; i--) {
+        if (chatStore.messages[i].role === 'user') {
+          userMsgIndex = i
+          break
+        }
+      }
+
+      for (let i = userMsgIndex; i >= 0 && context.length < assistant.modelConfig.context_size; i--) {
         context.push(chatStore.messages[i])
       }
-      if (context.length === assistant.modelConfig.context_size) {
-        break
-      }
+
+      needDeleteMessages = chatStore.messages.slice(userMsgIndex + 1)
+      await Promise.all(needDeleteMessages.map(item => deleteMessage(item.id)))
+      chatStore.removeMessages(needDeleteMessages.map(item => item.id))
+      generateAssistantReply(context.reverse())
+    } else {
+      generateAssistantReply(chatStore.messages.slice(-assistant.modelConfig.context_size))
     }
-    const needDeleteMessages = chatStore.messages.slice(index)
-    await Promise.all(needDeleteMessages.map(item => deleteMessage(item.id)))
-    chatStore.removeMessages(needDeleteMessages.map(item => item.id))
-    generateAssistantReply(context.reverse())
   }
 
   return (
@@ -187,10 +192,17 @@ const AssistantInteraction = observer(() => {
               <StopIcon />
             </IconBtn>
           ) : (
-            chatStore.messages.length > 0 && (
+            chatStore.messages.filter(item => item.role === 'user').length > 0 && (
               <IconBtn
                 onClick={() => {
-                  onRetry(chatStore.messages.slice(-1)[0].id)
+                  const lastAssistantMessage = chatStore.messages
+                    .filter(item => item.role === 'assistant')
+                    .slice(-1)?.[0]
+                  if (lastAssistantMessage) {
+                    onRetry(lastAssistantMessage.id)
+                  } else {
+                    onRetry()
+                  }
                 }}
               >
                 <RestartIcon />
