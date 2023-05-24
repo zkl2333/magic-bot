@@ -13,11 +13,14 @@ RUN npm install
 # 将你的app的源代码复制到工作目录
 COPY . .
 
+# 生成Prisma客户端
+RUN npx prisma generate
+
 # 编译TypeScript代码
 RUN npm run build
 
 # 让Docker监听你的app所需要的端口
-EXPOSE 3000
+EXPOSE 3001
 
 # 启动你的app
 CMD [ "node", "dist/index.js" ]
