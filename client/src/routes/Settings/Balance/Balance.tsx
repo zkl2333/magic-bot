@@ -15,7 +15,15 @@ const Balance = () => {
 
   return (
     <div className='w-full flex-1 p-4'>
-      {data.success ? <pre className=' '>{JSON.stringify(data.data.points, null, 2)}</pre> : <></>}
+      {data.success && (
+        <div className='stats shadow'>
+          <div className='stat'>
+            <div className='stat-title'>账户余额</div>
+            <div className='stat-value'>{data.data.points}</div>
+            <div className='stat-desc'>积分</div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
