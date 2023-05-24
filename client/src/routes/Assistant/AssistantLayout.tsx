@@ -56,7 +56,7 @@ function AssistantLayout() {
               <li
                 onClick={() => {
                   userStore.logout()
-                  navigate('/', { replace: true })
+                  navigate('/login', { replace: true })
                 }}
               >
                 <a>退出登录</a>
