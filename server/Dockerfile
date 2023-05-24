@@ -20,7 +20,7 @@ RUN npx prisma generate
 RUN npm run build
 
 # 让Docker监听你的app所需要的端口
-EXPOSE 3001
+EXPOSE 3000
 
 # 启动你的app
 CMD [ "node", "dist/index.js" ]
