@@ -3,7 +3,7 @@ import findProcess from 'find-process'
 import { exec } from 'child_process'
 import os from 'os'
 
-const port = 3001
+const port = 3000
 
 // 杀死占用端口的进程
 function killProcessOnPort(port: number) {
