@@ -1,4 +1,5 @@
 import userStore from '../store/UserStore'
+import request from './request'
 
 /**
  * Model User
@@ -27,10 +28,11 @@ export type Settings = {
 }
 
 export const getUserInfo = async ({ withInfo }: { withInfo?: boolean } = {}) => {
-  const queryParams = withInfo ? `?withInfo=${withInfo}` : ''
-
-  const user = await fetch(`/api/user/info${queryParams}`, {
+  const user = await request(`/api/user/info`, {
     method: 'GET',
+    query: {
+      withInfo: !!withInfo
+    },
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${userStore.token}`
