@@ -3,7 +3,7 @@ import * as bcrypt from 'bcrypt'
 import * as jwt from 'jsonwebtoken'
 import { PrismaClient, User } from '@prisma/client'
 import { jwtSecret } from '../constence'
-import { getPointAccount } from '../service/aiProxy'
+import { getApiKey, getPointAccount } from '../service/aiProxy'
 
 const prisma = new PrismaClient()
 
@@ -13,7 +13,7 @@ const generateToken = (user: User) => {
       id: user.id
     },
     jwtSecret,
-    { expiresIn: '15d' }
+    { expiresIn: '3d' }
   )
   return token
 }
@@ -160,6 +160,11 @@ export async function userInfo(ctx: Context) {
       avatarUrl: true,
       createdAt: true,
       updatedAt: true,
+      platforms: {
+        where: {
+          platform: 'AI Proxy'
+        }
+      },
       settings: withInfo
     }
   })
@@ -169,6 +174,13 @@ export async function userInfo(ctx: Context) {
     ctx.body = { success: false, message: '用户未找到' }
     return
   }
+
+  if (user.platforms.length === 0) {
+    const apiKey = await getApiKey(id)
+    console.log('创建AI密钥', apiKey.slice(0, 8))
+  }
+
+  // delete user.platforms
 
   ctx.status = 200
   ctx.body = {

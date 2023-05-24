@@ -92,6 +92,31 @@ export const createApiKey = async (uid: string) => {
   return responseBody.data
 }
 
+export const listApiKey = async () => {
+  const headers = {
+    'content-type': 'application/json',
+    cookie: `sessionId=${sessionId}`
+  }
+
+  const response = await fetch(createUrl('/user/listApiKey'), {
+    method: 'GET',
+    headers
+  })
+
+  if (!response.ok) {
+    throw new Error(`Request failed with status code ${response.status}`)
+  }
+
+  const responseBody = await response.json()
+
+  if (!responseBody.success) {
+    console.error(responseBody)
+    throw new Error(responseBody.message)
+  }
+
+  return responseBody.data
+}
+
 export const getApiKey = async (uid: string) => {
   // 判断是否存在AI密钥
   const existingUserPlatform = await prisma.userPlatform.findFirst({
