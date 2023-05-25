@@ -2,14 +2,21 @@ import { ActionFunction, useRouteLoaderData, useSubmit } from 'react-router-dom'
 import { Assistant } from '../../types'
 import OpenaiIcon from '../../../../components/OpenaiIcon'
 import { useState } from 'react'
-import classNames from 'classnames'
 import { updateAssistant } from '../../service/assistant'
+import classNames from 'classnames'
+import MarkdownRenderer from '../../../../components/MarkdownRenderer/MarkdownRenderer'
 
 export const assistantEditAction: ActionFunction = async ({ request }) => {
   const formData = await request.formData()
   const assistantUpdate = JSON.parse(formData.get('assistant') as string)
   updateAssistant(assistantUpdate)
   return null
+}
+
+const roleText = {
+  system: '系统',
+  assistant: '助手',
+  user: '用户'
 }
 
 const Edit = () => {
@@ -36,11 +43,11 @@ const Edit = () => {
   }
 
   const itemClassName =
-    'w-full h-full flex flex-col bg-base-100 rounded-box justify-between items-center p-8 shadow-xl'
+    'w-full h-full flex flex-col bg-base-100 rounded-box justify-between items-center p-4 lg:p-8 shadow-xl'
 
   return (
-    <div className='p-4 grid gap-4 grid-cols-[repeat(auto-fill,minmax(380px,auto))]'>
-      <div className={classNames(itemClassName)}>
+    <div className='p-4 grid gap-4 grid-cols-[repeat(auto-fit,minmax(300px,auto))] grid-flow-row-dense'>
+      <div className={itemClassName}>
         <div className='flex-1 flex flex-col justify-center items-center'>
           <div className='online avatar mb-3'>
             <div className='rounded-full bg-base-content h-24 w-24 bg-opacity-10'>
@@ -64,8 +71,9 @@ const Edit = () => {
           </div>
         </div>
       </div>
-      <div className={itemClassName}>
+      <div className={classNames(itemClassName)}>
         <div className='form-control w-full'>
+          <h3 className='mb-4 text-xl'>基本设置</h3>
           <label className='label'>
             <span className='label-text'>模型：</span>
           </label>
@@ -128,8 +136,9 @@ const Edit = () => {
           />
         </div>
       </div>
-      <div className={itemClassName}>
+      <div className={classNames(itemClassName, 'col-span-1 lg:col-span-2')}>
         <div className='w-full'>
+          <h3 className='mb-4 text-xl'>参数调节</h3>
           <label className='mb-1'>
             上下文数：
             <span className='countdown'>
@@ -272,6 +281,38 @@ const Edit = () => {
           />
         </div>
       </div>
+      {assistant.prompt && (
+        <div className={classNames(itemClassName, 'col-span-1 lg:col-span-2')}>
+          <div className='w-full'>
+            <h3 className='mb-4 text-xl'>内置提示词</h3>
+            <div className='bg-base-300 p-4 rounded-box'>
+              {assistant.prompt.map((item, index) => {
+                return (
+                  <div
+                    key={index}
+                    className={classNames('chat', {
+                      'chat-end': item.role === 'user',
+                      'chat-start': item.role !== 'user'
+                    })}
+                  >
+                    <div className='chat-header'>{roleText[item.role]}</div>
+                    {item.role === 'user' ? (
+                      <div className='chat-bubble chat-bubble-primary'>{item.content}</div>
+                    ) : item.role === 'assistant' ? (
+                      <MarkdownRenderer
+                        className='chat-bubble bg-base-100 text-base-content'
+                        text={item.content}
+                      />
+                    ) : (
+                      <div className='chat-bubble'>{item.content}</div>
+                    )}
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

@@ -1,36 +1,10 @@
-import classnames from 'classnames'
-import MarkdownIt from 'markdown-it'
-import mdKatex from '@traptitech/markdown-it-katex'
-import mila from 'markdown-it-link-attributes'
-import hljs from 'highlight.js'
-import 'katex/dist/katex.min.css'
-import '@/common/highlight.less'
-import './chatBubble.less'
+import classNames from 'classnames'
 import dayjs from 'dayjs'
 import { Assistant, Message } from '../../types'
 import OpenaiIcon from '../../../../components/OpenaiIcon'
 import Avatar from '../../../../components/Avatar'
 import userStore from '../../../../store/UserStore'
-
-function highlightBlock(str: string, lang?: string) {
-  return `<pre class="code-block-wrapper"><code class="hljs code-block-body ${lang}">${str}</code></pre>`
-}
-
-const mdi = new MarkdownIt({
-  html: false,
-  linkify: true,
-  highlight(code, language) {
-    const validLang = !!(language && hljs.getLanguage(language))
-    if (validLang) {
-      const lang = language ?? ''
-      return highlightBlock(hljs.highlight(code, { language: lang }).value, lang)
-    }
-    return highlightBlock(hljs.highlightAuto(code).value, '')
-  }
-})
-
-mdi.use(mila, { attrs: { target: '_blank', rel: 'noopener' } })
-mdi.use(mdKatex, { blockClass: 'katexmath-block rounded-md p-[10px]', errorColor: ' #cc0000' })
+import MarkdownRenderer from '../../../../components/MarkdownRenderer/MarkdownRenderer'
 
 interface ChatBubbleProps extends Message {
   loading: boolean
@@ -77,18 +51,13 @@ const ChatBubble = (props: ChatBubbleProps) => {
       {isAssistant ? (
         <div className='flex w-full'>
           <div className='flex-1 w-0'>
-            <div
-              className={classnames(
-                'prose prose-sm md:prose-md lg:prose-lg chat-bubble bg-base-100 text-base-content markdown-body dark p-3 shadow'
-              )}
-              dangerouslySetInnerHTML={{ __html: mdi.render(text) }}
-            />
+            <MarkdownRenderer className='chat-bubble bg-base-100 text-base-content p-3' text={text} />
           </div>
         </div>
       ) : (
         <div
-          className={classnames(
-            'prose prose-sm md:prose-md lg:prose-lg chat-bubble bg-base-100 text-base-content markdown-body dark p-3 shadow whitespace-pre-wrap'
+          className={classNames(
+            'prose prose-sm md:prose-md lg:prose-lg chat-bubble bg-base-100 text-base-content markdown-body p-3 shadow whitespace-pre-wrap'
           )}
         >
           {text}
