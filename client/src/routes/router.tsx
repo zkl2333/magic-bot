@@ -1,7 +1,7 @@
 import userStore from '../store/UserStore'
 import { createBrowserRouter, Navigate } from 'react-router-dom'
 import { redirect } from 'react-router-dom'
-import { assistantLoader } from './Assistant/AssistantId/loader'
+import { assistantIndexLoader, assistantLoader } from './Assistant/AssistantId/loader'
 import { assistantInteractionLoader } from './Assistant/AssistantId/InteractionId/loader'
 import { assistantLayoutLoader } from './Assistant/loader'
 import { AssistantLayoutAction } from './Assistant/AssistantLayoutAction'
@@ -19,6 +19,7 @@ import Security from './Settings/Security/Security'
 import Balance from './Settings/Balance/Balance'
 import Transactions from './Settings/Transactions/Transactions'
 import { getUserInfo, getBalance, updateUserInfo } from '../service/user'
+import Edit from './Assistant/AssistantId/Edit/Edit'
 
 export const router = createBrowserRouter([
   {
@@ -128,7 +129,11 @@ export const router = createBrowserRouter([
             children: [
               {
                 index: true,
-                loader: assistantLoader
+                loader: assistantIndexLoader
+              },
+              {
+                path: 'edit',
+                element: <Edit />
               },
               {
                 path: ':interactionId',

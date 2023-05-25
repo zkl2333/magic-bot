@@ -1,4 +1,12 @@
-import { Link, Outlet, useLoaderData, useNavigate, useOutletContext } from 'react-router-dom'
+import {
+  Link,
+  NavLink,
+  Outlet,
+  useLoaderData,
+  useNavigate,
+  useOutletContext,
+  useParams
+} from 'react-router-dom'
 import AssistantSidebar from './AssistantSidebar'
 import { useState } from 'react'
 import MenuIcon from '@mui/icons-material/Menu'
@@ -14,6 +22,8 @@ function AssistantLayout() {
   const context = useOutletContext<RootContextProps>()
   const { title } = context
   const navigate = useNavigate()
+
+  const { assistantId } = useParams()
 
   return (
     <SidebarLayout
@@ -39,7 +49,13 @@ function AssistantLayout() {
           </button>
         )}
         <div className='flex-1'>
-          <a className='btn btn-ghost normal-case text-xl'>{title || 'AI Web'}</a>
+          {assistantId ? (
+            <Link to={`/assistant/${assistantId}/edit`} className='btn btn-ghost normal-case text-xl'>
+              {title || 'AI Web'}
+            </Link>
+          ) : (
+            <div className='h-12 flex items-center px-4 font-bold normal-case text-xl'>{title || 'AI Web'}</div>
+          )}
         </div>
         <div className='flex-none'>
           <div className='dropdown dropdown-end'>
@@ -51,7 +67,7 @@ function AssistantLayout() {
               className='menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-36'
             >
               <li>
-                <Link to='/settings'>设置</Link>
+                <NavLink to='/settings'>设置</NavLink>
               </li>
               <li
                 onClick={() => {

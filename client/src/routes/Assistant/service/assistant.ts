@@ -62,3 +62,7 @@ export const deleteAssistant = async (assistantId: Assistant['id']): Promise<voi
   await localforage.removeItem(`assistants.${assistantId}`)
   await Promise.all(needInteractionIds.map(key => deleteInteraction(key)))
 }
+
+export const updateAssistant = async (assistant: Assistant): Promise<void> => {
+  await localforage.setItem(`assistants.${assistant.id}`, assistant)
+}

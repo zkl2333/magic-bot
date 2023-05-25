@@ -11,6 +11,18 @@ function getUrlForLastInteraction(assistantId: string, interactionIds: string[])
 }
 
 export const assistantLoader: LoaderFunction = async ({ params }) => {
+  const { assistantId } = params as { assistantId: string; interactionId: string }
+
+  const assistant = await getAssistant(assistantId)
+
+  if (!assistant) {
+    return redirect('/assistant')
+  }
+
+  return { assistant }
+}
+
+export const assistantIndexLoader: LoaderFunction = async ({ params }) => {
   const { assistantId, interactionId } = params as { assistantId: string; interactionId: string }
 
   const assistant = await getAssistant(assistantId)
@@ -22,7 +34,6 @@ export const assistantLoader: LoaderFunction = async ({ params }) => {
   if (interactionId) {
     return { assistant }
   }
-
   const url = getUrlForLastInteraction(assistantId, assistant.interactionIds)
   return redirect(url)
 }
