@@ -91,7 +91,7 @@ export const createApiKey = async (uid: string) => {
   const responseBody = await response.json()
 
   if (!responseBody.success) {
-    console.error(responseBody)
+    console.error('createApiKey error', responseBody)
     throw new Error(responseBody.message)
   }
 
@@ -110,14 +110,17 @@ export const listApiKey = async () => {
   })
 
   if (!response.ok) {
-    throw new Error(`Request failed with status code ${response.status}`)
+    // throw new Error(`Request failed with status code ${response.status}`)
+    console.error(`listApiKey Request failed with status code ${response.status}`)
+    return []
   }
 
   const responseBody = await response.json()
 
   if (!responseBody.success) {
-    console.error(responseBody)
-    throw new Error(responseBody.message)
+    console.error('listApiKey error', responseBody)
+    // throw new Error(responseBody.message)
+    return []
   }
 
   return responseBody.data
