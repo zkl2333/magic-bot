@@ -1,4 +1,4 @@
-import { NavLink, Outlet, useLoaderData, useNavigate, useOutletContext } from 'react-router-dom'
+import { Link, Outlet, useLoaderData, useNavigate, useOutletContext } from 'react-router-dom'
 import AssistantSidebar from './AssistantSidebar'
 import { useState } from 'react'
 import MenuIcon from '@mui/icons-material/Menu'
@@ -51,7 +51,7 @@ function AssistantLayout() {
               className='menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-36'
             >
               <li>
-                <NavLink to='/settings'>设置</NavLink>
+                <Link to='/settings'>设置</Link>
               </li>
               <li
                 onClick={() => {
