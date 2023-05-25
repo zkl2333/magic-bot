@@ -53,12 +53,11 @@ export const router = createBrowserRouter([
         children: [
           {
             index: true,
-            element: <Navigate to='/settings/user' />
+            element: <Navigate to='/settings/user' replace />
           },
           {
             path: 'user',
             element: <User />,
-            // loader: () => getUserInfo({ withInfo: true }),
             action: async ({ request }) => {
               const formData = await request.formData()
               const data = {
