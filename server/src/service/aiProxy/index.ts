@@ -71,7 +71,7 @@ export const createApiKey = async (uid: string) => {
   }
 
   const data = {
-    name: `web-user-${uid}`,
+    name: `web-user-${uid.slice(0, 7)}`,
     externalId: uid,
     enableSubPointAccount: true,
     initPoint: '1000.00',
