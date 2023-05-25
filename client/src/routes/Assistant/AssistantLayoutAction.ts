@@ -1,7 +1,8 @@
 import { redirect, ActionFunction } from 'react-router-dom'
 import { addAssistant, deleteAssistant } from './service/assistant'
 
-export const AssistantLayoutAction: ActionFunction = async ({ request }) => {
+export const assistantLayoutAction: ActionFunction = async ({ request }) => {
+  console.log('assistantLayoutAction', request)
   try {
     let formData = await request.formData()
     switch (request.method) {

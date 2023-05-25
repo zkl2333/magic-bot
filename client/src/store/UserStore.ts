@@ -27,6 +27,7 @@ class UserStore {
   }
 
   setUser(user: User) {
+    this.isLogin = true
     const { id, username, email, avatarUrl, settings } = user
     this.id = id
     this.username = username

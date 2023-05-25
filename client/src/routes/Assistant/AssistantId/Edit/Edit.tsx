@@ -1,25 +1,38 @@
-import { useRouteLoaderData } from 'react-router-dom'
+import { ActionFunction, useRouteLoaderData, useSubmit } from 'react-router-dom'
 import { Assistant } from '../../types'
 import OpenaiIcon from '../../../../components/OpenaiIcon'
 import { useState } from 'react'
 import classNames from 'classnames'
 import { updateAssistant } from '../../service/assistant'
 
+export const assistantEditAction: ActionFunction = async ({ request }) => {
+  const formData = await request.formData()
+  const assistantUpdate = JSON.parse(formData.get('assistant') as string)
+  updateAssistant(assistantUpdate)
+  return null
+}
+
 const Edit = () => {
   const { assistant: _assistant } = useRouteLoaderData('assistant') as { assistant: Assistant }
   const [assistant, _setAssistant] = useState(_assistant)
+  let submit = useSubmit()
+
   const setModalConfig = (config: any) => {
     const newAssistant = {
       ...assistant,
       modelConfig: config
     }
     setAssistant(newAssistant)
-    updateAssistant(newAssistant)
   }
 
   const setAssistant = (assistant: Assistant) => {
     _setAssistant(assistant)
-    updateAssistant(assistant)
+    submit(
+      { assistant: JSON.stringify(assistant) },
+      {
+        method: 'PUT'
+      }
+    )
   }
 
   const itemClassName =

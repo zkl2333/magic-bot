@@ -3,8 +3,8 @@ import { createBrowserRouter, Navigate } from 'react-router-dom'
 import { redirect } from 'react-router-dom'
 import { assistantIndexLoader, assistantLoader } from './Assistant/AssistantId/loader'
 import { assistantInteractionLoader } from './Assistant/AssistantId/InteractionId/loader'
-import { assistantLayoutLoader } from './Assistant/loader'
-import { AssistantLayoutAction } from './Assistant/AssistantLayoutAction'
+import { assistantLayoutLoader } from './Assistant/assistantLayoutLoader'
+import { assistantLayoutAction } from './Assistant/assistantLayoutAction'
 import AssistantLayout from './Assistant/AssistantLayout'
 import AssistantInteraction from './Assistant/AssistantId/InteractionId/Index'
 import New from './Assistant/New/New'
@@ -19,7 +19,7 @@ import Security from './Settings/Security/Security'
 import Balance from './Settings/Balance/Balance'
 import Transactions from './Settings/Transactions/Transactions'
 import { getUserInfo, getBalance, updateUserInfo } from '../service/user'
-import Edit from './Assistant/AssistantId/Edit/Edit'
+import Edit, { assistantEditAction } from './Assistant/AssistantId/Edit/Edit'
 
 export const router = createBrowserRouter([
   {
@@ -29,16 +29,18 @@ export const router = createBrowserRouter([
     loader: async () => {
       const token = localStorage.getItem('token')
       if (!token) {
+        userStore.clear()
         return redirect('/login')
+      }
+      if (userStore.isLogin) {
+        return null
       }
       try {
         const user = await getUserInfo({
           withInfo: true
         })
         userStore.setUser(user)
-        return {
-          user
-        }
+        return null
       } catch (error) {
         return redirect('/login')
       }
@@ -98,7 +100,7 @@ export const router = createBrowserRouter([
         path: '/assistant',
         element: <AssistantLayout />,
         loader: assistantLayoutLoader,
-        action: AssistantLayoutAction,
+        action: assistantLayoutAction,
         children: [
           {
             index: true,
@@ -133,7 +135,8 @@ export const router = createBrowserRouter([
               },
               {
                 path: 'edit',
-                element: <Edit />
+                element: <Edit />,
+                action: assistantEditAction
               },
               {
                 path: ':interactionId',
