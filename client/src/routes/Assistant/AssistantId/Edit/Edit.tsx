@@ -38,6 +38,7 @@ const Edit = () => {
                   style={{
                     backgroundColor: 'rgb(16, 163, 127)'
                   }}
+                  className='p-1.5 text-[#fff]'
                 />
               )}
             </div>
