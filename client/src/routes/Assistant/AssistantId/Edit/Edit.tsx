@@ -30,7 +30,7 @@ const Edit = () => {
       <div className={classNames(itemClassName)}>
         <div className='flex-1 flex flex-col justify-center items-center'>
           <div className='online avatar mb-3'>
-            <div className='rounded-full bg-base-content h-24 w-24 bg-opacity-10 p-px'>
+            <div className='rounded-full bg-base-content h-24 w-24 bg-opacity-10'>
               {_assistant.avatar ? (
                 <img src={_assistant.avatar} />
               ) : (
@@ -158,14 +158,19 @@ const Edit = () => {
         </div>
         <div className='w-full'>
           <label className='mb-1'>
-            随机属性：
-            {assistant.modelConfig.temperature}
+            <div
+              className='tooltip'
+              data-tip='控制文本多样性，高值创新多样但不可信，低值保守无新意。（用于创意文本生成。）'
+            >
+              随机属性：
+              {assistant.modelConfig.temperature}
+            </div>
           </label>
           <input
             type='range'
             className='range range-xs range-primary'
             min='0'
-            max='1'
+            max='2'
             step='0.1'
             value={assistant.modelConfig.temperature}
             onChange={e => {
@@ -179,8 +184,13 @@ const Edit = () => {
         </div>
         <div className='w-full'>
           <label className='mb-1'>
-            词汇属性：
-            {assistant.modelConfig.top_p}
+            <div
+              className='tooltip'
+              data-tip='控制文本多样性和保真度。高值多样但不准确，低值保险且准确。（用于科技文本、学术论文等需要准确性的文本生成。）'
+            >
+              词汇属性：
+              {assistant.modelConfig.top_p}
+            </div>
           </label>
           <input
             type='range'
@@ -200,8 +210,13 @@ const Edit = () => {
         </div>
         <div className='w-full'>
           <label className='mb-1'>
-            重复惩罚：
-            {assistant.modelConfig.presence_penalty}
+            <div
+              className='tooltip'
+              data-tip='控制文本同一词汇重复情况。当此参数值大于0时，将鼓励模型生成不同的单词，并尽可能避免使用已经在之前生成的文本中出现过的单词。'
+            >
+              重复惩罚：
+              {assistant.modelConfig.presence_penalty}
+            </div>
           </label>
           <input
             type='range'
@@ -220,8 +235,13 @@ const Edit = () => {
         </div>
         <div className='w-full'>
           <label className='mb-1'>
-            频率惩罚：
-            {assistant.modelConfig.frequency_penalty}
+            <div
+              className='tooltip'
+              data-tip='控制文本罕见词汇出现情况。当此参数值大于0时，将抑制模型生成频繁出现的单词，并鼓励生成罕见的单词。'
+            >
+              频率惩罚：
+              {assistant.modelConfig.frequency_penalty}
+            </div>
           </label>
           <input
             type='range'
