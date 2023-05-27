@@ -17,18 +17,19 @@ enum Role {
 }
 
 model User {
-  id        String         @id @default(cuid())
-  email     String         @unique
-  username  String         @unique
-  nickname  String?
-  password  String
-  role      Role           @default(USER)
-  avatarUrl String?
-  createdAt DateTime       @default(now())
-  updatedAt DateTime       @updatedAt
-  settings  Settings?
-  account   Account?
-  platforms UserPlatform[]
+  id            String          @id @default(cuid())
+  email         String          @unique
+  username      String          @unique
+  nickname      String?
+  password      String
+  role          Role            @default(USER)
+  avatarUrl     String?
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  settings      Settings?
+  account       Account?
+  platforms     UserPlatform[]
+  UserAssistant UserAssistant[]
 }
 
 model UserPlatform {
@@ -68,4 +69,29 @@ model Transaction {
   description String?
   createdAt   DateTime @default(now())
   account     Account  @relation(fields: [accountId], references: [id])
+}
+
+model Assistant {
+  id           Int             @id @default(autoincrement())
+  name         String
+  config       String
+  description  String
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+  isPublic     Boolean         @default(false)
+  users        UserAssistant[]
+  forkedFrom   Assistant?      @relation("ForkedFrom", fields: [forkedFromId], references: [id])
+  forkedFromId Int?
+  forks        Assistant[]     @relation("ForkedFrom")
+  lastSyncAt   DateTime?
+}
+
+model UserAssistant {
+  user         User      @relation(fields: [userId], references: [id])
+  userId       String
+  assistant    Assistant @relation(fields: [assistantId], references: [id])
+  assistantId  Int
+  customConfig String?
+
+  @@id([userId, assistantId])
 }

@@ -5,6 +5,7 @@ import { useState } from 'react'
 import { updateAssistant } from '../../service/assistant'
 import classNames from 'classnames'
 import MarkdownRenderer from '../../../../components/MarkdownRenderer/MarkdownRenderer'
+import { pushAssistant } from '../../../../service/assistant'
 
 export const assistantEditAction: ActionFunction = async ({ request }) => {
   const formData = await request.formData()
@@ -67,6 +68,21 @@ const Edit = () => {
             <div className='text-center'>
               <div className='text-lg font-extrabold'>{_assistant.name}</div>
               <div className='text-base-content/70 my-3 text-sm'>{_assistant.description}</div>
+            </div>
+            <div className='space-x-4'>
+              <div
+                className='btn btn-sm'
+                onClick={() => {
+                  pushAssistant({
+                    name: _assistant.name,
+                    description: _assistant.description,
+                    config: JSON.stringify(_assistant.modelConfig)
+                  })
+                }}
+              >
+                上传到市场
+              </div>
+              <div className='btn btn-sm btn-disabled'>从市场更新</div>
             </div>
           </div>
         </div>
