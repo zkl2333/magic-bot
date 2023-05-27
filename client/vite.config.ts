@@ -13,9 +13,9 @@ export default defineConfig(({ mode }) => {
         registerType: 'autoUpdate',
         injectRegister: 'auto',
         manifest: {
-          name: 'AI Web',
-          short_name: 'AI Web',
-          description: 'AI Web',
+          name: '机仆乐园',
+          short_name: '机仆乐园',
+          description: '机仆乐园',
           icons: [
             {
               src: '/robot_160.png',
