@@ -1,5 +1,5 @@
-import { Assistant } from '../types'
-import { defaultAssistantList, config } from '../constants'
+import { Assistant } from '../routes/Assistant/types'
+import { defaultAssistantList, config } from '../routes/Assistant/constants'
 import { v4 as uuidv4 } from 'uuid'
 import localforage from 'localforage'
 import { deleteInteraction } from './interaction'
@@ -14,7 +14,7 @@ export const initialize = async (): Promise<void> => {
   )
 }
 
-export const addAssistant = async (assistant?: Assistant): Promise<Assistant> => {
+export const addLocalAssistant = async (assistant?: Assistant): Promise<Assistant> => {
   const newAssistant = assistant || {
     id: uuidv4(),
     name: 'New Assistant',
@@ -25,36 +25,37 @@ export const addAssistant = async (assistant?: Assistant): Promise<Assistant> =>
     interactionIds: []
   }
 
-  const assistants = await getAllAssistantsIds()
+  const assistants = await getLocalAllAssistantsIds()
   assistants.push(newAssistant.id)
   await localforage.setItem('assistantsIds', assistants)
   await localforage.setItem(`assistants.${newAssistant.id}`, newAssistant)
   return newAssistant
 }
 
-export const getAllAssistantsIds = async (): Promise<string[]> => {
+export const getLocalAllAssistantsIds = async (): Promise<string[]> => {
   return (await localforage.getItem('assistantsIds')) || []
 }
 
-export const getAllAssistants = async (): Promise<Assistant[]> => {
-  const assistantsIds = await getAllAssistantsIds()
+export const getLocalAllAssistants = async (): Promise<Assistant[]> => {
+  const assistantsIds = await getLocalAllAssistantsIds()
   const assistants = await Promise.all(assistantsIds.map(id => localforage.getItem(`assistants.${id}`)))
   return assistants.filter((assistant): assistant is Assistant => !!assistant)
 }
 
-export const getAssistant = async (id: string): Promise<Assistant | null> => {
+export const getLocalAssistant = async (id: string): Promise<Assistant | null> => {
   return await localforage.getItem(`assistants.${id}`)
 }
 
-export const deleteAssistant = async (assistantId: Assistant['id']): Promise<void> => {
-  const assistant = await getAssistant(assistantId)
+export const deleteLocalAssistant = async (assistantId: Assistant['id']): Promise<void> => {
+  console.log('deleteLocalAssistant', assistantId)
+  const assistant = await getLocalAssistant(assistantId)
   const needInteractionIds: string[] = []
   if (assistant) {
     assistant.interactionIds.forEach(interactionId => {
       needInteractionIds.push(interactionId)
     })
   }
-  const assistantsIds = await getAllAssistantsIds()
+  const assistantsIds = await getLocalAllAssistantsIds()
   await localforage.setItem(
     'assistantsIds',
     assistantsIds.filter(id => id !== assistantId)
@@ -63,6 +64,6 @@ export const deleteAssistant = async (assistantId: Assistant['id']): Promise<voi
   await Promise.all(needInteractionIds.map(key => deleteInteraction(key)))
 }
 
-export const updateAssistant = async (assistant: Assistant): Promise<void> => {
+export const updateLocalAssistant = async (assistant: Assistant): Promise<void> => {
   await localforage.setItem(`assistants.${assistant.id}`, assistant)
 }

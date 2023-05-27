@@ -1,7 +1,7 @@
 import { useLoaderData, useNavigate, useOutletContext, useRouteLoaderData } from 'react-router-dom'
 import { useEffect, useRef } from 'react'
 import { Message, Assistant, Interaction, BaseMessage } from '../../types'
-import { getMessage, addMessage, deleteMessage, updateMessage } from '../../service/message'
+import { getMessage, addMessage, deleteMessage, updateMessage } from '../../../../service/message'
 import { v4 as uuidv4 } from 'uuid'
 import ChatBubble from './ChatBubble'
 import { AssistantIdContentProps } from '../AssistantId'

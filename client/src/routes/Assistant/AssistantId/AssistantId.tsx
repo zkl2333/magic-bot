@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
 import { Outlet, useLoaderData, useFetcher, useOutletContext } from 'react-router-dom'
-import { getInteraction, deleteInteraction } from '../service/interaction'
 import { Assistant, Interaction } from '../types'
 import AssistantInteractionSidebar from './AssistantIdSidebar'
 import { RootContextProps } from '../../Root/Root'
+import { deleteInteraction, getInteraction } from '../../../service/interaction'
 
 export type AssistantIdContentProps = {
   showAssistantIdSidebar: boolean

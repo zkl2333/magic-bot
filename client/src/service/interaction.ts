@@ -1,8 +1,8 @@
 import localforage from 'localforage'
-import { Interaction } from '../types'
-import { getAssistant } from './assistant'
 import { v4 as uuidv4 } from 'uuid'
 import { deleteMessage } from './message'
+import { Interaction } from '../routes/Assistant/types'
+import { getLocalAssistant } from './localAssistant'
 
 export const addInteraction = async (assistantId: string, interactionId?: string): Promise<Interaction> => {
   const id = interactionId || uuidv4()
@@ -14,7 +14,7 @@ export const addInteraction = async (assistantId: string, interactionId?: string
     createdAt: Date.now()
   }
 
-  const assistant = await getAssistant(assistantId)
+  const assistant = await getLocalAssistant(assistantId)
   if (assistant) {
     assistant.interactionIds.push(id)
     await localforage.setItem(`assistants.${assistantId}`, assistant)
@@ -35,7 +35,7 @@ export const deleteInteraction = async (id: string): Promise<void> => {
   }
   localforage.removeItem(`interactions.${id}`)
   await Promise.all(interaction.messageIds.map(messageId => deleteMessage(messageId)))
-  const assistant = await getAssistant(interaction.assistantId)
+  const assistant = await getLocalAssistant(interaction.assistantId)
   if (!assistant) {
     return
   }

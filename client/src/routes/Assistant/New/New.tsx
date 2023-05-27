@@ -12,9 +12,9 @@ const AssistantItem = ({
   isOnline,
   onClick
 }: {
-  assistant: Omit<Assistant, 'createdAt' | 'updatedAt'>
+  assistant: Omit<Assistant, 'isPublic' | 'createdAt' | 'updatedAt'>
   isOnline?: boolean
-  onClick?: () => void
+  onClick: () => void
 }) => {
   return (
     <div
@@ -64,37 +64,50 @@ const New = () => {
   const { assistants } = useLoaderData() as { assistants: Assistant[] }
 
   return (
-    <div className='h-full grid justify-center grid-cols-[repeat(auto-fit,minmax(150px,auto))] lg:grid-cols-[repeat(auto-fit,minmax(300px,auto))] gap-4 p-6 overflow-y-auto'>
-      {assistants.map(assistant => (
-        <AssistantItem
-          isOnline
-          assistant={assistant}
-          onClick={() => {
-            let formData = new FormData()
-            formData.append('assistant', JSON.stringify({ ...assistant, interactionIds: [] }))
-            fetcher.submit(formData, {
-              action: '/assistant',
-              method: 'post'
-            })
-          }}
-        />
-      ))}
-      {defaultAssistantList.map(assistant => (
-        <AssistantItem
-          assistant={{
-            ...assistant,
-            config: assistant.config
-          }}
-          onClick={() => {
-            let formData = new FormData()
-            formData.append('assistant', JSON.stringify({ ...assistant, id: uuidv4() }))
-            fetcher.submit(formData, {
-              action: '/assistant',
-              method: 'post'
-            })
-          }}
-        />
-      ))}
+    <div className='h-full overflow-y-auto'>
+      用户分享
+      <div className='grid justify-center grid-cols-[repeat(auto-fit,minmax(150px,auto))] lg:grid-cols-[repeat(auto-fit,minmax(300px,auto))] gap-4 p-6'>
+        {assistants.map(assistant => (
+          <AssistantItem
+            isOnline
+            assistant={assistant}
+            onClick={() => {
+              let formData = new FormData()
+              formData.append(
+                'assistant',
+                JSON.stringify({
+                  ...assistant,
+                  forkedFromId: assistant.id,
+                  interactionIds: []
+                })
+              )
+              fetcher.submit(formData, {
+                action: '/assistant',
+                method: 'post'
+              })
+            }}
+          />
+        ))}
+      </div>
+      预设助手
+      <div className='grid justify-center grid-cols-[repeat(auto-fit,minmax(150px,auto))] lg:grid-cols-[repeat(auto-fit,minmax(300px,auto))] gap-4 p-6'>
+        {defaultAssistantList.map(assistant => (
+          <AssistantItem
+            assistant={{
+              ...assistant,
+              config: assistant.config
+            }}
+            onClick={() => {
+              let formData = new FormData()
+              formData.append('assistant', JSON.stringify({ ...assistant, id: uuidv4() }))
+              fetcher.submit(formData, {
+                action: '/assistant',
+                method: 'post'
+              })
+            }}
+          />
+        ))}
+      </div>
     </div>
   )
 }

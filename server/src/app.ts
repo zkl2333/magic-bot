@@ -3,8 +3,7 @@ import bodyParser from 'koa-bodyparser'
 import auth from './middleware/auth'
 import logger from './middleware/logger'
 import prismaErrorHandler from './middleware/prismaErrorHandler'
-import router from './routes'
-import assistantRouter from './controllers/assistantController'
+import router from './router/routes'
 
 const app = new Koa<DefaultState, DefaultContext>()
 
@@ -13,7 +12,6 @@ app.use(logger)
 app.use(prismaErrorHandler)
 app.use(auth)
 
-app.use(assistantRouter.routes()).use(assistantRouter.allowedMethods())
 app.use(router.routes()).use(router.allowedMethods())
 
 export default app

@@ -11,7 +11,7 @@ import New from './Assistant/New/New'
 import AssistantId from './Assistant/AssistantId/AssistantId'
 import ErrorPage from './ErrorPage'
 import Login from './Login/Login'
-import { getAllAssistants } from './Assistant/service/assistant'
+import { getLocalAllAssistants } from '../service/localAssistant'
 import Root from './Root/Root'
 import Settings from './Settings/Settings'
 import User from './Settings/User/User'
@@ -107,7 +107,7 @@ export const router = createBrowserRouter([
             index: true,
             loader: async ({ params }) => {
               const { assistantId } = params
-              const assistantList = await getAllAssistants()
+              const assistantList = await getLocalAllAssistants()
               if (!assistantId) {
                 if (assistantList.length > 0) {
                   const assistant = assistantList[0]

@@ -1,5 +1,5 @@
 import localforage from 'localforage'
-import { Message } from '../types'
+import { Message } from '../routes/Assistant/types'
 import { getInteraction } from './interaction'
 import { v4 as uuidv4 } from 'uuid'
 
@@ -41,7 +41,7 @@ export const deleteMessage = async (id: string): Promise<void> => {
   if (message) {
     const interaction = await getInteraction(message.interactionId)
     if (interaction) {
-      interaction.messageIds = interaction.messageIds.filter(mId => mId !== id)
+      interaction.messageIds = interaction.messageIds.filter((mId: string) => mId !== id)
       await localforage.setItem(`interactions.${interaction.id}`, interaction)
     }
   }

@@ -1,8 +1,8 @@
 import { LoaderFunction } from 'react-router-dom'
-import { getAllAssistants } from './service/assistant'
+import { getAssistants } from '../../service/assistant'
 
 export const assistantLayoutLoader: LoaderFunction = async () => {
-  const assistantList = await getAllAssistants()
+  const assistantList = await getAssistants()
   return {
     assistantList
   }

@@ -4,6 +4,7 @@ export type Assistant = {
   id: number | string
   name: string
   avatar: string | null
+  isPublic: boolean
   config: {
     [key: string]: any
   } | null
@@ -28,8 +29,10 @@ export type AssistantWithSyncInfo = Assistant & {
 
 export type AssistantWithAllInfo = AssistantWithUsers & AssistantWithForks & AssistantWithSyncInfo
 
-export const pushAssistant = async (assistantInfo: Pick<Assistant, 'name' | 'config' | 'description'>) => {
-  return request('/api/assistants', {
+export const creatAssistant = async (
+  assistantInfo: Pick<Assistant, 'name' | 'config' | 'description' | 'isPublic' | 'avatar'>
+) => {
+  const response = await request('/api/assistants', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -37,10 +40,18 @@ export const pushAssistant = async (assistantInfo: Pick<Assistant, 'name' | 'con
     },
     body: JSON.stringify(assistantInfo)
   })
+
+  const data = await response.json()
+
+  if (!data.success) {
+    throw new Error(response.message)
+  }
+
+  return data.assistant
 }
 
 export const getAssistants = async () => {
-  const assistants = await request('/api/assistants', {
+  const response = await request('/api/assistants', {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -48,16 +59,16 @@ export const getAssistants = async () => {
     }
   })
 
-  const res = await assistants.json()
+  const data = await response.json()
 
-  if (!res.success) {
-    throw new Error(res.message)
+  if (!data.success) {
+    throw new Error(response.message)
   }
-  return res.assistants
+  return data.assistants
 }
 
 export const getPublicAssistants = async () => {
-  const assistants = await request('/api/assistants/public', {
+  const response = await request('/api/assistants/public', {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -65,10 +76,39 @@ export const getPublicAssistants = async () => {
     }
   })
 
-  const res = await assistants.json()
+  const data = await response.json()
 
-  if (!res.success) {
-    throw new Error(res.message)
+  if (!data.success) {
+    throw new Error(data.message)
   }
-  return res.assistants
+  return data.assistants.map(
+    (
+      assistant: Assistant & {
+        config: string
+      }
+    ) => {
+      return {
+        ...assistant,
+        config: assistant.config ? JSON.parse(assistant.config) : null
+      }
+    }
+  )
+}
+
+export const deleteAssistant = async (assistantId: Assistant['id']) => {
+  const response = await request(`/api/assistants/${assistantId}`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${localStorage.getItem('token')}`
+    }
+  })
+
+  const data = await response.json()
+
+  if (!data.success) {
+    throw new Error(data.message)
+  }
+
+  return data
 }

@@ -2,15 +2,15 @@ import { ActionFunction, useRouteLoaderData, useSubmit } from 'react-router-dom'
 import { Assistant } from '../../types'
 import OpenaiIcon from '../../../../components/OpenaiIcon'
 import { useState } from 'react'
-import { updateAssistant } from '../../service/assistant'
+import { updateLocalAssistant } from '../../../../service/localAssistant'
 import classNames from 'classnames'
 import MarkdownRenderer from '../../../../components/MarkdownRenderer/MarkdownRenderer'
-import { pushAssistant } from '../../../../service/assistant'
+import { creatAssistant } from '../../../../service/assistant'
 
 export const assistantEditAction: ActionFunction = async ({ request }) => {
   const formData = await request.formData()
   const assistantUpdate = JSON.parse(formData.get('assistant') as string)
-  updateAssistant(assistantUpdate)
+  updateLocalAssistant(assistantUpdate)
   return null
 }
 
@@ -73,10 +73,12 @@ const Edit = () => {
               <div
                 className='btn btn-sm'
                 onClick={() => {
-                  pushAssistant({
+                  creatAssistant({
                     name: _assistant.name,
                     description: _assistant.description,
-                    config: _assistant.config
+                    config: _assistant.config,
+                    avatar: _assistant.avatar,
+                    isPublic: true
                   })
                 }}
               >
