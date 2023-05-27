@@ -1,5 +1,5 @@
 import { Assistant } from '../types'
-import { defaultAssistantList, modelConfig } from '../constants'
+import { defaultAssistantList, config } from '../constants'
 import { v4 as uuidv4 } from 'uuid'
 import localforage from 'localforage'
 import { deleteInteraction } from './interaction'
@@ -21,7 +21,7 @@ export const addAssistant = async (assistant?: Assistant): Promise<Assistant> =>
     description: 'New Assistant',
     avatar: '',
     initialMessage: 'Hello, I am a new assistant',
-    modelConfig: modelConfig,
+    config: config,
     interactionIds: []
   }
 

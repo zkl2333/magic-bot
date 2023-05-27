@@ -8,7 +8,7 @@ import { fetchApiKey } from '../service/aiProxy'
 
 export interface ChatCompletionRequest {
   messages: Message[]
-  modelConfig: {
+  config: {
     model: string
     temperature: number
     top_p: number

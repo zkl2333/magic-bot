@@ -28,7 +28,7 @@ const Edit = () => {
   const setModalConfig = (config: any) => {
     const newAssistant = {
       ...assistant,
-      modelConfig: config
+      config: config
     }
     setAssistant(newAssistant)
   }
@@ -76,7 +76,7 @@ const Edit = () => {
                   pushAssistant({
                     name: _assistant.name,
                     description: _assistant.description,
-                    config: JSON.stringify(_assistant.modelConfig)
+                    config: _assistant.config
                   })
                 }}
               >
@@ -95,11 +95,11 @@ const Edit = () => {
           </label>
           <input
             type='text'
-            value={assistant.modelConfig.model}
+            value={assistant.config.model}
             className='input input-bordered w-full'
             onChange={e => {
               setModalConfig({
-                ...assistant.modelConfig,
+                ...assistant.config,
                 model: e.target.value
               })
             }}
@@ -141,12 +141,15 @@ const Edit = () => {
             <span className='label-text'>初始消息</span>
           </label>
           <textarea
-            value={assistant.initialMessage}
+            value={assistant.config.initialMessage}
             className='textarea input-bordered w-full'
             onChange={e => {
               setAssistant({
                 ...assistant,
-                initialMessage: e.target.value
+                config: {
+                  ...assistant.config,
+                  initialMessage: e.target.value
+                }
               })
             }}
           />
@@ -158,7 +161,7 @@ const Edit = () => {
           <label className='mb-1'>
             上下文数：
             <span className='countdown'>
-              <span style={{ '--value': assistant.modelConfig.context_size } as any}></span>
+              <span style={{ '--value': assistant.config.context_size } as any}></span>
             </span>
           </label>
           <input
@@ -166,10 +169,10 @@ const Edit = () => {
             className='range range-xs range-primary'
             min='1'
             max='20'
-            value={assistant.modelConfig.context_size}
+            value={assistant.config.context_size}
             onChange={e => {
               setModalConfig({
-                ...assistant.modelConfig,
+                ...assistant.config,
                 context_size: Number(e.target.value)
               })
             }}
@@ -178,17 +181,17 @@ const Edit = () => {
         <div className='w-full'>
           <label className='mb-1'>
             最大生成长度：
-            {assistant.modelConfig.max_tokens}
+            {assistant.config.max_tokens}
           </label>
           <input
             type='range'
             className='range range-xs range-primary'
             min='1'
             max='2600'
-            value={assistant.modelConfig.max_tokens}
+            value={assistant.config.max_tokens}
             onChange={e => {
               setModalConfig({
-                ...assistant.modelConfig,
+                ...assistant.config,
                 max_tokens: Number(e.target.value)
               })
             }}
@@ -201,7 +204,7 @@ const Edit = () => {
               data-tip='控制文本多样性，高值创新多样但不可信，低值保守无新意。（用于创意文本生成。）'
             >
               随机属性：
-              {assistant.modelConfig.temperature}
+              {assistant.config.temperature}
             </div>
           </label>
           <input
@@ -210,10 +213,10 @@ const Edit = () => {
             min='0'
             max='2'
             step='0.1'
-            value={assistant.modelConfig.temperature}
+            value={assistant.config.temperature}
             onChange={e => {
               setModalConfig({
-                ...assistant.modelConfig,
+                ...assistant.config,
                 top_p: 1,
                 temperature: Number(e.target.value)
               })
@@ -227,7 +230,7 @@ const Edit = () => {
               data-tip='控制文本多样性和保真度。高值多样但不准确，低值保险且准确。（用于科技文本、学术论文等需要准确性的文本生成。）'
             >
               词汇属性：
-              {assistant.modelConfig.top_p}
+              {assistant.config.top_p}
             </div>
           </label>
           <input
@@ -236,10 +239,10 @@ const Edit = () => {
             min='0'
             max='1'
             step='0.1'
-            value={assistant.modelConfig.top_p}
+            value={assistant.config.top_p}
             onChange={e => {
               setModalConfig({
-                ...assistant.modelConfig,
+                ...assistant.config,
                 temperature: 1,
                 top_p: Number(e.target.value)
               })
@@ -253,7 +256,7 @@ const Edit = () => {
               data-tip='控制文本同一词汇重复情况。当此参数值大于0时，将鼓励模型生成不同的单词，并尽可能避免使用已经在之前生成的文本中出现过的单词。'
             >
               重复惩罚：
-              {assistant.modelConfig.presence_penalty}
+              {assistant.config.presence_penalty}
             </div>
           </label>
           <input
@@ -262,10 +265,10 @@ const Edit = () => {
             min='-2'
             max='2'
             step='0.1'
-            value={assistant.modelConfig.presence_penalty}
+            value={assistant.config.presence_penalty}
             onChange={e => {
               setModalConfig({
-                ...assistant.modelConfig,
+                ...assistant.config,
                 presence_penalty: Number(e.target.value)
               })
             }}
@@ -278,7 +281,7 @@ const Edit = () => {
               data-tip='控制文本罕见词汇出现情况。当此参数值大于0时，将抑制模型生成频繁出现的单词，并鼓励生成罕见的单词。'
             >
               频率惩罚：
-              {assistant.modelConfig.frequency_penalty}
+              {assistant.config.frequency_penalty}
             </div>
           </label>
           <input
@@ -287,22 +290,22 @@ const Edit = () => {
             min='-2'
             max='2'
             step='0.1'
-            value={assistant.modelConfig.frequency_penalty}
+            value={assistant.config.frequency_penalty}
             onChange={e => {
               setModalConfig({
-                ...assistant.modelConfig,
+                ...assistant.config,
                 frequency_penalty: Number(e.target.value)
               })
             }}
           />
         </div>
       </div>
-      {assistant.prompt && (
+      {assistant.config.prompt && (
         <div className={classNames(itemClassName, 'col-span-1 lg:col-span-2')}>
           <div className='w-full'>
             <h3 className='mb-4 text-xl'>内置提示词</h3>
             <div className='bg-base-300 p-4 rounded-box'>
-              {assistant.prompt.map((item, index) => {
+              {assistant.config.prompt.map((item, index) => {
                 return (
                   <div
                     key={index}

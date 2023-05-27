@@ -1,13 +1,14 @@
 import { Context } from 'koa'
 import { PrismaClient, Assistant } from '@prisma/client'
+import Router from 'koa-router'
 
 const prisma = new PrismaClient()
 
 // 给自己创建一个助手
-async function createAssistant(
+const createAssistant = async (
   userId: string,
   assistantData: Pick<Assistant, 'name' | 'config' | 'description'>
-) {
+) => {
   const user = await prisma.user.findUnique({
     where: { id: userId }
   })
@@ -20,7 +21,7 @@ async function createAssistant(
   const createdAssistant = await prisma.assistant.create({
     data: {
       name: assistantData.name,
-      config: assistantData.config,
+      config: JSON.stringify(assistantData.config),
       description: assistantData.description
     }
   })
@@ -46,6 +47,20 @@ async function listAssistants(userId: string) {
   return userAssistants.map(userAssistant => userAssistant.assistant)
 }
 
+// 列出公开的助手
+const listPublicAssistants = () => {
+  return prisma.assistant.findMany({
+    where: { isPublic: true }
+  })
+}
+
+// 删除我的助手
+const deleteAssistant = (userId: string, assistantId: number) => {
+  return prisma.userAssistant.delete({
+    where: { userId_assistantId: { userId, assistantId } }
+  })
+}
+
 export const create = async (ctx: Context) => {
   const userId = ctx.state.user.id
   const assistantData = ctx.request.body as Assistant
@@ -53,10 +68,14 @@ export const create = async (ctx: Context) => {
   try {
     const assistant = await createAssistant(userId, assistantData)
     ctx.status = 200
-    ctx.body = { message: '创建助手成功', assistant }
+    ctx.body = { success: true, message: '创建助手成功', assistant }
   } catch (error) {
     ctx.status = 400
-    ctx.body = { message: '创建助手失败', error: (error as Error).message }
+    ctx.body = {
+      success: false,
+      message: '创建助手失败',
+      error: (error as Error).message
+    }
   }
 }
 
@@ -66,14 +85,60 @@ const list = async (ctx: Context) => {
   try {
     const assistants = await listAssistants(userId)
     ctx.status = 200
-    ctx.body = { message: '获取助手列表成功', assistants }
+    ctx.body = {
+      success: true,
+      message: '获取助手列表成功',
+      assistants
+    }
   } catch (error) {
     ctx.status = 400
-    ctx.body = { message: '获取助手列表失败', error: (error as Error).message }
+    ctx.body = {
+      success: false,
+      message: '获取助手列表失败',
+      error: (error as Error).message
+    }
   }
 }
 
-import Router from 'koa-router'
+const _delete = async (ctx: Context) => {
+  const userId = ctx.state.user.id
+  const assistantId = ctx.params.id
+
+  try {
+    await deleteAssistant(userId, +assistantId)
+    ctx.status = 200
+    ctx.body = {
+      success: true,
+      message: '删除助手成功'
+    }
+  } catch (error) {
+    ctx.status = 400
+    ctx.body = {
+      success: false,
+      message: '删除助手失败',
+      error: (error as Error).message
+    }
+  }
+}
+
+const publicList = async (ctx: Context) => {
+  try {
+    const assistants = await listPublicAssistants()
+    ctx.status = 200
+    ctx.body = {
+      success: true,
+      message: '获取公开助手列表成功',
+      assistants
+    }
+  } catch (error) {
+    ctx.status = 400
+    ctx.body = {
+      success: false,
+      message: '获取公开助手列表失败',
+      error: (error as Error).message
+    }
+  }
+}
 
 const assistantRouter = new Router({
   prefix: '/assistants'
@@ -81,5 +146,7 @@ const assistantRouter = new Router({
 
 assistantRouter.post('/', create)
 assistantRouter.get('/', list)
+assistantRouter.get('/public', publicList)
+assistantRouter.delete('/:id', _delete)
 
 export default assistantRouter

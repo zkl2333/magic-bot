@@ -25,8 +25,7 @@ export interface Assistant {
   name: string
   description: string
   avatar: string
-  initialMessage?: string
-  modelConfig: {
+  config: {
     model: string
     context_size: number
     temperature: number
@@ -34,7 +33,8 @@ export interface Assistant {
     max_tokens: number
     presence_penalty: number
     frequency_penalty: number
+    initialMessage?: string
+    prompt?: BaseMessage[]
   }
   interactionIds: string[]
-  prompt?: BaseMessage[]
 }

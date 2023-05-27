@@ -8,7 +8,7 @@ const createMessage = (chatList: Message[]) => {
 
 const baseUrl = 'https://api.aiproxy.io/v1'
 
-const chatCompletions = async ({ messages, modelConfig }: ChatCompletionRequest, apiKey: string) => {
+const chatCompletions = async ({ messages, config }: ChatCompletionRequest, apiKey: string) => {
   const configuration = new Configuration({
     basePath: baseUrl,
     apiKey: apiKey
@@ -19,7 +19,7 @@ const chatCompletions = async ({ messages, modelConfig }: ChatCompletionRequest,
   try {
     const response = await openai.createChatCompletion(
       {
-        ...modelConfig,
+        ...config,
         stream: true,
         messages: createMessage(messages)
       },

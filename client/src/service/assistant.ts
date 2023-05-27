@@ -1,9 +1,12 @@
 import request from './request'
 
 export type Assistant = {
-  id: number
+  id: number | string
   name: string
-  config: string | null
+  avatar: string | null
+  config: {
+    [key: string]: any
+  } | null
   description: string | null
   createdAt: Date
   updatedAt: Date
@@ -38,6 +41,23 @@ export const pushAssistant = async (assistantInfo: Pick<Assistant, 'name' | 'con
 
 export const getAssistants = async () => {
   const assistants = await request('/api/assistants', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${localStorage.getItem('token')}`
+    }
+  })
+
+  const res = await assistants.json()
+
+  if (!res.success) {
+    throw new Error(res.message)
+  }
+  return res.assistants
+}
+
+export const getPublicAssistants = async () => {
+  const assistants = await request('/api/assistants/public', {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',

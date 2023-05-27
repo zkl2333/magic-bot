@@ -20,6 +20,7 @@ import Balance from './Settings/Balance/Balance'
 import Transactions from './Settings/Transactions/Transactions'
 import { getUserInfo, getBalance, updateUserInfo } from '../service/user'
 import Edit, { assistantEditAction } from './Assistant/AssistantId/Edit/Edit'
+import { getPublicAssistants } from '../service/assistant'
 
 export const router = createBrowserRouter([
   {
@@ -121,7 +122,13 @@ export const router = createBrowserRouter([
           },
           {
             path: 'new',
-            element: <New />
+            element: <New />,
+            loader: async () => {
+              const assistants = await getPublicAssistants()
+              return {
+                assistants
+              }
+            }
           },
           {
             path: ':assistantId',

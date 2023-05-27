@@ -32,7 +32,7 @@ export interface IAssistant {
   description: string
   avatar: string
   initialMessage?: string
-  modelConfig: {
+  config: {
     model: string
     context_size: number
     temperature: number

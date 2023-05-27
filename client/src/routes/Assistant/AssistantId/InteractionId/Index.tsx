@@ -39,7 +39,7 @@ const AssistantInteraction = observer(() => {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       },
-      body: JSON.stringify({ messages: messages, modelConfig: assistant.modelConfig }),
+      body: JSON.stringify({ messages: messages, config: assistant.config }),
       signal: abortController.current.signal
     })
   }
@@ -62,14 +62,14 @@ const AssistantInteraction = observer(() => {
       const newMessages = [...chatStore.messages, message]
       chatStore.setMessages(newMessages)
       chatStore.setInput('')
-      const context = newMessages.slice(-assistant.modelConfig.context_size)
+      const context = newMessages.slice(-assistant.config.context_size)
       generateAssistantReply(context)
     }
   }
 
   // 生成回复 异步流
   const generateAssistantReply = async (context: Message[]) => {
-    const realContext = assistant.prompt ? [...assistant.prompt, ...context] : context
+    const realContext = assistant.config.prompt ? [...assistant.config.prompt, ...context] : context
     const message = await addMessage(interaction.id, 'assistant', '思考中...')
     chatStore.addMessage(message)
     const messageId = message.id
@@ -107,7 +107,7 @@ const AssistantInteraction = observer(() => {
         }
       }
 
-      for (let i = userMsgIndex; i >= 0 && context.length < assistant.modelConfig.context_size; i--) {
+      for (let i = userMsgIndex; i >= 0 && context.length < assistant.config.context_size; i--) {
         context.push(chatStore.messages[i])
       }
 
@@ -116,7 +116,7 @@ const AssistantInteraction = observer(() => {
       chatStore.removeMessages(needDeleteMessages.map(item => item.id))
       generateAssistantReply(context.reverse())
     } else {
-      generateAssistantReply(chatStore.messages.slice(-assistant.modelConfig.context_size))
+      generateAssistantReply(chatStore.messages.slice(-assistant.config.context_size))
     }
   }
 
@@ -124,11 +124,11 @@ const AssistantInteraction = observer(() => {
     <>
       {/* 对话列表 */}
       <div id='chat-list' className='flex flex-1 flex-col p-3 lg:p-4 overflow-y-auto overflow-x-hidden'>
-        {assistant.initialMessage && (
+        {assistant.config.initialMessage && (
           <ChatBubble
             id={'0'}
             interactionId={interaction.id}
-            content={assistant.initialMessage}
+            content={assistant.config.initialMessage}
             role='assistant'
             loading={false}
             createdAt={interaction.createdAt}
