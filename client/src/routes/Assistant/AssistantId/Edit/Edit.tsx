@@ -82,7 +82,7 @@ const Edit = () => {
                   })
                 }}
               >
-                上传到市场
+                分享到市场
               </div>
               <div className='btn btn-sm btn-disabled'>从市场更新</div>
             </div>
