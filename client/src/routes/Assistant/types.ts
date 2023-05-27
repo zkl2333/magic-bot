@@ -1,5 +1,3 @@
-type UUID = string
-
 export interface BaseMessage {
   role: 'user' | 'assistant' | 'system'
   content: string
@@ -20,21 +18,7 @@ export interface Interaction {
   messageIds: string[]
 }
 
-export interface Assistant {
-  id: UUID
-  name: string
-  description: string
-  avatar: string
-  config: {
-    model: string
-    context_size: number
-    temperature: number
-    top_p: number
-    max_tokens: number
-    presence_penalty: number
-    frequency_penalty: number
-    initialMessage?: string
-    prompt?: BaseMessage[]
-  }
+export interface LocalAssistant {
+  id: string | number
   interactionIds: string[]
 }

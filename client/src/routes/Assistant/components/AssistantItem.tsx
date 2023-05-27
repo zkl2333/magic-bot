@@ -1,10 +1,10 @@
 import classnames from 'classnames'
 import OpenaiIcon from '../../../components/OpenaiIcon'
-import { IAssistant } from '../../../types'
+import { Assistant } from '../../../service/assistant'
 
 interface IAssistantItemProps {
   className?: string
-  assistant: IAssistant
+  assistant: Assistant
   isActive: boolean
 }
 

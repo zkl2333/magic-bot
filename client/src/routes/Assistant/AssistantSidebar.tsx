@@ -1,14 +1,14 @@
 import classNames from 'classnames'
 import AssistantItem from './components/AssistantItem'
 import { NavLink, useFetcher } from 'react-router-dom'
-import { Assistant } from './types'
 import HighlightOffTwoToneIcon from '@mui/icons-material/HighlightOffTwoTone'
+import { Assistant } from '../../service/assistant'
 
 const AssistantSidebar = ({
   assistantList,
   setAssistantLayoutShowSidebar
 }: {
-  assistantList: Assistant[]
+  assistantList: Array<Assistant>
   setAssistantLayoutShowSidebar: React.Dispatch<React.SetStateAction<boolean>>
 }) => {
   const fetcher = useFetcher()
@@ -51,7 +51,12 @@ const AssistantSidebar = ({
                       e.stopPropagation()
                       e.preventDefault()
                       const data = new FormData()
-                      data.append('assistantId', assistant.id)
+                      data.append('assistantId', assistant.id.toString())
+                      const nextAssistant = assistantList.filter(item => item.id !== assistant.id)[0]
+                      data.append(
+                        'redirectTo',
+                        nextAssistant ? `/assistant/${nextAssistant.id}` : '/assistant/new'
+                      )
                       fetcher.submit(data, {
                         method: 'delete',
                         action: '/assistant'

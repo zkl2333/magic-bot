@@ -32,7 +32,7 @@ export type AssistantWithAllInfo = AssistantWithUsers & AssistantWithForks & Ass
 export const creatAssistant = async (
   assistantInfo: Pick<Assistant, 'name' | 'config' | 'description' | 'isPublic' | 'avatar'>
 ) => {
-  const response = await request('/api/assistants', {
+  const data = await request('/api/assistants', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -41,17 +41,15 @@ export const creatAssistant = async (
     body: JSON.stringify(assistantInfo)
   })
 
-  const data = await response.json()
-
   if (!data.success) {
-    throw new Error(response.message)
+    throw new Error(data.message)
   }
 
   return data.assistant
 }
 
 export const getAssistants = async () => {
-  const response = await request('/api/assistants', {
+  const data = await request('/api/assistants', {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -59,24 +57,20 @@ export const getAssistants = async () => {
     }
   })
 
-  const data = await response.json()
-
   if (!data.success) {
-    throw new Error(response.message)
+    throw new Error(data.message)
   }
   return data.assistants
 }
 
 export const getPublicAssistants = async () => {
-  const response = await request('/api/assistants/public', {
+  const data = await request('/api/assistants/public', {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${localStorage.getItem('token')}`
     }
   })
-
-  const data = await response.json()
 
   if (!data.success) {
     throw new Error(data.message)
@@ -96,7 +90,7 @@ export const getPublicAssistants = async () => {
 }
 
 export const deleteAssistant = async (assistantId: Assistant['id']) => {
-  const response = await request(`/api/assistants/${assistantId}`, {
+  const data = await request(`/api/assistants/${assistantId}`, {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
@@ -104,11 +98,29 @@ export const deleteAssistant = async (assistantId: Assistant['id']) => {
     }
   })
 
-  const data = await response.json()
-
   if (!data.success) {
     throw new Error(data.message)
   }
 
   return data
+}
+
+export const getAssistant = async (assistantId: Assistant['id']) => {
+  const data = await request(`/api/assistants/${assistantId}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${localStorage.getItem('token')}`
+    }
+  })
+
+  if (!data.success) {
+    // throw new Error(data.message)
+    return null
+  }
+
+  return {
+    ...data.assistant,
+    config: data.assistant.config ? JSON.parse(data.assistant.config) : null
+  }
 }

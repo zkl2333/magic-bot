@@ -6,7 +6,8 @@ import {
   listAssistants,
   deleteAssistant,
   listPublicAssistants,
-  forkAssistant
+  forkAssistant,
+  getAssistant
 } from '../controllers/assistantController'
 
 export const create = async (ctx: Context) => {
@@ -110,6 +111,33 @@ const fork = async (ctx: Context) => {
   }
 }
 
+const get = async (ctx: Context) => {
+  const userId = ctx.state.user.id
+  const assistantId = Number(ctx.params.id)
+
+  try {
+    const assistant = await getAssistant(userId, assistantId)
+
+    if (!assistant) {
+      throw new Error('助手不存在')
+    }
+
+    ctx.status = 200
+    ctx.body = {
+      success: true,
+      message: '获取助手成功',
+      assistant: assistant
+    }
+  } catch (error) {
+    ctx.status = 400
+    ctx.body = {
+      success: false,
+      message: '获取助手失败',
+      error: (error as Error).message
+    }
+  }
+}
+
 const assistantRouter = new Router({
   prefix: '/assistants'
 })
@@ -117,6 +145,7 @@ const assistantRouter = new Router({
 assistantRouter.post('/', create)
 assistantRouter.get('/', list)
 assistantRouter.get('/public', publicList)
+assistantRouter.get('/:id', get)
 assistantRouter.delete('/:id', _delete)
 assistantRouter.post('/:id/fork', fork)
 

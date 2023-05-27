@@ -27,7 +27,7 @@ export type Settings = {
 }
 
 export const getUserInfo = async ({ withInfo }: { withInfo?: boolean } = {}) => {
-  const user = await request(`/api/user/info`, {
+  const data = await request(`/api/user/info`, {
     method: 'GET',
     query: {
       withInfo: !!withInfo
@@ -38,12 +38,10 @@ export const getUserInfo = async ({ withInfo }: { withInfo?: boolean } = {}) => 
     }
   })
 
-  const res = await user.json()
-
-  if (!res.success) {
-    throw new Error(res.message)
+  if (!data.success) {
+    throw new Error(data.message)
   }
-  return res.user
+  return data.user
 }
 
 export const updateUserInfo = async (

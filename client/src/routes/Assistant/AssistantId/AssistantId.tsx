@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react'
-import { Outlet, useLoaderData, useFetcher, useOutletContext } from 'react-router-dom'
-import { Assistant, Interaction } from '../types'
+import { Outlet, useLoaderData, useFetcher, useOutletContext, useParams, useNavigate } from 'react-router-dom'
+import { LocalAssistant, Interaction } from '../types'
 import AssistantInteractionSidebar from './AssistantIdSidebar'
 import { RootContextProps } from '../../Root/Root'
 import { deleteInteraction, getInteraction } from '../../../service/interaction'
+import { Assistant } from '../../../service/assistant'
 
 export type AssistantIdContentProps = {
   showAssistantIdSidebar: boolean
@@ -11,10 +12,12 @@ export type AssistantIdContentProps = {
 }
 
 const AssistantId = () => {
-  const { assistant } = useLoaderData() as { assistant: Assistant }
+  const { assistant } = useLoaderData() as { assistant: LocalAssistant & Assistant }
   const [interactions, setInteractions] = useState<Interaction[]>([])
   const [showAssistantIdSidebar, setAssistantIdShowSidebar] = useState(false)
   const fetcher = useFetcher()
+  const { interactionId } = useParams()
+  const navigate = useNavigate()
 
   const fetchInteractions = async () => {
     const fetchedInteractions = await Promise.all(
@@ -39,6 +42,13 @@ const AssistantId = () => {
 
   useEffect(() => {
     setTitle(assistant.name)
+
+    if (!interactionId) {
+      console.log('interactionId is null')
+      const interactionId = assistant.interactionIds[0]
+      navigate(`/assistant/${assistant.id}/${interactionId}`)
+    }
+
     return () => {
       setTitle('')
     }

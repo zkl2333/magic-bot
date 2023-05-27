@@ -1,7 +1,6 @@
 import classNames from 'classnames'
 import { defaultAssistantList } from '../constants'
 import { useFetcher, useLoaderData, useOutletContext } from 'react-router-dom'
-import { v4 as uuidv4 } from 'uuid'
 import { useEffect } from 'react'
 import { RootContextProps } from '../../Root/Root'
 import OpenaiIcon from '../../../components/OpenaiIcon'
@@ -93,7 +92,9 @@ const New = () => {
             <div className='hero-content text-center'>
               <div className='max-w-md'>
                 <h3 className='text-3xl font-bold'>快来分享你的AI助理！</h3>
-                <p className='py-6'>你可以分享你的助手给其他用户，也可以从下面的简单预设寻找一个AI助手快速开始聊天。</p>
+                <p className='py-6'>
+                  你可以分享你的助手给其他用户，也可以从下面的简单预设寻找一个AI助手快速开始聊天。
+                </p>
               </div>
             </div>
           </div>
@@ -105,11 +106,11 @@ const New = () => {
           <AssistantItem
             assistant={{
               ...assistant,
-              config: assistant.config
+              config: assistant?.config || {}
             }}
             onClick={() => {
               let formData = new FormData()
-              formData.append('assistant', JSON.stringify({ ...assistant, id: uuidv4() }))
+              formData.append('assistant', JSON.stringify({ ...assistant }))
               fetcher.submit(formData, {
                 action: '/assistant',
                 method: 'post'

@@ -1,8 +1,8 @@
 import userStore from '../store/UserStore'
 import { createBrowserRouter, Navigate } from 'react-router-dom'
 import { redirect } from 'react-router-dom'
-import { assistantIndexLoader, assistantLoader } from './Assistant/AssistantId/loader'
-import { assistantInteractionLoader } from './Assistant/AssistantId/InteractionId/loader'
+import { assistantIdLoader } from './Assistant/AssistantId/loader'
+import { assistantIdInteractionLoader } from './Assistant/AssistantId/InteractionId/loader'
 import { assistantLayoutLoader } from './Assistant/assistantLayoutLoader'
 import { assistantLayoutAction } from './Assistant/AssistantLayoutAction'
 import AssistantLayout from './Assistant/AssistantLayout'
@@ -11,7 +11,6 @@ import New from './Assistant/New/New'
 import AssistantId from './Assistant/AssistantId/AssistantId'
 import ErrorPage from './ErrorPage'
 import Login from './Login/Login'
-import { getLocalAllAssistants } from '../service/localAssistant'
 import Root from './Root/Root'
 import Settings from './Settings/Settings'
 import User from './Settings/User/User'
@@ -19,8 +18,8 @@ import Security from './Settings/Security/Security'
 import Balance from './Settings/Balance/Balance'
 import Transactions from './Settings/Transactions/Transactions'
 import { getUserInfo, getBalance, updateUserInfo } from '../service/user'
-import Edit, { assistantEditAction } from './Assistant/AssistantId/Edit/Edit'
-import { getPublicAssistants } from '../service/assistant'
+import Edit, { assistantEditAction as assistantIdEditAction } from './Assistant/AssistantId/Edit/Edit'
+import assistantNewLoader from './Assistant/New/newLoader'
 
 export const router = createBrowserRouter([
   {
@@ -104,51 +103,25 @@ export const router = createBrowserRouter([
         action: assistantLayoutAction,
         children: [
           {
-            index: true,
-            loader: async ({ params }) => {
-              const { assistantId } = params
-              const assistantList = await getLocalAllAssistants()
-              if (!assistantId) {
-                if (assistantList.length > 0) {
-                  const assistant = assistantList[0]
-                  return redirect(`/assistant/${assistant.id}`)
-                }
-                return redirect('/assistant/new')
-              }
-              return {
-                assistantList
-              }
-            }
-          },
-          {
             path: 'new',
             element: <New />,
-            loader: async () => {
-              const assistants = await getPublicAssistants()
-              return {
-                assistants
-              }
-            }
+            loader: assistantNewLoader
           },
           {
             path: ':assistantId',
             id: 'assistant',
-            loader: assistantLoader,
+            loader: assistantIdLoader,
             element: <AssistantId />,
             children: [
               {
-                index: true,
-                loader: assistantIndexLoader
-              },
-              {
                 path: 'edit',
                 element: <Edit />,
-                action: assistantEditAction
+                action: assistantIdEditAction
               },
               {
                 path: ':interactionId',
                 element: <AssistantInteraction />,
-                loader: assistantInteractionLoader
+                loader: assistantIdInteractionLoader
               }
             ]
           }

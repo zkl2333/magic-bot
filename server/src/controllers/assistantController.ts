@@ -98,3 +98,19 @@ export const deleteAssistant = (userId: string, assistantId: number) => {
     where: { userId_assistantId: { userId, assistantId } }
   })
 }
+
+// 获取助手
+export const getAssistant = async (userId: string, assistantId: number) => {
+  const assistant = await prisma.userAssistant.findUnique({
+    where: {
+      userId_assistantId: { userId, assistantId }
+    },
+    include: { assistant: true }
+  })
+
+  if (!assistant) {
+    return null
+  }
+
+  return assistant.assistant
+}

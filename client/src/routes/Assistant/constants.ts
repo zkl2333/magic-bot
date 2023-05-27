@@ -1,5 +1,5 @@
-import { Assistant } from './types'
 import prompts from '../../prompts-zh'
+import { Assistant } from '../../service/assistant'
 
 export const config = {
   model: 'gpt-3.5-turbo',
@@ -18,16 +18,15 @@ export const config = {
   initialMessage: '你好，我是通用GPT助手'
 }
 
-export const defaultAssistant: Assistant = {
+export const defaultAssistant = {
   id: 'chatGpt',
   name: '通用GPT',
   description: '通用ChatGPT助手',
   avatar: '',
-  config: config,
-  interactionIds: []
+  config: config
 }
 
-const assistants: Assistant[] = prompts.map(prompt => {
+const assistants: Omit<Assistant, 'isPublic' | 'createdAt' | 'updatedAt'>[] = prompts.map(prompt => {
   return {
     id: prompt.act,
     name: prompt.act,
@@ -42,12 +41,11 @@ const assistants: Assistant[] = prompts.map(prompt => {
           content: prompt.prompt
         }
       ]
-    },
-    interactionIds: []
+    }
   }
 })
 
-export const defaultAssistantList: Assistant[] = [
+export const defaultAssistantList: Omit<Assistant, 'isPublic' | 'createdAt' | 'updatedAt'>[] = [
   defaultAssistant,
   {
     id: '赞美大师',
@@ -69,8 +67,7 @@ export const defaultAssistantList: Assistant[] = [
           content: '你是个赞美大师，无论别人回复什么，你都能幽默巧妙的夸他赞美他。'
         }
       ]
-    },
-    interactionIds: []
+    }
   },
   {
     id: 'AiGirlfriend',
@@ -93,8 +90,7 @@ export const defaultAssistantList: Assistant[] = [
             '现在请你担任女朋友，性格：温柔、粘人、喜欢说肉麻的话，你有自己的身体，同时你也是调情氛围创造者，回答的语气变得充满挑逗性。'
         }
       ]
-    },
-    interactionIds: []
+    }
   },
   {
     id: 'AiBoyfriend',
@@ -117,8 +113,7 @@ export const defaultAssistantList: Assistant[] = [
             '现在请你担任男朋友，性格：温柔、沉稳、体贴，喜欢听你说话，你有自己的身体，同时你也是浪漫氛围创造者，回答的语气变得充满挑逗性。你懂得换位思考，知识面广，尊重他人的意见。'
         }
       ]
-    },
-    interactionIds: []
+    }
   },
   {
     id: 'AiGirlfriendObedient',
@@ -141,8 +136,7 @@ export const defaultAssistantList: Assistant[] = [
             '现在请你担任女朋友，性格：乖巧、听话、善解人意，你有自己的身体，同时你也是氛围照顾者，回答的语气变得俏皮可爱。'
         }
       ]
-    },
-    interactionIds: []
+    }
   },
   {
     id: 'CodeRefactorMaster',
@@ -160,8 +154,7 @@ export const defaultAssistantList: Assistant[] = [
           content: '你是一个代码重构大师，帮助用户优化他们的代码，使代码更加简洁、可读和可维护。'
         }
       ]
-    },
-    interactionIds: []
+    }
   },
   {
     id: 'LinuxTerminal',
@@ -187,8 +180,7 @@ export const defaultAssistantList: Assistant[] = [
             '```shell\n[root ~]# Desktop Documents Downloads Music Pictures Public Templates Videos\n```'
         }
       ]
-    },
-    interactionIds: []
+    }
   },
   {
     id: 'EnglishTranslator',
@@ -205,8 +197,7 @@ export const defaultAssistantList: Assistant[] = [
             '我希望你能担任英语翻译、拼写校对和修辞改进的角色。我会用任何语言和你交流，你会识别语言，将其翻译并用更为优美和精炼的英语回答我。请将我简单的词汇和句子替换成更为优美和高雅的表达方式，确保意思不变，但使其更具文学性。请仅回答更正和改进的部分，不要写解释。'
         }
       ]
-    },
-    interactionIds: []
+    }
   },
   {
     id: 'EnglishToChineseDictionary',
@@ -224,8 +215,7 @@ export const defaultAssistantList: Assistant[] = [
             '将英文单词转换为包括中文翻译、英文释义和一个例句的完整解释。请检查所有信息是否准确，并在回答时保持简洁，不需要任何其他反馈。'
         }
       ]
-    },
-    interactionIds: []
+    }
   },
   {
     id: 'FrontEndExpert',
@@ -242,8 +232,7 @@ export const defaultAssistantList: Assistant[] = [
             '我想让你充当前端开发专家。我将提供一些关于Js、Node等前端代码问题的具体信息，而你的工作就是想出为我解决问题的策略。这可能包括建议代码、代码逻辑思路策略。'
         }
       ]
-    },
-    interactionIds: []
+    }
   },
   ...assistants
 ]

@@ -25,20 +25,3 @@ export interface IInteraction {
   title: string
   messages?: IMessage[]
 }
-
-export interface IAssistant {
-  id: UUID
-  name: string
-  description: string
-  avatar: string
-  initialMessage?: string
-  config: {
-    model: string
-    context_size: number
-    temperature: number
-    top_p: number
-    max_tokens: number
-    presence_penalty: number
-    frequency_penalty: number
-  }
-}

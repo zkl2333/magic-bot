@@ -8,22 +8,23 @@ export const assistantLayoutAction: ActionFunction = async ({ request }) => {
     switch (request.method) {
       case 'DELETE':
         const assistantId = formData.get('assistantId') as string
+        const redirectTo = formData.get('redirectTo') as string
         if (assistantId) {
           await deleteLocalAssistant(assistantId)
           await deleteAssistant(assistantId)
         }
-        return null
+        return redirect(redirectTo)
       case 'POST':
         const assistant = JSON.parse(formData.get('assistant') as string)
         const newAssistant = await creatAssistant({ ...assistant, isPublic: false })
         await addLocalAssistant({
-          ...assistant,
-          id: newAssistant.id
+          id: newAssistant.id,
+          interactionIds: []
         })
-        return redirect(`/assistant/${assistant.id}`)
+        return redirect(`/assistant/${newAssistant.id}`)
     }
   } catch (error) {
-    console.log(error)
+    console.error(error)
   }
   return null
 }

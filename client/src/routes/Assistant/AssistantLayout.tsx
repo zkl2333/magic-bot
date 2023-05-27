@@ -1,8 +1,10 @@
 import {
   Link,
   NavLink,
+  Navigate,
   Outlet,
   useLoaderData,
+  useLocation,
   useNavigate,
   useOutletContext,
   useParams
@@ -12,18 +14,35 @@ import { useState } from 'react'
 import MenuIcon from '@mui/icons-material/Menu'
 import userStore from '../../store/UserStore'
 import Avatar from '../../components/Avatar'
-import { Assistant } from './types'
 import { SidebarLayout } from '../../components/SidebarLayout'
 import { RootContextProps } from '../Root/Root'
+import { Assistant } from '../../service/assistant'
 
 function AssistantLayout() {
-  const { assistantList } = useLoaderData() as { assistantList: Assistant[] }
+  const { assistantList } = useLoaderData() as { assistantList: Array<Assistant> }
   const [showAssistantLayoutSidebar, setAssistantLayoutShowSidebar] = useState(false)
   const context = useOutletContext<RootContextProps>()
   const { title } = context
   const navigate = useNavigate()
 
   const { assistantId } = useParams()
+  let location = useLocation()
+
+  if (location.pathname !== '/assistant/new') {
+    if (!assistantId && assistantList.length === 0) {
+      return <Navigate to='/assistant/new' replace={true} />
+    }
+
+    if (!assistantId) {
+      const assistant = assistantList[0]
+      return <Navigate to={`/assistant/${assistant.id}`} replace={true} />
+    }
+
+    const assistant = assistantList.find(assistant => assistant.id.toString() === assistantId)
+    if (!assistant) {
+      return <Navigate to='/assistant/new' replace={true} />
+    }
+  }
 
   return (
     <SidebarLayout
@@ -54,7 +73,9 @@ function AssistantLayout() {
               {title || 'AI Web'}
             </Link>
           ) : (
-            <div className='h-12 flex items-center px-4 font-bold normal-case text-xl'>{title || 'AI Web'}</div>
+            <div className='h-12 flex items-center px-4 font-bold normal-case text-xl'>
+              {title || 'AI Web'}
+            </div>
           )}
         </div>
         <div className='flex-none'>

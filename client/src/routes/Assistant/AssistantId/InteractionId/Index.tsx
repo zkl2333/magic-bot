@@ -1,6 +1,6 @@
 import { useLoaderData, useNavigate, useOutletContext, useRouteLoaderData } from 'react-router-dom'
 import { useEffect, useRef } from 'react'
-import { Message, Assistant, Interaction, BaseMessage } from '../../types'
+import { Message, LocalAssistant, Interaction, BaseMessage } from '../../types'
 import { getMessage, addMessage, deleteMessage, updateMessage } from '../../../../service/message'
 import { v4 as uuidv4 } from 'uuid'
 import ChatBubble from './ChatBubble'
@@ -25,7 +25,7 @@ const IconBtn: React.FC<React.ButtonHTMLAttributes<HTMLButtonElement>> = ({ chil
 )
 
 const AssistantInteraction = observer(() => {
-  const { assistant } = useRouteLoaderData('assistant') as { assistant: Assistant }
+  const { assistant } = useRouteLoaderData('assistant') as { assistant: LocalAssistant }
   const { interaction } = useLoaderData() as { interaction: Interaction }
   const { setAssistantIdShowSidebar } = useOutletContext<AssistantIdContentProps>()
   const navigate = useNavigate()

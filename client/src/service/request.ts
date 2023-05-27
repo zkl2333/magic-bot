@@ -7,14 +7,12 @@ const request = async (url: string, options: IRequestOptions = { method: 'GET' }
     const queryStr = new URLSearchParams(options.query).toString()
     url += `?${queryStr}`
   }
-
   const response = await fetch(url, options)
-
-  if (!response.ok) {
+  try {
+    return response.json()
+  } catch (error) {
     throw new Error(`Error: ${response.status} - ${response.statusText}`)
   }
-
-  return response
 }
 
 export default request
