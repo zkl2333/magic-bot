@@ -18,12 +18,12 @@ const New = () => {
   }, [setTitle])
 
   return (
-    <div className='h-full grid justify-center grid-cols-[repeat(auto-fit,minmax(200px,auto))] gap-4 p-6 overflow-y-auto'>
+    <div className='h-full grid justify-center grid-cols-[repeat(auto-fit,minmax(150px,auto))] lg:grid-cols-[repeat(auto-fit,minmax(300px,auto))] gap-4 p-6 overflow-y-auto'>
       {defaultAssistantList.map(assistant => (
         <div
           key={assistant.id}
           className={classNames(
-            'p-4 lg:p-8 shadow bg-base-100 hover:bg-base-300 rounded-xl cursor-pointer h-full flex-1 flex flex-col justify-center items-center'
+            'p-4 shadow bg-base-100 hover:bg-base-300 rounded-xl cursor-pointer h-full flex-1 flex flex-col justify-center items-center'
           )}
           onClick={() => {
             let formData = new FormData()
