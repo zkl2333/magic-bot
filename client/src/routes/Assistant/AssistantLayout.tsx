@@ -51,10 +51,12 @@ function AssistantLayout() {
         <div className='flex-1'>
           {assistantId ? (
             <Link to={`/assistant/${assistantId}/edit`} className='btn btn-ghost normal-case text-xl'>
-              {title || 'AI Web'}
+              {title || '机仆乐园'}
             </Link>
           ) : (
-            <div className='h-12 flex items-center px-4 font-bold normal-case text-xl'>{title || 'AI Web'}</div>
+            <div className='h-12 flex items-center px-4 font-bold normal-case text-xl'>
+              {title || '机仆乐园'}
+            </div>
           )}
         </div>
         <div className='flex-none'>

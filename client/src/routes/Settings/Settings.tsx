@@ -33,7 +33,7 @@ const User = () => {
                 })
               }
             >
-            🤖 AI Web
+              🤖 机仆乐园
             </NavLink>
           </div>
           <ul className='menu p-4 text-base-content'>
