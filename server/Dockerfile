@@ -14,7 +14,7 @@ RUN npm install
 COPY . .
 
 # 生成Prisma客户端
-RUN npx prisma deploy
+RUN npx prisma migrate deploy
 RUN npx prisma generate
 
 # 编译TypeScript代码
