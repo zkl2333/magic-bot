@@ -1,6 +1,14 @@
 import { BaseMessage } from '../routes/Assistant/types'
 import request from './request'
 
+const formatAssistant = (assistant: any): Assistant => {
+  return {
+    ...assistant,
+    forkedFrom: assistant.forkedFrom ? formatAssistant(assistant.forkedFrom) : null,
+    config: assistant.config ? JSON.parse(assistant.config) : null
+  }
+}
+
 export interface LocalAssistant {
   id: number
   interactionIds: string[]
@@ -9,6 +17,12 @@ export interface LocalAssistant {
 export type Assistant = {
   id: number
   name: string
+  author: {
+    id: string
+    username: string
+    avatar: string | null
+    nickname: string | null
+  }
   avatar: string | null
   isPublic: boolean
   config: {
@@ -46,7 +60,10 @@ export type AssistantWithLocal = Assistant & LocalAssistant
 export type AssistantWithAllInfo = AssistantWithUsers & AssistantWithForks & AssistantWithSyncInfo
 
 export const creatAssistant = async (
-  assistantInfo: Pick<Assistant, 'name' | 'config' | 'description' | 'isPublic' | 'avatar'>
+  assistantInfo: Pick<
+    AssistantWithForks,
+    'name' | 'config' | 'description' | 'isPublic' | 'avatar' | 'forkedFromId'
+  >
 ) => {
   const data = await request('/api/assistants', {
     method: 'POST',
@@ -138,10 +155,7 @@ export const getAssistant = async (assistantId: Assistant['id']) => {
     return null
   }
 
-  return {
-    ...data.assistant,
-    config: data.assistant.config ? JSON.parse(data.assistant.config) : null
-  }
+  return formatAssistant(data.assistant)
 }
 
 export const updateAssistant = async (

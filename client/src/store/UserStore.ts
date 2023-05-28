@@ -1,7 +1,7 @@
 import { makeAutoObservable } from 'mobx'
 
 interface User {
-  id: number
+  id: string
   username: string
   nickname: string
   email: string
@@ -14,7 +14,7 @@ interface User {
 
 class UserStore {
   isLogin = false
-  id = 0
+  id = ''
   username = ''
   nickname = ''
   email = ''
@@ -41,7 +41,7 @@ class UserStore {
 
   clear() {
     this.isLogin = false
-    this.id = 0
+    this.id = ''
     this.username = ''
     this.email = ''
     this.token = ''

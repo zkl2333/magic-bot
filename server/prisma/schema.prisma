@@ -30,6 +30,7 @@ model User {
   account       Account?
   platforms     UserPlatform[]
   UserAssistant UserAssistant[]
+  Assistant     Assistant[]
 }
 
 model UserPlatform {
@@ -74,6 +75,8 @@ model Transaction {
 model Assistant {
   id           Int             @id @default(autoincrement())
   name         String
+  authorId     String
+  author       User            @relation(fields: [authorId], references: [id])
   avatar       String?
   config       String          @db.Text
   description  String
@@ -88,11 +91,10 @@ model Assistant {
 }
 
 model UserAssistant {
-  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId       String
-  assistant    Assistant @relation(fields: [assistantId], references: [id], onDelete: Cascade)
-  assistantId  Int
-  customConfig String?
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String
+  assistant   Assistant @relation(fields: [assistantId], references: [id], onDelete: Cascade)
+  assistantId Int
 
   @@id([userId, assistantId])
 }

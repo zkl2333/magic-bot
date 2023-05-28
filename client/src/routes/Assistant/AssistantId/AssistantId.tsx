@@ -1,5 +1,14 @@
 import { useEffect, useState } from 'react'
-import { Outlet, useLoaderData, useFetcher, useOutletContext, useParams, useNavigate } from 'react-router-dom'
+import {
+  Outlet,
+  useLoaderData,
+  useFetcher,
+  useOutletContext,
+  useParams,
+  useNavigate,
+  useLocation,
+  Navigate
+} from 'react-router-dom'
 import { Interaction } from '../types'
 import AssistantInteractionSidebar from './AssistantIdSidebar'
 import { RootContextProps } from '../../Root/Root'
@@ -17,8 +26,8 @@ const AssistantId = () => {
   const [interactions, setInteractions] = useState<Interaction[]>([])
   const [showAssistantIdSidebar, setAssistantIdShowSidebar] = useState(false)
   const fetcher = useFetcher()
-  const { interactionId } = useParams()
   const navigate = useNavigate()
+  const location = useLocation()
 
   const fetchInteractions = async () => {
     const fetchedInteractions = await Promise.all(
@@ -44,19 +53,20 @@ const AssistantId = () => {
   useEffect(() => {
     setTitle(assistant.name)
 
-    if (!interactionId) {
-      const interactionId = assistant.interactionIds[0]
-      if (interactionId) {
-        navigate(`/assistant/${assistant.id}/${interactionId}`)
+    if (location.pathname === `/assistant/${assistant.id}`) {
+      console.log('assistant.id', location.pathname, `/assistant/${assistant.id}`)
+      if (assistant.interactionIds.length === 0) {
+        navigate(`/assistant/${assistant.id}/${createId()}`, { replace: true })
       } else {
-        navigate(`/assistant/${assistant.id}/${createId()}`)
+        const interactionId = assistant.interactionIds[0]
+        navigate(`/assistant/${assistant.id}/${interactionId}`, { replace: true })
       }
     }
 
     return () => {
       setTitle('')
     }
-  }, [assistant.id])
+  }, [location])
 
   return (
     <div className='drawer h-full'>

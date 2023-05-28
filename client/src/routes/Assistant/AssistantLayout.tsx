@@ -26,21 +26,14 @@ function AssistantLayout() {
   const navigate = useNavigate()
 
   const { assistantId } = useParams()
-  let location = useLocation()
+  const location = useLocation()
 
-  if (location.pathname !== '/assistant/new') {
-    if (!assistantId && assistantList.length === 0) {
+  if (location.pathname === '/assistant') {
+    if (assistantList.length === 0) {
       return <Navigate to='/assistant/new' replace={true} />
-    }
-
-    if (!assistantId) {
+    } else {
       const assistant = assistantList[0]
       return <Navigate to={`/assistant/${assistant.id}`} replace={true} />
-    }
-
-    const assistant = assistantList.find(assistant => assistant.id.toString() === assistantId)
-    if (!assistant) {
-      return <Navigate to='/assistant/new' replace={true} />
     }
   }
 

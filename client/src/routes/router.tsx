@@ -20,6 +20,7 @@ import Transactions from './Settings/Transactions/Transactions'
 import { getUserInfo, getBalance, updateUserInfo } from '../service/user'
 import Edit, { assistantEditAction as assistantIdEditAction } from './Assistant/AssistantId/Edit/Edit'
 import assistantNewLoader from './Assistant/New/newLoader'
+import { getAssistant } from '../service/assistant'
 
 export const router = createBrowserRouter([
   {
@@ -106,6 +107,18 @@ export const router = createBrowserRouter([
             path: 'new',
             element: <New />,
             loader: assistantNewLoader
+          },
+          {
+            path: 'edit/:assistantId',
+            element: <Edit />,
+            loader: async ({ params }) => {
+              const { assistantId } = params as { assistantId: string; interactionId: string }
+              const assistant = await getAssistant(+assistantId)
+              return {
+                assistant: assistant
+              }
+            },
+            action: assistantIdEditAction
           },
           {
             path: ':assistantId',

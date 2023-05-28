@@ -4,13 +4,14 @@ import { Assistant } from '../../../service/assistant'
 
 interface IAssistantItemProps {
   className?: string
-  assistant: Assistant
+  assistant: Pick<Assistant, 'name' | 'description' | 'avatar'>
   isActive: boolean
+  onClick?: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void
 }
 
-const AssistantItem = ({ assistant, isActive, className }: IAssistantItemProps) => {
+const AssistantItem = ({ assistant, isActive, className, onClick }: IAssistantItemProps) => {
   return (
-    <div className={classnames(className, 'flex items-center space-x-4')}>
+    <div className={classnames(className, 'flex items-center space-x-4')} onClick={onClick}>
       <div
         className={classnames('shrink-0 avatar w-10 h-10 rounded-full overflow-hidden', {
           'ring ring-primary': isActive

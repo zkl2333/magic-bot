@@ -1,6 +1,6 @@
 import { ActionFunction, useRouteLoaderData, useSubmit } from 'react-router-dom'
 import OpenaiIcon from '../../../../components/OpenaiIcon'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import classNames from 'classnames'
 import MarkdownRenderer from '../../../../components/MarkdownRenderer/MarkdownRenderer'
 import {
@@ -14,9 +14,14 @@ import { useDebounce } from '../../../../hooks'
 
 export const assistantEditAction: ActionFunction = async ({ request }) => {
   const formData = await request.formData()
-  const assistantUpdate = JSON.parse(formData.get('assistant') as string)
-  await updateAssistant(assistantUpdate)
-  return null
+  switch (request.method) {
+    case 'PUT':
+      const assistantUpdate = JSON.parse(formData.get('assistant') as string)
+      await updateAssistant(assistantUpdate)
+      return null
+    case 'GET':
+      return null
+  }
 }
 
 const roleText = {
@@ -32,6 +37,10 @@ const Edit = () => {
   const [assistant, _setAssistant] = useState<AssistantWithLocal>(_assistant)
   let submit = useSubmit()
 
+  useEffect(() => {
+    _setAssistant(_assistant)
+  }, [_assistant])
+
   const updateAssistant = useDebounce((assistant: AssistantWithLocal & AssistantWithSyncInfo) => {
     submit(
       { assistant: JSON.stringify(assistant) },
@@ -40,6 +49,18 @@ const Edit = () => {
       }
     )
   }, 1000)
+
+  const pushAssistant = (
+    assistant: Pick<
+      AssistantWithForks,
+      'name' | 'description' | 'config' | 'avatar' | 'forkedFromId' | 'isPublic'
+    >
+  ) => {
+    creatAssistant(assistant)
+    submit(null, {
+      method: 'GET'
+    })
+  }
 
   const setModalConfig = (config: any) => {
     const newAssistant = {
@@ -61,7 +82,7 @@ const Edit = () => {
   return (
     <div className='p-4 grid gap-4 grid-cols-[repeat(auto-fit,minmax(300px,auto))] grid-flow-row-dense'>
       <div className={itemClassName}>
-        <div className='flex-1 flex flex-col justify-center items-center'>
+        <div className='flex-1 w-full flex flex-col justify-center items-center'>
           <div className='online avatar mb-3'>
             <div className='rounded-full bg-base-content h-24 w-24 bg-opacity-10'>
               {_assistant.avatar ? (
@@ -81,22 +102,27 @@ const Edit = () => {
               <div className='text-lg font-extrabold'>{_assistant.name}</div>
               <div className='text-base-content/70 my-3 text-sm'>{_assistant.description}</div>
             </div>
-            <div className='space-x-4'>
-              <div
-                className='btn btn-sm'
-                onClick={() => {
-                  creatAssistant({
-                    name: _assistant.name,
-                    description: _assistant.description,
-                    config: _assistant.config,
-                    avatar: _assistant.avatar,
-                    isPublic: true
-                  })
-                }}
-              >
-                分享到市场
-              </div>
-              {_assistant.forkedFrom && (
+            <div className='flex  justify-center space-x-4'>
+              {!_assistant.isPublic && (
+                <div
+                  className={classNames('btn btn-sm', {
+                    'btn-disabled': _assistant.forks.length > 0 || _assistant.updatedAt === _assistant.createdAt
+                  })}
+                  onClick={() => {
+                    pushAssistant({
+                      name: _assistant.name,
+                      description: _assistant.description,
+                      config: _assistant.config,
+                      avatar: _assistant.avatar,
+                      forkedFromId: _assistant.id,
+                      isPublic: true
+                    })
+                  }}
+                >
+                  分享到市场
+                </div>
+              )}
+              {_assistant.forkedFrom?.isPublic && (
                 <div
                   className={classNames('btn btn-sm', {
                     'btn-disabled':
