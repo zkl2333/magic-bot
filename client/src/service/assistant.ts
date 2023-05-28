@@ -38,7 +38,7 @@ export type AssistantWithForks = Assistant & {
 }
 
 export type AssistantWithSyncInfo = Assistant & {
-  lastSyncAt: Date | null
+  lastSyncAt: Date
 }
 
 export type AssistantWithLocal = Assistant & LocalAssistant

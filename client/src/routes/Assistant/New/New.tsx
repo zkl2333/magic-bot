@@ -77,6 +77,7 @@ const New = () => {
                 JSON.stringify({
                   ...assistant,
                   forkedFromId: assistant.id,
+                  lastSyncAt: new Date(),
                   interactionIds: []
                 })
               )

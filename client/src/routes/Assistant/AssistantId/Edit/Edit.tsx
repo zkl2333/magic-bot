@@ -3,7 +3,13 @@ import OpenaiIcon from '../../../../components/OpenaiIcon'
 import { useState } from 'react'
 import classNames from 'classnames'
 import MarkdownRenderer from '../../../../components/MarkdownRenderer/MarkdownRenderer'
-import { AssistantWithLocal, creatAssistant, updateAssistant } from '../../../../service/assistant'
+import {
+  AssistantWithForks,
+  AssistantWithLocal,
+  AssistantWithSyncInfo,
+  creatAssistant,
+  updateAssistant
+} from '../../../../service/assistant'
 import { useDebounce } from '../../../../hooks'
 
 export const assistantEditAction: ActionFunction = async ({ request }) => {
@@ -20,11 +26,13 @@ const roleText = {
 }
 
 const Edit = () => {
-  const { assistant: _assistant } = useRouteLoaderData('assistant') as { assistant: AssistantWithLocal }
-  const [assistant, _setAssistant] = useState(_assistant)
+  const { assistant: _assistant } = useRouteLoaderData('assistant') as {
+    assistant: AssistantWithLocal & AssistantWithForks & AssistantWithSyncInfo
+  }
+  const [assistant, _setAssistant] = useState<AssistantWithLocal>(_assistant)
   let submit = useSubmit()
 
-  const updateAssistant = useDebounce((assistant: AssistantWithLocal) => {
+  const updateAssistant = useDebounce((assistant: AssistantWithLocal & AssistantWithSyncInfo) => {
     submit(
       { assistant: JSON.stringify(assistant) },
       {
@@ -88,7 +96,29 @@ const Edit = () => {
               >
                 分享到市场
               </div>
-              <div className='btn btn-sm btn-disabled'>从市场更新</div>
+              {_assistant.forkedFrom && (
+                <div
+                  className={classNames('btn btn-sm', {
+                    'btn-disabled':
+                      _assistant.lastSyncAt && _assistant.lastSyncAt >= _assistant.forkedFrom.updatedAt
+                  })}
+                  onClick={() => {
+                    {
+                      _assistant.forkedFrom &&
+                        updateAssistant({
+                          ..._assistant,
+                          config: _assistant.forkedFrom.config,
+                          avatar: _assistant.forkedFrom.avatar,
+                          name: _assistant.forkedFrom.name,
+                          description: _assistant.forkedFrom.description,
+                          lastSyncAt: new Date()
+                        })
+                    }
+                  }}
+                >
+                  从市场更新
+                </div>
+              )}
             </div>
           </div>
         </div>

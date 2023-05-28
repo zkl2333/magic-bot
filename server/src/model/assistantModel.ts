@@ -20,7 +20,8 @@ export const createAssistant = async (userId: string, assistantData: Omit<Assist
       avatar: assistantData.avatar,
       isPublic: assistantData.isPublic,
       forkedFromId: assistantData.forkedFromId,
-      config: JSON.stringify(assistantData.config)
+      config: JSON.stringify(assistantData.config),
+      lastSyncAt: assistantData.lastSyncAt
     }
   })
 
@@ -77,12 +78,20 @@ export const forkAssistant = async (userId: string, assistantId: number) => {
 
 // 列出我的助手
 export async function listAssistants(userId: string) {
-  const userAssistants = await prisma.userAssistant.findMany({
-    where: { userId },
-    include: { assistant: true }
+  const userAssistants = await prisma.assistant.findMany({
+    include: {
+      forkedFrom: true
+    },
+    where: {
+      isPublic: false,
+      users: {
+        some: {
+          userId: userId
+        }
+      }
+    }
   })
-
-  return userAssistants.map(userAssistant => userAssistant.assistant)
+  return userAssistants
 }
 
 // 列出公开的助手
@@ -118,7 +127,13 @@ export const getAssistant = async (userId: string, assistantId: number) => {
     where: {
       userId_assistantId: { userId, assistantId }
     },
-    include: { assistant: true }
+    include: {
+      assistant: {
+        include: {
+          forkedFrom: true
+        }
+      }
+    }
   })
 
   if (!assistant) {
@@ -152,7 +167,8 @@ export const updateAssistant = async (
       description: assistantData.description,
       avatar: assistantData.avatar,
       isPublic: assistantData.isPublic,
-      config: JSON.stringify(assistantData.config)
+      config: JSON.stringify(assistantData.config),
+      lastSyncAt: assistantData.lastSyncAt
     }
   })
 }
