@@ -14,6 +14,7 @@
     "@mui/base": "^5.0.0-beta.0",
     "@mui/icons-material": "^5.11.16",
     "@mui/material": "^5.13.0",
+    "@paralleldrive/cuid2": "^2.2.0",
     "@tailwindcss/typography": "^0.5.9",
     "@traptitech/markdown-it-katex": "^3.6.0",
     "classnames": "^2.3.2",
@@ -31,8 +32,7 @@
     "notistack": "^3.0.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.11.1",
-    "uuid": "^9.0.0"
+    "react-router-dom": "^6.11.1"
   },
   "devDependencies": {
     "@types/crypto-js": "^4.1.1",
@@ -41,7 +41,6 @@
     "@types/node": "^20.1.1",
     "@types/react": "^18.0.28",
     "@types/react-dom": "^18.0.11",
-    "@types/uuid": "^9.0.1",
     "@typescript-eslint/eslint-plugin": "^5.57.1",
     "@typescript-eslint/parser": "^5.57.1",
     "@vitejs/plugin-react-swc": "^3.0.0",

@@ -1,14 +1,15 @@
 import classNames from 'classnames'
 import dayjs from 'dayjs'
-import { LocalAssistant, Message } from '../../types'
+import { Message } from '../../types'
 import OpenaiIcon from '../../../../components/OpenaiIcon'
 import Avatar from '../../../../components/Avatar'
 import userStore from '../../../../store/UserStore'
 import MarkdownRenderer from '../../../../components/MarkdownRenderer/MarkdownRenderer'
+import { AssistantWithLocal } from '../../../../service/assistant'
 
 interface ChatBubbleProps extends Message {
   loading: boolean
-  assistant: LocalAssistant
+  assistant: AssistantWithLocal
   onRetry?: (id: Message['id']) => void
   onDeleted?: (id: Message['id']) => void
   onUpdate?: (id: Message['id'], text: Message['content']) => void

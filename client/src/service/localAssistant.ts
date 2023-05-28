@@ -1,22 +1,18 @@
-import { LocalAssistant } from '../routes/Assistant/types'
-import { v4 as uuidv4 } from 'uuid'
 import localforage from 'localforage'
 import { deleteInteraction } from './interaction'
-import { Assistant } from './assistant'
+import { LocalAssistant } from './assistant'
 
-export const addLocalAssistant = async (assistant?: LocalAssistant | Assistant): Promise<void> => {
-  const newAssistant =
-    assistant ||
-    ({
-      id: uuidv4(),
-      interactionIds: []
-    } as LocalAssistant)
+export const addLocalAssistant = async (assistant: LocalAssistant): Promise<LocalAssistant> => {
+  const newAssistant = {
+    id: assistant.id,
+    interactionIds: []
+  }
 
   const assistants = await getLocalAllAssistantsIds()
   assistants.push(newAssistant.id)
   await localforage.setItem('assistantsIds', assistants)
   await localforage.setItem(`assistants.${newAssistant.id}`, newAssistant)
-  return
+  return newAssistant
 }
 
 export const getLocalAllAssistantsIds = async (): Promise<Array<number | string>> => {

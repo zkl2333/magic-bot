@@ -1,14 +1,28 @@
+import { BaseMessage } from '../routes/Assistant/types'
 import request from './request'
 
+export interface LocalAssistant {
+  id: number
+  interactionIds: string[]
+}
+
 export type Assistant = {
-  id: number | string
+  id: number
   name: string
   avatar: string | null
   isPublic: boolean
   config: {
-    [key: string]: any
-  } | null
-  description: string | null
+    model: string
+    context_size: number
+    temperature: number
+    top_p: number
+    max_tokens: number
+    presence_penalty: number
+    frequency_penalty: number
+    initialMessage?: string
+    prompt?: BaseMessage[]
+  }
+  description: string
   createdAt: Date
   updatedAt: Date
 }
@@ -26,6 +40,8 @@ export type AssistantWithForks = Assistant & {
 export type AssistantWithSyncInfo = Assistant & {
   lastSyncAt: Date | null
 }
+
+export type AssistantWithLocal = Assistant & LocalAssistant
 
 export type AssistantWithAllInfo = AssistantWithUsers & AssistantWithForks & AssistantWithSyncInfo
 

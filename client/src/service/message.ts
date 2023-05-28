@@ -1,14 +1,14 @@
 import localforage from 'localforage'
 import { Message } from '../routes/Assistant/types'
 import { getInteraction } from './interaction'
-import { v4 as uuidv4 } from 'uuid'
+import { createId } from '@paralleldrive/cuid2'
 
 export const addMessage = async (
   interactionId: string,
   role: Message['role'],
   text: string
 ): Promise<Message> => {
-  const id = uuidv4()
+  const id = createId()
   const message: Message = {
     id,
     interactionId,

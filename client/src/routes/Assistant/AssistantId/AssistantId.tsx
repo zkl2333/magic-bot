@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react'
 import { Outlet, useLoaderData, useFetcher, useOutletContext, useParams, useNavigate } from 'react-router-dom'
-import { LocalAssistant, Interaction } from '../types'
+import { Interaction } from '../types'
 import AssistantInteractionSidebar from './AssistantIdSidebar'
 import { RootContextProps } from '../../Root/Root'
 import { deleteInteraction, getInteraction } from '../../../service/interaction'
-import { Assistant } from '../../../service/assistant'
+import { AssistantWithLocal } from '../../../service/assistant'
+import { createId } from '@paralleldrive/cuid2'
 
 export type AssistantIdContentProps = {
   showAssistantIdSidebar: boolean
@@ -12,7 +13,7 @@ export type AssistantIdContentProps = {
 }
 
 const AssistantId = () => {
-  const { assistant } = useLoaderData() as { assistant: LocalAssistant & Assistant }
+  const { assistant } = useLoaderData() as { assistant: AssistantWithLocal }
   const [interactions, setInteractions] = useState<Interaction[]>([])
   const [showAssistantIdSidebar, setAssistantIdShowSidebar] = useState(false)
   const fetcher = useFetcher()
@@ -44,15 +45,18 @@ const AssistantId = () => {
     setTitle(assistant.name)
 
     if (!interactionId) {
-      console.log('interactionId is null')
       const interactionId = assistant.interactionIds[0]
-      navigate(`/assistant/${assistant.id}/${interactionId}`)
+      if (interactionId) {
+        navigate(`/assistant/${assistant.id}/${interactionId}`)
+      } else {
+        navigate(`/assistant/${assistant.id}/${createId()}`)
+      }
     }
 
     return () => {
       setTitle('')
     }
-  }, [assistant.name])
+  }, [assistant.id])
 
   return (
     <div className='drawer h-full'>

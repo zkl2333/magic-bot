@@ -17,8 +17,3 @@ export interface Interaction {
   createdAt: number
   messageIds: string[]
 }
-
-export interface LocalAssistant {
-  id: string | number
-  interactionIds: string[]
-}

@@ -1,11 +1,10 @@
 import { ActionFunction, useRouteLoaderData, useSubmit } from 'react-router-dom'
-import { LocalAssistant } from '../../types'
 import OpenaiIcon from '../../../../components/OpenaiIcon'
 import { useState } from 'react'
 import { updateLocalAssistant } from '../../../../service/localAssistant'
 import classNames from 'classnames'
 import MarkdownRenderer from '../../../../components/MarkdownRenderer/MarkdownRenderer'
-import { creatAssistant } from '../../../../service/assistant'
+import { AssistantWithLocal, creatAssistant } from '../../../../service/assistant'
 
 export const assistantEditAction: ActionFunction = async ({ request }) => {
   const formData = await request.formData()
@@ -21,7 +20,7 @@ const roleText = {
 }
 
 const Edit = () => {
-  const { assistant: _assistant } = useRouteLoaderData('assistant') as { assistant: LocalAssistant }
+  const { assistant: _assistant } = useRouteLoaderData('assistant') as { assistant: AssistantWithLocal }
   const [assistant, _setAssistant] = useState(_assistant)
   let submit = useSubmit()
 
@@ -33,7 +32,7 @@ const Edit = () => {
     setAssistant(newAssistant)
   }
 
-  const setAssistant = (assistant: LocalAssistant) => {
+  const setAssistant = (assistant: AssistantWithLocal) => {
     _setAssistant(assistant)
     submit(
       { assistant: JSON.stringify(assistant) },

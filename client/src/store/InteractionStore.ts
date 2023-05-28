@@ -1,5 +1,5 @@
 import { makeAutoObservable, autorun } from 'mobx'
-import { v4 as uuidv4 } from 'uuid'
+import { createId } from '@paralleldrive/cuid2'
 import { IMessage, IInteraction, SESSION_TYPE } from '../types'
 
 const InteractionsKey = 'Interactions'
@@ -57,7 +57,7 @@ class InteractionStore {
   createOrUpdateInteraction(interactionItem?: Omit<IInteraction, 'id'>): string
   createOrUpdateInteraction(interactionItem: Pick<IInteraction, 'id'> | Partial<IInteraction>): string
   createOrUpdateInteraction(interactionItem: IInteraction | Partial<IInteraction> = {}) {
-    const { id = uuidv4(), ...rest } = interactionItem
+    const { id = createId(), ...rest } = interactionItem
     const interactionIndex = this.interactions.findIndex(interaction => interaction.id === id)
     const interactionExists = interactionIndex !== -1
 
@@ -108,7 +108,7 @@ class InteractionStore {
   createOrUpdateMessage(messageItem: Omit<IMessage, 'id'>): string
   createOrUpdateMessage(messageItem: Pick<IMessage, 'id'> | Partial<IMessage>): string
   createOrUpdateMessage(messageItem: IMessage | Partial<IMessage>) {
-    const { id = uuidv4(), ...rest } = messageItem
+    const { id = createId(), ...rest } = messageItem
     const messageItemIndex = this.messages.findIndex(m => m.id === id)
     const messageItemExists = messageItemIndex !== -1
 

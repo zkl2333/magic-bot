@@ -1,7 +1,7 @@
 import userStore from '../store/UserStore'
 import { createBrowserRouter, Navigate } from 'react-router-dom'
 import { redirect } from 'react-router-dom'
-import { assistantIdLoader } from './Assistant/AssistantId/loader'
+import { assistantIdLoader } from './Assistant/AssistantId/assistantIdLoader'
 import { assistantIdInteractionLoader } from './Assistant/AssistantId/InteractionId/loader'
 import { assistantLayoutLoader } from './Assistant/assistantLayoutLoader'
 import { assistantLayoutAction } from './Assistant/AssistantLayoutAction'
