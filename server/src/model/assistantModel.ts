@@ -114,3 +114,32 @@ export const getAssistant = async (userId: string, assistantId: number) => {
 
   return assistant.assistant
 }
+
+// 更新助手
+export const updateAssistant = async (
+  userId: string,
+  assistantId: number,
+  assistantData: Partial<Assistant>
+) => {
+  const assistant = await prisma.userAssistant.findUnique({
+    where: {
+      userId_assistantId: { userId, assistantId }
+    },
+    include: { assistant: true }
+  })
+
+  if (!assistant) {
+    return null
+  }
+
+  return prisma.assistant.update({
+    where: { id: assistantId },
+    data: {
+      name: assistantData.name,
+      description: assistantData.description,
+      avatar: assistantData.avatar,
+      isPublic: assistantData.isPublic,
+      config: JSON.stringify(assistantData.config)
+    }
+  })
+}

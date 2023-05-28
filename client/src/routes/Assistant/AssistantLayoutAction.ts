@@ -10,8 +10,8 @@ export const assistantLayoutAction: ActionFunction = async ({ request }) => {
         const assistantId = formData.get('assistantId') as string
         const redirectTo = formData.get('redirectTo') as string
         if (assistantId) {
-          await deleteLocalAssistant(assistantId)
-          await deleteAssistant(assistantId)
+          await deleteLocalAssistant(+assistantId)
+          await deleteAssistant(+assistantId)
         }
         return redirect(redirectTo)
       case 'POST':

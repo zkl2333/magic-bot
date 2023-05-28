@@ -1,15 +1,15 @@
 import { ActionFunction, useRouteLoaderData, useSubmit } from 'react-router-dom'
 import OpenaiIcon from '../../../../components/OpenaiIcon'
 import { useState } from 'react'
-import { updateLocalAssistant } from '../../../../service/localAssistant'
 import classNames from 'classnames'
 import MarkdownRenderer from '../../../../components/MarkdownRenderer/MarkdownRenderer'
-import { AssistantWithLocal, creatAssistant } from '../../../../service/assistant'
+import { AssistantWithLocal, creatAssistant, updateAssistant } from '../../../../service/assistant'
+import { useDebounce } from '../../../../hooks'
 
 export const assistantEditAction: ActionFunction = async ({ request }) => {
   const formData = await request.formData()
   const assistantUpdate = JSON.parse(formData.get('assistant') as string)
-  updateLocalAssistant(assistantUpdate)
+  await updateAssistant(assistantUpdate)
   return null
 }
 
@@ -24,22 +24,27 @@ const Edit = () => {
   const [assistant, _setAssistant] = useState(_assistant)
   let submit = useSubmit()
 
-  const setModalConfig = (config: any) => {
-    const newAssistant = {
-      ...assistant,
-      config: config
-    }
-    setAssistant(newAssistant)
-  }
-
-  const setAssistant = (assistant: AssistantWithLocal) => {
-    _setAssistant(assistant)
+  const updateAssistant = useDebounce((assistant: AssistantWithLocal) => {
     submit(
       { assistant: JSON.stringify(assistant) },
       {
         method: 'PUT'
       }
     )
+  }, 1000)
+
+  const setModalConfig = (config: any) => {
+    const newAssistant = {
+      ...assistant,
+      config: config
+    }
+    console.log(newAssistant)
+    setAssistant(newAssistant)
+  }
+
+  const setAssistant = (assistant: AssistantWithLocal) => {
+    _setAssistant(assistant)
+    updateAssistant(assistant)
   }
 
   const itemClassName =

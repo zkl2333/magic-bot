@@ -80,11 +80,14 @@ export const getAssistants = async () => {
 }
 
 export const getPublicAssistants = async () => {
-  const data = await request('/api/assistants/public', {
+  const data = await request('/api/assistants', {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${localStorage.getItem('token')}`
+    },
+    query: {
+      public: true
     }
   })
 
@@ -139,4 +142,23 @@ export const getAssistant = async (assistantId: Assistant['id']) => {
     ...data.assistant,
     config: data.assistant.config ? JSON.parse(data.assistant.config) : null
   }
+}
+
+export const updateAssistant = async (
+  assistant: Pick<Assistant, 'id' | 'name' | 'config' | 'description' | 'isPublic' | 'avatar'>
+) => {
+  const data = await request(`/api/assistants/${assistant.id}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${localStorage.getItem('token')}`
+    },
+    body: JSON.stringify(assistant)
+  })
+
+  if (!data.success) {
+    throw new Error(data.message)
+  }
+
+  return data.assistant
 }
