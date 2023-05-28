@@ -88,7 +88,7 @@ model Assistant {
 }
 
 model UserAssistant {
-  user         User      @relation(fields: [userId], references: [id])
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId       String
   assistant    Assistant @relation(fields: [assistantId], references: [id], onDelete: Cascade)
   assistantId  Int

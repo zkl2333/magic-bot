@@ -93,9 +93,22 @@ export const listPublicAssistants = () => {
 }
 
 // 删除我的助手
-export const deleteAssistant = (userId: string, assistantId: number) => {
-  return prisma.userAssistant.delete({
-    where: { userId_assistantId: { userId, assistantId } }
+export const deleteAssistant = async (userId: string, assistantId: number) => {
+  // 判断是不是自己的
+  const userAssistant = await prisma.userAssistant.findUnique({
+    where: {
+      userId_assistantId: { userId, assistantId }
+    }
+  })
+
+  if (!userAssistant) {
+    throw new Error('User assistant not found')
+  }
+
+  return prisma.assistant.delete({
+    where: {
+      id: assistantId
+    }
   })
 }
 
