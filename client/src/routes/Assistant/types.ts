@@ -12,7 +12,7 @@ export interface Message extends BaseMessage {
 
 export interface Interaction {
   id: string
-  assistantId: string
+  assistantId: number
   title: string
   createdAt: number
   messageIds: string[]

@@ -4,7 +4,7 @@ import { deleteMessage } from './message'
 import { Interaction } from '../routes/Assistant/types'
 import { getLocalAssistant } from './localAssistant'
 
-export const addInteraction = async (assistantId: string, interactionId?: string): Promise<Interaction> => {
+export const addInteraction = async (assistantId: number, interactionId?: string): Promise<Interaction> => {
   const id = interactionId || createId()
   const interaction: Interaction = {
     id,

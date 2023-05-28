@@ -64,7 +64,9 @@ const New = () => {
           <AssistantItem
             className='p-4 shadow bg-base-100 hover:bg-base-300 rounded-xl cursor-pointer'
             assistant={{
-              ...assistant
+              name: assistant.name,
+              description: assistant.description,
+              avatar: assistant.avatar
             }}
             isActive={false}
             onClick={() => {

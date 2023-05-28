@@ -14,7 +14,6 @@ RUN npm install
 COPY . .
 
 # 生成Prisma客户端
-RUN npx prisma migrate deploy
 RUN npx prisma generate
 
 # 编译TypeScript代码
@@ -24,4 +23,4 @@ RUN npm run build
 EXPOSE 3000
 
 # 启动你的app
-CMD [ "node", "dist/index.js" ]
+CMD ["/bin/bash", "/app/start.sh"]

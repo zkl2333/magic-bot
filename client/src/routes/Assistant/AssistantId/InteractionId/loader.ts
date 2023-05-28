@@ -6,7 +6,7 @@ export const assistantIdInteractionLoader: LoaderFunction = async ({ params }) =
 
   const actualInteractionId = interactionId
   const interaction =
-    (await getInteraction(actualInteractionId)) || (await addInteraction(assistantId, actualInteractionId))
+    (await getInteraction(actualInteractionId)) || (await addInteraction(+assistantId, actualInteractionId))
 
   return {
     interaction

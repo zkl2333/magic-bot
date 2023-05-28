@@ -4,11 +4,8 @@ import {
   useLoaderData,
   useFetcher,
   useOutletContext,
-  useParams,
   useNavigate,
-  useLocation,
-  Navigate
-} from 'react-router-dom'
+  useLocation} from 'react-router-dom'
 import { Interaction } from '../types'
 import AssistantInteractionSidebar from './AssistantIdSidebar'
 import { RootContextProps } from '../../Root/Root'

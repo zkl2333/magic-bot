@@ -1,6 +1,15 @@
 import prompts from '../../prompts-zh'
 import { Assistant } from '../../service/assistant'
 
+type DefaultAssistant = {
+  id: string
+  name: string
+  description: string
+  avatar: string
+  initialMessage?: string
+  config: Assistant['config']
+}
+
 export const config = {
   model: 'gpt-3.5-turbo',
   // 上下文数量
@@ -26,7 +35,7 @@ export const defaultAssistant = {
   config: config
 }
 
-const assistants: Omit<Assistant, 'isPublic' | 'createdAt' | 'updatedAt'>[] = prompts.map(prompt => {
+const assistants: DefaultAssistant[] = prompts.map(prompt => {
   return {
     id: prompt.act,
     name: prompt.act,
@@ -45,7 +54,7 @@ const assistants: Omit<Assistant, 'isPublic' | 'createdAt' | 'updatedAt'>[] = pr
   }
 })
 
-export const defaultAssistantList: Omit<Assistant, 'isPublic' | 'createdAt' | 'updatedAt'>[] = [
+export const defaultAssistantList: DefaultAssistant[] = [
   defaultAssistant,
   {
     id: '赞美大师',
