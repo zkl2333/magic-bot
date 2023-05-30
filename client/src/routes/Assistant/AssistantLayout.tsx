@@ -63,11 +63,11 @@ function AssistantLayout() {
         <div className='flex-1'>
           {assistantId ? (
             <Link to={`/assistant/${assistantId}/edit`} className='btn btn-ghost normal-case text-xl'>
-              {title || '机仆乐园'}
+              {title || '神奇海螺'}
             </Link>
           ) : (
             <div className='h-12 flex items-center px-4 font-bold normal-case text-xl'>
-              {title || '机仆乐园'}
+              {title || '神奇海螺'}
             </div>
           )}
         </div>

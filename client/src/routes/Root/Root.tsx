@@ -11,7 +11,7 @@ const Root = () => {
 
   const setTitle = (title: string) => {
     _setTitle(title)
-    document.title = `${title} - 机仆乐园`
+    document.title = `${title} - 神奇海螺`
   }
 
   return (

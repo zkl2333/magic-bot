@@ -33,7 +33,7 @@ const User = () => {
                 })
               }
             >
-              🤖 机仆乐园
+              🤖 神奇海螺
             </NavLink>
           </div>
           <ul className='menu p-4 text-base-content'>

@@ -13,9 +13,9 @@ export default defineConfig(({ mode }) => {
         registerType: 'autoUpdate',
         injectRegister: 'auto',
         manifest: {
-          name: '机仆乐园',
-          short_name: '机仆乐园',
-          description: '机仆乐园',
+          name: '神奇海螺',
+          short_name: '神奇海螺',
+          description: '神奇海螺',
           icons: [
             {
               src: '/robot_160.png',
