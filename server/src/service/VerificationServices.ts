@@ -64,7 +64,38 @@ export const sendEmail = async (email: string) => {
 }
 
 export const verifyEmail = async (email: string, code: string) => {
-  // Your service logic...
+  // 验证邮箱验证码
+  const emailCodeExists = await prisma.verificationCode.findUnique({
+    where: {
+      contact: email
+    }
+  })
+
+  if (!emailCodeExists) {
+    throw new Error('验证码不存在')
+  }
+
+  if (emailCodeExists.code !== code) {
+    throw new Error('验证码错误')
+  }
+
+  const now = new Date()
+  const createdAt = new Date(emailCodeExists.createdAt)
+  const diff = now.getTime() - createdAt.getTime()
+  const diffMinutes = Math.floor(diff / 1000 / 60)
+
+  if (diffMinutes > 10) {
+    throw new Error('验证码已过期')
+  }
+
+  // 验证通过
+  await prisma.verificationCode.delete({
+    where: {
+      contact: email
+    }
+  })
+
+  return true
 }
 
 export default {

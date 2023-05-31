@@ -1,10 +1,11 @@
 import { Context } from 'koa'
 import * as bcrypt from 'bcrypt'
 import { prisma, generateToken } from '.'
+import VerificationServices from '../../service/VerificationServices'
 
 // 注册
 export default async function register(ctx: Context) {
-  let { username, email, password } = ctx.request.body as Record<string, unknown>
+  let { username, email, password, emailCode } = ctx.request.body as Record<string, unknown>
 
   if (typeof email !== 'string' || typeof password !== 'string') {
     ctx.status = 400
@@ -18,12 +19,25 @@ export default async function register(ctx: Context) {
     return
   }
 
-  if (!/[^@ \t\r\n]+@[^@ \t\r\n]+\.[^@ \t\r\n]+/.test(email)) {
+  if (!emailCode || typeof emailCode !== 'string') {
     ctx.status = 400
-    ctx.body = { message: '无效的邮箱格式' }
+    ctx.body = { message: '需要邮箱验证码' }
     return
   }
 
+  // 验证邮箱验证码
+  try {
+    await VerificationServices.verifyEmail(email, emailCode)
+  } catch (error) {
+    ctx.status = 400
+    ctx.body = {
+      success: false,
+      message: (error as Error).message
+    }
+    return
+  }
+
+  // 验证邮箱是否已被注册
   const userExists = await prisma.user.findUnique({
     where: {
       email: email

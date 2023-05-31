@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client'
 
-const sessionId = 'MTM5NWQzZGQtMTk3ZC00MjEwLWI3ZjYtNzU0NjFhZmVlZWY3'
+const sessionId = 'AIP_MANAGE_KEY'
 const prisma = new PrismaClient()
 
 const baseUrl = 'https://aiproxy.io/api'
