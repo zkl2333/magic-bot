@@ -2,7 +2,7 @@ import Router from 'koa-router'
 import { getCompletions } from '../controllers/chatController'
 import assistantRouter from './assistantRouter'
 import userRouter from './userRouter'
-import verificationRouter from './VerificationRouter'
+import verificationRouter from './verificationRouter'
 
 const router = new Router()
 
