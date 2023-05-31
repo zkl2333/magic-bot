@@ -2,11 +2,14 @@ import { useState } from 'react'
 import LoginImg from './login.jpg'
 import { useNavigate } from 'react-router-dom'
 import { useSnackbar } from 'notistack'
+import { sendEmailCode } from './utils'
 
 const Login = () => {
   const [isNewUser, setIsNewUser] = useState(false)
   const [usernameOrEmail, setUsernameOrEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [emailCode, setEmailCode] = useState('')
+
   const navigate = useNavigate()
   const { enqueueSnackbar } = useSnackbar()
 
@@ -55,14 +58,22 @@ const Login = () => {
     }
   }
 
-  const register = async () => {
+  const register = async ({
+    email,
+    password,
+    emailCode
+  }: {
+    email: string
+    password: string
+    emailCode: string
+  }) => {
     if (!verify()) return
     const response = await fetch('/api/user/register', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ email: usernameOrEmail, password })
+      body: JSON.stringify({ email, password, emailCode })
     })
     const data = await response.json()
     if (response.ok) {
@@ -77,7 +88,11 @@ const Login = () => {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     if (isNewUser) {
-      register()
+      register({
+        email: usernameOrEmail,
+        password,
+        emailCode
+      })
     } else {
       login()
     }
@@ -131,12 +146,29 @@ const Login = () => {
                   onChange={e => setPassword(e.target.value)}
                   required
                 />
-                <label className='label'>
-                  <a href='#' className='label-text-alt link link-hover'>
-                    忘记密码？
-                  </a>
-                </label>
+                {!isNewUser && (
+                  <label className='label'>
+                    <a href='#' className='label-text-alt link link-hover'>
+                      忘记密码？
+                    </a>
+                  </label>
+                )}
               </div>
+              {isNewUser && (
+                <div className='form-control'>
+                  <label className='label'>
+                    <span className='label-text'>邮箱验证码</span>
+                  </label>
+                  <input
+                    type='text'
+                    placeholder='验证码'
+                    className='input input-bordered'
+                    value={emailCode}
+                    onChange={e => setEmailCode(e.target.value)}
+                    required
+                  />
+                </div>
+              )}
               <div className='form-control'>
                 <label className='cursor-pointer label'>
                   <span className='label-text'>创建新用户</span>
@@ -148,6 +180,26 @@ const Login = () => {
                   />
                 </label>
               </div>
+              {isNewUser && (
+                <div className='form-control mt-4'>
+                  <button
+                    type='button'
+                    formNoValidate
+                    className='btn btn-secondary'
+                    onClick={async e => {
+                      e.stopPropagation()
+                      const response = await sendEmailCode(usernameOrEmail)
+                      if (response.success) {
+                        setSuccess('验证码已发送')
+                      } else {
+                        setError(response.message)
+                      }
+                    }}
+                  >
+                    发送验证码
+                  </button>
+                </div>
+              )}
               <div className='form-control mt-4'>
                 <button className='btn btn-primary' type='submit'>
                   {isNewUser ? '创建账户' : '登录'}
