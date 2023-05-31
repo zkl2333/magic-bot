@@ -1,5 +1,5 @@
-import { prisma } from '../controllers/userController'
 import nodemailer from 'nodemailer'
+import { prisma } from './userServices'
 
 async function getConfig(key: string) {
   const config = await prisma.config.findUnique({

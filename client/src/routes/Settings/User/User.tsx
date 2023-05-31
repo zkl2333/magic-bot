@@ -75,7 +75,9 @@ const User = () => {
           name='nickname'
           defaultValue={userStore.nickname || ''}
         />
-        <p className='text-sm text-base-content opacity-50'>昵称是用户的可选别名，用于显示在界面上，不需要唯一。</p>
+        <p className='text-sm text-base-content opacity-50'>
+          昵称是用户的可选别名，用于显示在界面上，不需要唯一。
+        </p>
       </div>
       <div className='mb-4'>
         <label className='block text-base-content font-semibold mb-1' htmlFor='email'>
@@ -130,10 +132,7 @@ const User = () => {
           ))}
         </div>
       </div>
-      <button
-        className='w-full bg-primary text-white font-semibold px-4 py-2 rounded-md hover:bg-blue-600'
-        type='submit'
-      >
+      <button className='w-full bg-primary text-white font-semibold px-4 py-2 rounded-md' type='submit'>
         保存
       </button>
     </Form>

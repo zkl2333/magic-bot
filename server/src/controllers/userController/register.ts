@@ -1,7 +1,8 @@
 import { Context } from 'koa'
 import * as bcrypt from 'bcrypt'
-import { prisma, generateToken } from '.'
+import { generateToken } from '.'
 import VerificationServices from '../../service/VerificationServices'
+import { prisma } from '../../service/userServices'
 
 // 注册
 export default async function register(ctx: Context) {
@@ -60,7 +61,8 @@ export default async function register(ctx: Context) {
     return
   }
 
-  const hashedPassword = await bcrypt.hash(password, 10)
+  const salt = await bcrypt.genSalt(10)
+  const hashedPassword = await bcrypt.hash(password, salt)
 
   const user = await prisma.user.create({
     data: {

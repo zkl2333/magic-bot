@@ -14,7 +14,7 @@ import Login from './Login/Login'
 import Root from './Root/Root'
 import Settings from './Settings/Settings'
 import User from './Settings/User/User'
-import Security from './Settings/Security/Security'
+import Security, { changePasswordAction } from './Settings/Security/Security'
 import Balance from './Settings/Balance/Balance'
 import Transactions from './Settings/Transactions/Transactions'
 import { getUserInfo, getBalance, updateUserInfo } from '../service/user'
@@ -84,7 +84,8 @@ export const router = createBrowserRouter([
           },
           {
             path: 'security',
-            element: <Security />
+            element: <Security />,
+            action: changePasswordAction
           },
           {
             path: 'balance',

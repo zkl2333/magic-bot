@@ -1,9 +1,9 @@
 import { Context } from 'koa'
 import * as bcrypt from 'bcrypt'
-import { prisma, generateToken } from '.'
+import { generateToken } from '.'
+import { prisma } from '../../service/userServices'
 
 // 登录 用户名和邮箱都可以登录
-
 export default async function login(ctx: Context) {
   const { usernameOrEmail, password } = ctx.request.body as Record<string, unknown>
 

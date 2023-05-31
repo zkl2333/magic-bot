@@ -1,11 +1,9 @@
 import { Context } from 'koa'
 import * as jwt from 'jsonwebtoken'
-import { PrismaClient, User } from '@prisma/client'
+import { User } from '@prisma/client'
 import { jwtSecret } from '../../constence'
 import { fetchApiKey, getPointAccount } from '../../service/aiProxy'
-import UserServices from '../../service/VerificationServices'
-
-export const prisma = new PrismaClient()
+import userServices, { prisma } from '../../service/userServices'
 
 export const generateToken = (user: User) => {
   const token = jwt.sign(
@@ -163,5 +161,40 @@ export const getBalance = async (ctx: Context) => {
     success: true,
     message: '获取用户余额成功',
     data: data
+  }
+}
+
+export const changePassword = async (ctx: Context) => {
+  const { id } = ctx.state.user
+  const { oldPassword, newPassword } = ctx.request.body as {
+    oldPassword: string
+    newPassword: string
+  }
+
+  if (!oldPassword || !newPassword) {
+    console.log('无效的密码', ctx.request.body)
+    ctx.status = 400
+    ctx.body = {
+      success: false,
+      message: '无效的密码'
+    }
+    return
+  }
+
+  try {
+    await userServices.changePassword(oldPassword, newPassword, id)
+
+    ctx.status = 200
+    ctx.body = {
+      success: true,
+      message: '修改密码成功'
+    }
+  } catch (error) {
+    console.log(error)
+    ctx.status = 400
+    ctx.body = {
+      success: false,
+      message: (error as Error).message
+    }
   }
 }

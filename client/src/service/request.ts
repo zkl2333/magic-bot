@@ -2,11 +2,18 @@ interface IRequestOptions extends RequestInit {
   query?: { [key: string]: any }
 }
 
-const request = async (url: string, options: IRequestOptions = { method: 'GET' }): Promise<any> => {
+const requestHandler = async (url: string, options: IRequestOptions = { method: 'GET' }): Promise<any> => {
   if (options.query) {
     const queryStr = new URLSearchParams(options.query).toString()
     url += `?${queryStr}`
   }
+
+  options.headers = {
+    'Content-Type': 'application/json',
+    Authorization: `Bearer ${localStorage.getItem('token')}`,
+    ...options.headers
+  }
+
   const response = await fetch(url, options)
   try {
     return response.json()
@@ -15,4 +22,4 @@ const request = async (url: string, options: IRequestOptions = { method: 'GET' }
   }
 }
 
-export default request
+export default requestHandler

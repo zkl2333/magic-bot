@@ -1,5 +1,5 @@
 import { BaseMessage } from '../routes/Assistant/types'
-import request from './request'
+import requestHandler from './request'
 
 const formatAssistant = (assistant: any): Assistant => {
   return {
@@ -65,7 +65,7 @@ export const creatAssistant = async (
     'name' | 'config' | 'description' | 'isPublic' | 'avatar' | 'forkedFromId'
   >
 ) => {
-  const data = await request('/api/assistants', {
+  const data = await requestHandler('/api/assistants', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -82,7 +82,7 @@ export const creatAssistant = async (
 }
 
 export const getAssistants = async () => {
-  const data = await request('/api/assistants', {
+  const data = await requestHandler('/api/assistants', {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -97,7 +97,7 @@ export const getAssistants = async () => {
 }
 
 export const getPublicAssistants = async () => {
-  const data = await request('/api/assistants', {
+  const data = await requestHandler('/api/assistants', {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -126,7 +126,7 @@ export const getPublicAssistants = async () => {
 }
 
 export const deleteAssistant = async (assistantId: Assistant['id']) => {
-  const data = await request(`/api/assistants/${assistantId}`, {
+  const data = await requestHandler(`/api/assistants/${assistantId}`, {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
@@ -142,7 +142,7 @@ export const deleteAssistant = async (assistantId: Assistant['id']) => {
 }
 
 export const getAssistant = async (assistantId: Assistant['id']) => {
-  const data = await request(`/api/assistants/${assistantId}`, {
+  const data = await requestHandler(`/api/assistants/${assistantId}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -161,7 +161,7 @@ export const getAssistant = async (assistantId: Assistant['id']) => {
 export const updateAssistant = async (
   assistant: Pick<Assistant, 'id' | 'name' | 'config' | 'description' | 'isPublic' | 'avatar'>
 ) => {
-  const data = await request(`/api/assistants/${assistant.id}`, {
+  const data = await requestHandler(`/api/assistants/${assistant.id}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',

@@ -1,4 +1,4 @@
-import request from './request'
+import requestHandler from './request'
 
 /**
  * Model User
@@ -27,7 +27,7 @@ export type Settings = {
 }
 
 export const getUserInfo = async ({ withInfo }: { withInfo?: boolean } = {}) => {
-  const data = await request(`/api/user/info`, {
+  const data = await requestHandler(`/api/user/info`, {
     method: 'GET',
     query: {
       withInfo: !!withInfo
