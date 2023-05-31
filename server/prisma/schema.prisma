@@ -31,6 +31,7 @@ model User {
   platforms     UserPlatform[]
   UserAssistant UserAssistant[]
   Assistant     Assistant[]
+  emailVerified Boolean         @default(false)
 }
 
 model UserPlatform {
@@ -97,4 +98,23 @@ model UserAssistant {
   assistantId Int
 
   @@id([userId, assistantId])
+}
+
+enum ContactType {
+  EMAIL
+  PHONE
+}
+
+model VerificationCode {
+  id        Int         @id @default(autoincrement())
+  contact   String      @unique
+  type      ContactType
+  createdAt DateTime    @default(now())
+  code      String
+}
+
+model Config {
+  id    Int    @id @default(autoincrement())
+  key   String @unique
+  value String
 }

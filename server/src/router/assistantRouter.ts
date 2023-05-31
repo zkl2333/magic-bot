@@ -151,9 +151,7 @@ const update = async (ctx: Context) => {
   }
 }
 
-const assistantRouter = new Router({
-  prefix: '/assistants'
-})
+const assistantRouter = new Router()
 
 assistantRouter.post('/', create)
 assistantRouter.get('/', list)
