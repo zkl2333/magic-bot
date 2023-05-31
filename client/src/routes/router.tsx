@@ -21,6 +21,7 @@ import { getUserInfo, getBalance, updateUserInfo } from '../service/user'
 import Edit, { assistantEditAction as assistantIdEditAction } from './Assistant/AssistantId/Edit/Edit'
 import assistantNewLoader from './Assistant/New/newLoader'
 import { getAssistant } from '../service/assistant'
+import requestHandler from '@/service/request'
 
 export const router = createBrowserRouter([
   {
@@ -94,7 +95,18 @@ export const router = createBrowserRouter([
           },
           {
             path: 'transactions',
-            element: <Transactions />
+            element: <Transactions />,
+            loader: async ({ request, params }) => {
+              console.log(request)
+              console.log(params)
+              const url = new URL(request.url)
+              const page = url.searchParams.get('page')
+              return await requestHandler('/api/user/transaction', {
+                query: {
+                  page: page || 1
+                }
+              })
+            }
           }
         ]
       },
