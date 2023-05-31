@@ -66,7 +66,8 @@ export default async function register(ctx: Context) {
     data: {
       email: email,
       username: username,
-      password: hashedPassword
+      password: hashedPassword,
+      emailVerified: true
     }
   })
 
