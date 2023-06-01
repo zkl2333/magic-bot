@@ -70,9 +70,9 @@ const Transactions = () => {
   }
 
   return (
-    <div className='w-full flex-1 p-4'>
+    <div className='w-full flex-1 p-4 flex flex-col overflow-hidden'>
       <div className='overflow-x-auto mb-4'>
-        <table className='table table-zebra w-full bg-base-100'>
+        <table className='table table-zebra w-full min-w-[700px] bg-base-100'>
           <thead className='bg-base-200'>
             <tr>
               <th>交易时间</th>

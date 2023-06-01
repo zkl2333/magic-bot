@@ -95,7 +95,9 @@ const User = () => {
         </button>
         <div className='flex-1 px-2 mx-2'>{title}</div>
       </div>
-      <Outlet context={{ title, setTitle }} />
+      <div className='flex-1 flex overflow-hidden'>
+        <Outlet context={{ title, setTitle }} />
+      </div>
     </SidebarLayout>
   )
 }
