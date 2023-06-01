@@ -42,7 +42,7 @@ function AssistantLayout() {
       hasSidebar={assistantList.length > 0}
       showSidebar={showAssistantLayoutSidebar}
       setShowSidebar={setAssistantLayoutShowSidebar}
-      className='h-full flex flex-col'
+      className='h-full'
       sidebarContent={
         <AssistantSidebar
           setAssistantLayoutShowSidebar={setAssistantLayoutShowSidebar}
