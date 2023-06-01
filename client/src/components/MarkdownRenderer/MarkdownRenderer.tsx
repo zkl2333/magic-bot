@@ -4,7 +4,7 @@ import './markdownRenderer.less'
 import ReactMarkdown from 'react-markdown'
 import SyntaxHighlighter from 'react-syntax-highlighter'
 import classNames from 'classnames'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 
 interface MarkdownRendererProps {
   className?: string
@@ -89,18 +89,20 @@ function CodeBlock({ node, inline, className, children, ...props }: any) {
 }
 
 const MarkdownRenderer = ({ text, className }: MarkdownRendererProps) => {
-  return (
-    <>
-      <ReactMarkdown
-        className={classNames('prose markdown-body dark:prose-invert', className)}
-        components={{
-          code: CodeBlock
-        }}
-      >
-        {text}
-      </ReactMarkdown>
-    </>
-  )
+  return useMemo(() => {
+    return (
+      <>
+        <ReactMarkdown
+          className={classNames('prose markdown-body dark:prose-invert', className)}
+          components={{
+            code: CodeBlock
+          }}
+        >
+          {text}
+        </ReactMarkdown>
+      </>
+    )
+  }, [text])
 }
 
 export default MarkdownRenderer
