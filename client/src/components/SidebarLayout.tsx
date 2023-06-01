@@ -21,8 +21,8 @@ export function SidebarLayout({
   return (
     <>
       <div
-        className={classNames('safe-area drawer h-full bg-base-200', {
-          'drawer-mobile': isAlwaysOpenOnDesktop
+        className={classNames('drawer h-full bg-base-200', {
+          'lg:drawer-open': isAlwaysOpenOnDesktop,
         })}
       >
         <input
@@ -35,7 +35,7 @@ export function SidebarLayout({
         />
         <div className='drawer-content flex flex-col bg-base-200'>{children}</div>
         {hasSidebar && (
-          <div className='drawer-side'>
+          <div className='drawer-side h-full absolute'>
             <label
               className='drawer-overlay'
               onClick={() => {

@@ -44,20 +44,20 @@ const Transactions = () => {
 
     return (
       pages.length > 0 && (
-        <div className='btn-group'>
+        <div className='join border-2'>
           <button
-            className={classNames('btn', { 'btn-disabled': currentPage === 1 })}
+            className={classNames('join-item btn btn-sm', { 'btn-disabled': currentPage === 1 })}
             onClick={() => {
               navigate(`?page=${currentPage - 1}`)
             }}
           >
             «
           </button>
-          <button className='btn'>
+          <button className='join-item btn btn-sm'>
             {currentPage}/{totalPages}
           </button>
           <button
-            className={classNames('btn', { 'btn-disabled': currentPage === totalPages })}
+            className={classNames('join-item btn btn-sm ', { 'btn-disabled': currentPage === totalPages })}
             onClick={() => {
               navigate(`?page=${currentPage + 1}`)
             }}
@@ -72,14 +72,14 @@ const Transactions = () => {
   return (
     <div className='w-full flex-1 p-4'>
       <div className='overflow-x-auto mb-4'>
-        <table className='table w-full'>
-          <thead>
+        <table className='table table-zebra w-full bg-base-100'>
+          <thead className='bg-base-200'>
             <tr>
-              <th className='bg-base-300'>交易时间</th>
-              <th className='bg-base-300'>交易类型</th>
-              <th className='bg-base-300'>积分</th>
-              <th className='bg-base-300'>模型</th>
-              <th className='bg-base-300'>描述</th>
+              <th>交易时间</th>
+              <th>交易类型</th>
+              <th>积分</th>
+              <th>模型</th>
+              <th>描述</th>
             </tr>
           </thead>
           <tbody>

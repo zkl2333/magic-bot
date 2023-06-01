@@ -12,10 +12,9 @@ const User = () => {
   const [showUserLayoutSidebar, setUserLayoutShowSidebar] = useState(false)
   const { title, setTitle } = useOutletContext<RootContextProps>()
 
-  const navLinkClassNames = ({ isActive, isPending }: { isActive: boolean; isPending: boolean }) =>
-    classNames('group', {
-      active: isActive,
-      loading: isPending
+  const navLinkClassNames = ({ isActive }: { isActive: boolean; isPending: boolean }) =>
+    classNames({
+      '!active': isActive
     })
 
   return (
@@ -39,30 +38,46 @@ const User = () => {
           <ul className='menu p-4 text-base-content'>
             <li>
               <NavLink to='/settings/user' className={navLinkClassNames}>
-                <PersonOutlinedIcon />
-                个人信息
-                <button className='btn btn-ghost invisible group-[.loading]:visible group-[.loading]:loading btn-xs'></button>
+                {({ isPending }) => (
+                  <>
+                    <PersonOutlinedIcon />
+                    个人信息
+                    {isPending && <span className='loading loading-ring loading-xs'></span>}
+                  </>
+                )}
               </NavLink>
             </li>
             <li>
               <NavLink to='/settings/security' className={navLinkClassNames}>
-                <VerifiedUserOutlinedIcon />
-                安全设置
-                <button className='btn btn-ghost invisible group-[.loading]:visible group-[.loading]:loading btn-xs'></button>
+                {({ isPending }) => (
+                  <>
+                    <VerifiedUserOutlinedIcon />
+                    安全设置
+                    {isPending && <span className='loading loading-ring loading-xs'></span>}
+                  </>
+                )}
               </NavLink>
             </li>
             <li>
               <NavLink to='/settings/balance' className={navLinkClassNames}>
-                <AccountBalanceWalletOutlinedIcon />
-                账户余额
-                <button className='btn btn-ghost invisible group-[.loading]:visible group-[.loading]:loading btn-xs'></button>
+                {({ isPending }) => (
+                  <>
+                    <AccountBalanceWalletOutlinedIcon />
+                    账户余额
+                    {isPending && <span className='loading loading-ring loading-xs'></span>}
+                  </>
+                )}
               </NavLink>
             </li>
             <li>
               <NavLink to='/settings/transactions' className={navLinkClassNames}>
-                <DescriptionOutlinedIcon />
-                积分明细
-                <button className='btn btn-ghost invisible group-[.loading]:visible group-[.loading]:loading btn-xs'></button>
+                {({ isPending }) => (
+                  <>
+                    <DescriptionOutlinedIcon />
+                    积分明细
+                    {isPending && <span className='loading loading-ring loading-xs'></span>}
+                  </>
+                )}
               </NavLink>
             </li>
           </ul>

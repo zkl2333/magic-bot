@@ -11,7 +11,7 @@ const AssistantInteractionSidebar = ({
   onDelete: (id: string) => {}
 }) => {
   return (
-    <div className='bg-base-200 w-60'>
+    <div className='h-full bg-base-200 w-60 overflow-y-auto'>
       {interactions.map(interaction => (
         <NavLink
           key={interaction.id}
