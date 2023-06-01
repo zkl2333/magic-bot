@@ -1,3 +1,3 @@
 #!/bin/bash
-npx prisma migrate deploy
-node dist/index.js
+npm run deploy
+npm run start
