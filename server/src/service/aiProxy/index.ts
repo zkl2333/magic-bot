@@ -7,7 +7,8 @@ const baseUrl = 'https://aiproxy.io/api'
 
 const api = {
   createApiKey: '/user/createApiKey',
-  getPointAccount: '/point/getPointAccount'
+  getPointAccount: '/point/getPointAccount',
+  listTransaction: '/point/listTransaction'
 }
 
 const defaultModelPermission = [
@@ -64,15 +65,15 @@ export const getPointAccount = async (uid: string) => {
   }
 }
 
-export const createApiKey = async (uid: string) => {
+export const createApiKey = async (userId: string) => {
   const headers = {
     'content-type': 'application/json',
     cookie: `sessionId=${sessionId}`
   }
 
   const data = {
-    name: `web-user-${uid.slice(0, 7)}`,
-    externalId: uid,
+    name: `web-user-${userId.slice(0, 7)}`,
+    externalId: userId,
     enableSubPointAccount: true,
     initPoint: '1000.00',
     modelPermission: defaultModelPermission
@@ -171,4 +172,38 @@ export const fetchApiKey = async (userId: string) => {
 
   // 使用提取的函数
   return createUserPlatformAndLog(newApiKey)
+}
+
+export const listTransaction = async (uid: string, page: number) => {
+  const { subKey } = await getPointAccount(uid)
+
+  const headers = {
+    'content-type': 'application/json',
+    cookie: `sessionId=${sessionId}`
+  }
+
+  const response = await fetch(createUrl(api.listTransaction), {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({
+      order: 'desc',
+      orderBy: 'gmtCreate',
+      page: page,
+      pageSize: 10,
+      subKey: subKey
+    })
+  })
+
+  if (!response.ok) {
+    throw new Error(`Request failed with status code ${response.status}`)
+  }
+
+  const responseBody = await response.json()
+
+  if (!responseBody.success) {
+    console.error('listTransaction error', responseBody)
+    throw new Error(responseBody.message)
+  }
+
+  return responseBody.data
 }

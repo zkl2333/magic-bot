@@ -61,7 +61,7 @@ const User = () => {
             <li>
               <NavLink to='/settings/transactions' className={navLinkClassNames}>
                 <DescriptionOutlinedIcon />
-                消费明细
+                积分明细
                 <button className='btn btn-ghost invisible group-[.loading]:visible group-[.loading]:loading btn-xs'></button>
               </NavLink>
             </li>

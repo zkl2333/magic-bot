@@ -2,7 +2,7 @@ import { Context } from 'koa'
 import * as jwt from 'jsonwebtoken'
 import { User } from '@prisma/client'
 import { jwtSecret } from '../../constence'
-import { fetchApiKey, getPointAccount } from '../../service/aiProxy'
+import { fetchApiKey, getPointAccount, listTransaction } from '../../service/aiProxy'
 import userServices, { prisma } from '../../service/userServices'
 
 export const generateToken = (user: User) => {
@@ -196,5 +196,37 @@ export const changePassword = async (ctx: Context) => {
       success: false,
       message: (error as Error).message
     }
+  }
+}
+
+export const transaction = async (ctx: Context) => {
+  const { id } = ctx.state.user
+  const { page } = ctx.query
+
+  if (!page || isNaN(+page)) {
+    ctx.status = 400
+    ctx.body = {
+      success: false,
+      message: '无效的页码'
+    }
+    return
+  }
+
+  const data = await listTransaction(id, +page)
+
+  if (data === null) {
+    ctx.status = 404
+    ctx.body = {
+      success: false,
+      message: '获取用户明细失败'
+    }
+    return
+  }
+
+  ctx.status = 200
+  ctx.body = {
+    success: true,
+    message: '获取用户明细成功',
+    data: data
   }
 }

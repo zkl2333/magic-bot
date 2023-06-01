@@ -1,18 +1,114 @@
 import { useEffect } from 'react'
-import { useOutletContext } from 'react-router-dom'
+import { useLoaderData, useNavigate, useOutletContext } from 'react-router-dom'
 import { RootContextProps } from '../../Root/Root'
+import classNames from 'classnames'
+
+const transactionTypeMap = {
+  Income: '收入',
+  Expense: '支出',
+  Transfer: '转账'
+}
 
 const Transactions = () => {
   const { setTitle } = useOutletContext<RootContextProps>()
+  const navigate = useNavigate()
+
+  const { data } = useLoaderData() as {
+    data: {
+      totalPages: number
+      currentPage: number
+      pageSize: number
+      totalRecords: number
+      records: {
+        description: string
+        gmtCreate: string
+        modelName: null
+        points: number
+        subKey: string
+        transactionType: keyof typeof transactionTypeMap
+        userId: string
+      }[]
+    }
+  }
 
   useEffect(() => {
-    setTitle('交易记录')
+    setTitle('积分明细')
     return () => {
       setTitle('')
     }
   }, [])
 
-  return <div className='w-full flex-1 p-4'>开发中。。。</div>
+  const renderPagination = () => {
+    const { totalPages, currentPage } = data
+    const pages = Array.from({ length: totalPages }, (_, index) => index + 1)
+
+    return (
+      pages.length > 0 && (
+        <div className='btn-group'>
+          <button
+            className={classNames('btn', { 'btn-disabled': currentPage === 1 })}
+            onClick={() => {
+              navigate(`?page=${currentPage - 1}`)
+            }}
+          >
+            «
+          </button>
+          <button className='btn'>
+            {currentPage}/{totalPages}
+          </button>
+          <button
+            className={classNames('btn', { 'btn-disabled': currentPage === totalPages })}
+            onClick={() => {
+              navigate(`?page=${currentPage + 1}`)
+            }}
+          >
+            »
+          </button>
+        </div>
+      )
+    )
+  }
+
+  return (
+    <div className='w-full flex-1 p-4'>
+      <div className='overflow-x-auto mb-4'>
+        <table className='table w-full'>
+          <thead>
+            <tr>
+              <th className='bg-base-300'>交易时间</th>
+              <th className='bg-base-300'>交易类型</th>
+              <th className='bg-base-300'>积分</th>
+              <th className='bg-base-300'>模型</th>
+              <th className='bg-base-300'>描述</th>
+            </tr>
+          </thead>
+          <tbody>
+            {data.records.map(item => {
+              return (
+                <tr className='hover'>
+                  <td>{item.gmtCreate}</td>
+                  <td>
+                    <span
+                      className={classNames('badge', {
+                        'badge-primary': item.transactionType === 'Income',
+                        'badge-secondary': item.transactionType === 'Expense'
+                      })}
+                    >
+                      {transactionTypeMap[item.transactionType]}
+                    </span>
+                  </td>
+                  <td>{item.points}</td>
+                  <td>{item.modelName}</td>
+                  <td>{item.description}</td>
+                </tr>
+              )
+            })}
+          </tbody>
+        </table>
+      </div>
+      <div className='flex justify-end'>{renderPagination()}</div>
+    </div>
+  )
 }
 
 export default Transactions
