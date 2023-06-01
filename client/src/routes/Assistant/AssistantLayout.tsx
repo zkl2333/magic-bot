@@ -49,54 +49,58 @@ function AssistantLayout() {
         />
       }
     >
-      <div className='navbar bg-base-200 border-b border-base-300'>
-        {assistantList.length > 0 && (
-          <button
-            className='btn btn-square btn-ghost lg:hidden'
-            onClick={() => {
-              setAssistantLayoutShowSidebar(true)
-            }}
-          >
-            <MenuIcon />
-          </button>
-        )}
-        <div className='flex-1'>
-          {assistantId ? (
-            <Link to={`/assistant/${assistantId}/edit`} className='btn btn-ghost normal-case text-xl'>
-              {title || '神奇海螺'}
-            </Link>
-          ) : (
-            <div className='h-12 flex items-center px-4 font-bold normal-case text-xl'>
-              {title || '神奇海螺'}
-            </div>
-          )}
-        </div>
-        <div className='flex-none'>
-          <div className='dropdown dropdown-end'>
-            <label tabIndex={0} className='btn btn-ghost btn-circle avatar'>
-              <Avatar className='w-10 rounded-full' email={userStore.email} />
-            </label>
-            <ul
-              tabIndex={0}
-              className='menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-36 z-40'
+      <div className='h-full flex flex-col'>
+        <div className='navbar bg-base-200 border-b border-base-300'>
+          {assistantList.length > 0 && (
+            <button
+              className='btn btn-square btn-ghost lg:hidden'
+              onClick={() => {
+                setAssistantLayoutShowSidebar(true)
+              }}
             >
-              <li>
-                <NavLink to='/settings'>设置</NavLink>
-              </li>
-              <li
-                onClick={() => {
-                  localStorage.clear()
-                  userStore.clear()
-                  navigate('/login', { replace: true })
-                }}
+              <MenuIcon />
+            </button>
+          )}
+          <div className='flex-1'>
+            {assistantId ? (
+              <Link to={`/assistant/${assistantId}/edit`} className='btn btn-ghost normal-case text-xl'>
+                {title || '神奇海螺'}
+              </Link>
+            ) : (
+              <div className='h-12 flex items-center px-4 font-bold normal-case text-xl'>
+                {title || '神奇海螺'}
+              </div>
+            )}
+          </div>
+          <div className='flex-none'>
+            <div className='dropdown dropdown-end'>
+              <label tabIndex={0} className='btn btn-ghost btn-circle avatar'>
+                <Avatar className='w-10 rounded-full' email={userStore.email} />
+              </label>
+              <ul
+                tabIndex={0}
+                className='menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-36 z-40'
               >
-                <a>退出登录</a>
-              </li>
-            </ul>
+                <li>
+                  <NavLink to='/settings'>设置</NavLink>
+                </li>
+                <li
+                  onClick={() => {
+                    localStorage.clear()
+                    userStore.clear()
+                    navigate('/login', { replace: true })
+                  }}
+                >
+                  <a>退出登录</a>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
+        <div className='flex-1 overflow-hidden'>
+          <Outlet context={context} />
+        </div>
       </div>
-      <Outlet context={context} />
     </SidebarLayout>
   )
 }
