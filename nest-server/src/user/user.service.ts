@@ -1,31 +1,22 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-
+import { PrismaService } from '../prisma/prisma.service';
 @Injectable()
 export class UserService {
-  private readonly users = [
-    {
-      id: 1,
-      name: 'John Doe',
-      age: 25,
-      email: '',
-    },
-  ];
+  constructor(private prisma: PrismaService) {}
 
-  create() {
-    const user = {
-      id: this.users.length + 1,
-      name: 'John Doe',
-      age: 25,
-      email: '',
-    };
-    this.users.push(user);
+  async get(id: string) {
+    const user = await this.prisma.user.findUnique({
+      where: { id },
+    });
+
+    if (!user) {
+      throw new NotFoundException('用户不存在');
+    }
+
+    return user;
   }
 
-  get(id: number) {
-    const user = this.users.find((user) => user.id === id);
-    if (!user) {
-      throw new NotFoundException(`User #${id} not found`);
-    }
-    return user;
+  getAll() {
+    return this.prisma.user.findMany();
   }
 }
