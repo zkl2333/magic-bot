@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 @Injectable()
-export class UserService {
+export class UsersService {
   constructor(private prisma: PrismaService) {}
 
   async get(id: string) {
@@ -13,7 +13,16 @@ export class UserService {
       throw new NotFoundException('用户不存在');
     }
 
-    return user;
+    const { password, ...result } = user;
+    // TODO: Generate a JWT and return it here
+    // instead of the user object
+    return result;
+  }
+
+  getByUsername(username: string) {
+    return this.prisma.user.findUnique({
+      where: { username },
+    });
   }
 
   getAll() {
