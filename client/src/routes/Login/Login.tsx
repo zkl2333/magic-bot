@@ -41,20 +41,21 @@ const Login = () => {
 
   const login = async () => {
     if (!verify()) return
-    const response = await fetch('/api/user/login', {
+    const response = await fetch('/api/auth/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({ usernameOrEmail, password })
     })
-    const data = await response.json()
-    if (response.ok) {
-      localStorage.setItem('token', data.token)
-      setSuccess(data.message)
+    const resData = await response.json()
+
+    if (resData.success) {
+      localStorage.setItem('token', resData.data.access_token)
+      setSuccess('登录成功')
       navigate('/', { replace: true })
     } else {
-      setError(data.message)
+      setError(resData.message)
     }
   }
 
@@ -68,7 +69,7 @@ const Login = () => {
     emailCode: string
   }) => {
     if (!verify()) return
-    const response = await fetch('/api/user/register', {
+    const response = await fetch('/api/auth/register', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -77,7 +78,7 @@ const Login = () => {
     })
     const data = await response.json()
     if (response.ok) {
-      localStorage.setItem('token', data.token)
+      localStorage.setItem('token', data.access_token)
       setSuccess(data.message)
       navigate('/', { replace: true })
     } else {

@@ -15,15 +15,17 @@ export class AllExceptionsFilter implements ExceptionFilter {
     const status =
       exception instanceof HttpException ? exception.getStatus() : 500;
 
+    const message =
+      exception instanceof HttpException
+        ? exception.message
+        : 'Internal server error';
+
     const errorResponse = {
       success: false,
       statusCode: status,
       timestamp: new Date().toISOString(),
       path: request.url,
-      message:
-        status !== 500
-          ? (exception as HttpException).getResponse()
-          : 'Internal server error',
+      message: message,
     };
 
     if (status === 500) {

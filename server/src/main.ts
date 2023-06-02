@@ -16,6 +16,7 @@ async function bootstrap() {
     .setDescription('The AI Web API description')
     .setVersion('1.0')
     .addTag('AI Web')
+    .addBearerAuth()
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

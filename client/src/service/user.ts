@@ -27,7 +27,7 @@ export type Settings = {
 }
 
 export const getUserInfo = async ({ withInfo }: { withInfo?: boolean } = {}) => {
-  const data = await requestHandler(`/api/user/info`, {
+  const data = await requestHandler(`/api/users/me`, {
     method: 'GET',
     query: {
       withInfo: !!withInfo

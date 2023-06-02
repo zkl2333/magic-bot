@@ -82,7 +82,7 @@ export const creatAssistant = async (
 }
 
 export const getAssistants = async () => {
-  const data = await requestHandler('/api/assistants', {
+  const data = await requestHandler('/api/users/me/assistants', {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -93,7 +93,7 @@ export const getAssistants = async () => {
   if (!data.success) {
     throw new Error(data.message)
   }
-  return data.assistants
+  return data.data
 }
 
 export const getPublicAssistants = async () => {

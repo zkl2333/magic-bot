@@ -14,8 +14,6 @@ export class UsersService {
     }
 
     const { password, ...result } = user;
-    // TODO: Generate a JWT and return it here
-    // instead of the user object
     return result;
   }
 
@@ -25,7 +23,20 @@ export class UsersService {
     });
   }
 
-  getAll() {
-    return this.prisma.user.findMany();
+  async getAssistants(id: string) {
+    const assistant = await this.prisma.assistant.findMany({
+      include: {
+        forkedFrom: true,
+      },
+      where: {
+        isPublic: false,
+        users: {
+          some: {
+            userId: id,
+          },
+        },
+      },
+    });
+    return assistant;
   }
 }
