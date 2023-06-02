@@ -1,8 +1,10 @@
 import { Controller, Get, Param } from '@nestjs/common';
 import { UserService } from './user.service';
 import { IsNumberString } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
 export class ParamsDto {
   @IsNumberString()
+  @ApiProperty()
   id: string;
 }
 
