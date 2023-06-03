@@ -18,13 +18,16 @@ export class AllExceptionsFilter implements ExceptionFilter {
     const message =
       exception instanceof Error ? exception.message : '未知错误，请联系管理员';
 
-    const errorResponse = {
+    const errorResponse: any = {
       success: false,
-      statusCode: status,
       timestamp: new Date().toISOString(),
       path: request.url,
       message: message,
     };
+
+    if (exception instanceof HttpException) {
+      errorResponse.error = exception.getResponse();
+    }
 
     if (status === 500) {
       console.error(exception);

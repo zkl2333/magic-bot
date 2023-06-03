@@ -25,7 +25,7 @@ export class ChatController {
       currentUser.id,
       body,
     );
-    res.setHeader('Content-Type', 'event-stream');
+    res.setHeader('Content-Type', 'text/event-stream; charset=utf-8');
     dataStream.pipe(res);
   }
 }

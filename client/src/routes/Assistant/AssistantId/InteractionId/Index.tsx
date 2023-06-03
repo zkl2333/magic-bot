@@ -3,7 +3,7 @@ import { useEffect, useRef } from 'react'
 import { Message, Interaction, BaseMessage } from '../../types'
 import { getMessage, addMessage, deleteMessage, updateMessage } from '../../../../service/message'
 import { createId } from '@paralleldrive/cuid2'
-
+import parseSSEData from './parseSSEData'
 import ChatBubble from './ChatBubble'
 import { AssistantIdContentProps } from '../AssistantId'
 import { observer } from 'mobx-react-lite'
@@ -14,6 +14,7 @@ import RestartIcon from './RestartIcon'
 import StopIcon from './StopIcon'
 import './index.css'
 import { AssistantWithLocal } from '../../../../service/assistant'
+import { formatChatErrorResponse } from './utils'
 
 const IconBtn: React.FC<React.ButtonHTMLAttributes<HTMLButtonElement>> = ({ children, ...props }) => (
   <div className='ml-1 md:ml-2 h-full inline-flex rounded-md items-center justify-center hover:bg-base-300 min-w-[25px] md:min-w-[40px] relative'>
@@ -69,7 +70,7 @@ const AssistantInteraction = observer(() => {
     }
   }
 
-  // 生成回复 异步流
+  // 生成回复
   const generateAssistantReply = async (context: Message[]) => {
     const realContext = assistant.config.prompt ? [...assistant.config.prompt, ...context] : context
     const message = await addMessage(interaction.id, 'assistant', '思考中...')
@@ -77,21 +78,38 @@ const AssistantInteraction = observer(() => {
     const messageId = message.id
     chatStore.setLoading(true)
     const response = await getAssistantReply(realContext)
+
+    if (response.headers.get('content-type') !== 'text/event-stream') {
+      const data = await response.json()
+      console.log('Received data:', data)
+      const message = formatChatErrorResponse(data)
+      updateMessage(messageId, message)
+      chatStore.updateMessage(messageId, message)
+      chatStore.setLoading(false)
+      return
+    }
+
     try {
-      const reader = response.body?.pipeThrough(new TextDecoderStream()).getReader()
-      if (reader) {
-        let answer = ''
-        while (true) {
-          const { value, done } = await reader.read()
-          if (done) {
-            break
+      const datas: string[] = []
+      parseSSEData(response, {
+        message: (sseData: string) => {
+          if (sseData) {
+            try {
+              const data = JSON.parse(sseData)
+              console.log('Received data:', data)
+              datas.push(data.choices[0].delta.content)
+            } catch (error) {
+              console.log('Received Not Json data:', sseData)
+            }
+            updateMessage(messageId, datas.join(''))
+            chatStore.updateMessage(messageId, datas.join(''))
           }
-          answer += value
-          await updateMessage(messageId, answer)
-          chatStore.updateMessage(messageId, answer)
-        }
-      }
-    } catch (error) {}
+        },
+        error: (error: string) => console.error('Error:', error)
+      })
+    } catch (error) {
+      console.error(error)
+    }
     chatStore.setLoading(false)
   }
 
@@ -161,8 +179,8 @@ const AssistantInteraction = observer(() => {
         {/* 操作 */}
         <div className='flex space-x-2 mb-2'>
           <div
-            className={classNames('btn btn-xs', {
-              // 'btn-disabled': chatStore.messages.length === 0
+            className={classNames('btn btn-primary btn-xs md:btn-sm', {
+              'btn-disabled': chatStore.messages.length === 0
             })}
             onClick={async () => {
               navigate(`/assistant/${assistant.id}/${createId()}`)
@@ -171,7 +189,7 @@ const AssistantInteraction = observer(() => {
             新话题
           </div>
           <div
-            className='btn btn-primary btn-xs drawer-button'
+            className='btn btn-primary btn-xs md:btn-sm drawer-button'
             onClick={() => {
               setAssistantIdShowSidebar(true)
             }}
@@ -190,7 +208,12 @@ const AssistantInteraction = observer(() => {
           />
 
           {chatStore.loading ? (
-            <IconBtn onClick={() => abortController.current.abort()}>
+            <IconBtn
+              onClick={() => {
+                abortController.current.abort()
+                chatStore.setLoading(false)
+              }}
+            >
               <StopIcon />
             </IconBtn>
           ) : (
