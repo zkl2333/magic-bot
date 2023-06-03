@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { UsersModule } from './modules/users/users.module';
-import { PrismaService } from './prisma/prisma.service';
+import { PrismaService } from './common/prisma/prisma.service';
 import { AuthModule } from './modules/auth/auth.module';
 import { JwtService } from '@nestjs/jwt';
 import { AssistantsModule } from './modules/assistants/assistants.module';

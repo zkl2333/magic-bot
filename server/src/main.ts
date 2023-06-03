@@ -5,7 +5,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { TransformInterceptor } from './transform.interceptor';
 import { AllExceptionsFilter } from './all-exceptions.filter';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-import { PrismaService } from './prisma/prisma.service';
+import { PrismaService } from './common/prisma/prisma.service';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
