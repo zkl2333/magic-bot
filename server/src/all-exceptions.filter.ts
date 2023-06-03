@@ -18,7 +18,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
     const message =
       exception instanceof HttpException
         ? exception.message
-        : 'Internal server error';
+        : '未知错误，请联系管理员';
 
     const errorResponse = {
       success: false,

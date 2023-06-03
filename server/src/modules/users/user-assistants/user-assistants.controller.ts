@@ -9,7 +9,7 @@ import {
   UseGuards,
   ParseIntPipe,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
 import { Assistant } from '@prisma/client';
 import { AssistantsService } from 'src/modules/assistants/assistants.service';
@@ -23,11 +23,13 @@ import { UserId } from '../decorators/user-id.decorator';
 export class UserAssistantsController {
   constructor(private readonly assistantsService: AssistantsService) {}
 
+  @ApiOperation({ summary: '获取用户助手列表' })
   @Get()
   findAssistants(@UserId() userId: string) {
     return this.assistantsService.listAssistantsByUserId(userId);
   }
 
+  @ApiOperation({ summary: '创建用户助手' })
   @Post()
   async create(
     @UserId() userId: string,
@@ -36,6 +38,7 @@ export class UserAssistantsController {
     return this.assistantsService.createAssistant(userId, assistantData);
   }
 
+  @ApiOperation({ summary: '删除用户助手' })
   @Delete(':aid')
   async delete(
     @UserId() userId: string,
@@ -44,6 +47,7 @@ export class UserAssistantsController {
     return this.assistantsService.deleteAssistant(userId, assistantId);
   }
 
+  @ApiOperation({ summary: '获取用户助手' })
   @Get(':aid')
   async get(
     @UserId() userId: string,
@@ -52,6 +56,7 @@ export class UserAssistantsController {
     return this.assistantsService.getAssistant(userId, assistantId);
   }
 
+  @ApiOperation({ summary: '更新用户助手' })
   @Put(':aid')
   async update(
     @UserId() userId: string,

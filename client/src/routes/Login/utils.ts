@@ -6,8 +6,12 @@ export const sendEmailCode = async (email: string) => {
       message: '无效的邮箱格式'
     }
   }
-  const response = await fetch(`/api/verification/emailSend/${email}`, {
-    method: 'POST'
+  const response = await fetch(`/api/auth/sendEmailCode`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ email })
   })
   const result = await response.json()
   return result

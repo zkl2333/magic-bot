@@ -5,13 +5,28 @@ import { useSnackbar } from 'notistack'
 import { sendEmailCode } from './utils'
 
 const Login = () => {
-  const [isNewUser, setIsNewUser] = useState(false)
+  const [isNewUser, _setIsNewUser] = useState(false)
   const [usernameOrEmail, setUsernameOrEmail] = useState('')
+  const [username, setUsername] = useState('')
+  const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [emailCode, setEmailCode] = useState('')
 
   const navigate = useNavigate()
   const { enqueueSnackbar } = useSnackbar()
+
+  const setIsNewUser = (isNewUser: boolean) => {
+    if (isNewUser) {
+      if (usernameOrEmail.includes('@')) {
+        setEmail(usernameOrEmail)
+      } else {
+        setUsername(usernameOrEmail)
+      }
+    } else {
+      setUsernameOrEmail(email)
+    }
+    _setIsNewUser(isNewUser)
+  }
 
   const setError = (message: string) => {
     enqueueSnackbar(message, {
@@ -48,23 +63,25 @@ const Login = () => {
       },
       body: JSON.stringify({ usernameOrEmail, password })
     })
-    const resData = await response.json()
+    const res = await response.json()
 
-    if (resData.success) {
-      localStorage.setItem('token', resData.data.access_token)
+    if (res.success) {
+      localStorage.setItem('token', res.data.access_token)
       setSuccess('登录成功')
       navigate('/', { replace: true })
     } else {
-      setError(resData.message)
+      setError(res.message)
     }
   }
 
   const register = async ({
     email,
+    username,
     password,
     emailCode
   }: {
     email: string
+    username: string
     password: string
     emailCode: string
   }) => {
@@ -74,15 +91,15 @@ const Login = () => {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ email, password, emailCode })
+      body: JSON.stringify({ email, username, password, emailCode })
     })
-    const data = await response.json()
-    if (response.ok) {
-      localStorage.setItem('token', data.access_token)
-      setSuccess(data.message)
+    const res = await response.json()
+    if (res.success) {
+      localStorage.setItem('token', res.data.access_token)
+      setSuccess('注册成功')
       navigate('/', { replace: true })
     } else {
-      setError(data.message)
+      setError(res.message)
     }
   }
 
@@ -90,7 +107,8 @@ const Login = () => {
     event.preventDefault()
     if (isNewUser) {
       register({
-        email: usernameOrEmail,
+        email,
+        username,
         password,
         emailCode
       })
@@ -122,19 +140,50 @@ const Login = () => {
         <div className='card flex-shrink-0 w-full max-w-md min-w-[340px] shadow-2xl bg-base-100'>
           <div className='card-body text-base-content'>
             <form onSubmit={handleSubmit}>
-              <div className='form-control'>
-                <label className='label'>
-                  <span className='label-text'>{isNewUser ? '电子邮件' : '电子邮件/用户名'}</span>
-                </label>
-                <input
-                  type='text'
-                  placeholder={isNewUser ? '电子邮件' : '电子邮件/用户名'}
-                  className='input input-bordered'
-                  value={usernameOrEmail}
-                  onChange={e => setUsernameOrEmail(e.target.value)}
-                  required
-                />
-              </div>
+              {isNewUser ? (
+                <div className='form-control'>
+                  <label className='label'>
+                    <span className='label-text'>电子邮件</span>
+                  </label>
+                  <input
+                    type='email'
+                    placeholder='电子邮件'
+                    className='input input-bordered'
+                    value={email}
+                    onChange={e => setEmail(e.target.value)}
+                    required
+                  />
+                </div>
+              ) : (
+                <div className='form-control'>
+                  <label className='label'>
+                    <span className='label-text'>电子邮件/用户名</span>
+                  </label>
+                  <input
+                    type='text'
+                    placeholder='电子邮件/用户名'
+                    className='input input-bordered'
+                    value={usernameOrEmail}
+                    onChange={e => setUsernameOrEmail(e.target.value)}
+                    required
+                  />
+                </div>
+              )}
+              {isNewUser && (
+                <div className='form-control'>
+                  <label className='label'>
+                    <span className='label-text'>用户名</span>
+                  </label>
+                  <input
+                    type='username'
+                    placeholder='用户名'
+                    className='input input-bordered'
+                    value={username}
+                    onChange={e => setUsername(e.target.value)}
+                    required
+                  />
+                </div>
+              )}
               <div className='form-control'>
                 <label className='label'>
                   <span className='label-text'>密码</span>
@@ -189,7 +238,7 @@ const Login = () => {
                     className='btn btn-secondary'
                     onClick={async e => {
                       e.stopPropagation()
-                      const response = await sendEmailCode(usernameOrEmail)
+                      const response = await sendEmailCode(email)
                       if (response.success) {
                         setSuccess('验证码已发送')
                       } else {
