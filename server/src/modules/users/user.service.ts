@@ -6,6 +6,7 @@ import {
 import { PrismaService } from '../../prisma/prisma.service';
 import { UserId } from './decorators/user-id.decorator';
 import * as bcrypt from 'bcrypt';
+import { UpdateUserDto } from './dto/updateUser.dto';
 
 @Injectable()
 export class UsersService {
@@ -103,5 +104,66 @@ export class UsersService {
         emailVerified: emailVerified || false,
       },
     });
+  }
+
+  async update(id: string, updateUser: UpdateUserDto) {
+    const { username, nickname, email, settings } = updateUser;
+    const data: any = {};
+
+    if (username || email) {
+      const existingUsers = await this.prisma.user.findMany({
+        where: {
+          OR: [{ username }, { email }],
+        },
+      });
+
+      const existingUsernameUser = existingUsers.find(
+        (user) => user.username === username,
+      );
+      const existingEmailUser = existingUsers.find(
+        (user) => user.email === email,
+      );
+
+      if (existingUsernameUser && existingUsernameUser.id !== id) {
+        throw new BadRequestException('该用户名已被使用');
+      }
+
+      if (existingEmailUser && existingEmailUser.id !== id) {
+        throw new BadRequestException('该邮箱已被其他用户绑定');
+      }
+
+      if (username) {
+        data.username = username;
+      }
+
+      if (nickname) {
+        data.nickname = nickname;
+      }
+
+      if (email) {
+        data.email = email;
+      }
+    }
+
+    if (settings) {
+      data.settings = {
+        upsert: {
+          create: settings,
+          update: settings,
+        },
+      };
+    }
+
+    try {
+      await this.prisma.user.update({
+        where: { id: id },
+        data: data,
+      });
+      return {
+        message: '用户信息更新成功',
+      };
+    } catch (error) {
+      throw new BadRequestException('用户消息更新失败');
+    }
   }
 }

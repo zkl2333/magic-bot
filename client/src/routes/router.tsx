@@ -73,12 +73,13 @@ export const router = createBrowserRouter([
                   theme: formData.get('theme') as string
                 }
               }
-              const res = await updateUserInfo(data)
-              if (res.ok) {
-                return res
+              const response = await updateUserInfo(data)
+              const res = await response.json()
+              if (res.success) {
+                return res.data
               } else {
                 return {
-                  error: await res.json()
+                  error: res.error
                 }
               }
             }

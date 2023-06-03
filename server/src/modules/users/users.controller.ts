@@ -6,6 +6,8 @@ import {
   CurrentUser,
   CurrentUserType,
 } from 'src/common/decorators/currentUser.decorator';
+import { UpdateUserDto } from './dto/updateUser.dto';
+import { UserId } from './decorators/user-id.decorator';
 
 @ApiTags('Users')
 @Controller('users')
@@ -33,5 +35,11 @@ export class UsersController {
     { oldPassword, newPassword }: { oldPassword: string; newPassword: string },
   ) {
     return this.userService.updatePassword(userId, oldPassword, newPassword);
+  }
+
+  @ApiOperation({ summary: '修改用户信息' })
+  @Post(':id')
+  update(@UserId() userId: string, @Body() updateUser: UpdateUserDto) {
+    return this.userService.update(userId, updateUser);
   }
 }
