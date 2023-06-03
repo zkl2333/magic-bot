@@ -65,7 +65,7 @@ export const creatAssistant = async (
     'name' | 'config' | 'description' | 'isPublic' | 'avatar' | 'forkedFromId'
   >
 ) => {
-  const data = await requestHandler('/api/assistants', {
+  const data = await requestHandler('/api/users/me/assistants', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -78,7 +78,7 @@ export const creatAssistant = async (
     throw new Error(data.message)
   }
 
-  return data.assistant
+  return data.data
 }
 
 export const getAssistants = async () => {
@@ -102,16 +102,13 @@ export const getPublicAssistants = async () => {
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${localStorage.getItem('token')}`
-    },
-    query: {
-      public: true
     }
   })
 
   if (!data.success) {
     throw new Error(data.message)
   }
-  return data.assistants.map(
+  return data.data.map(
     (
       assistant: Assistant & {
         config: string
@@ -126,7 +123,7 @@ export const getPublicAssistants = async () => {
 }
 
 export const deleteAssistant = async (assistantId: Assistant['id']) => {
-  const data = await requestHandler(`/api/assistants/${assistantId}`, {
+  const data = await requestHandler(`/api/users/me/assistants/${assistantId}`, {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
@@ -142,7 +139,7 @@ export const deleteAssistant = async (assistantId: Assistant['id']) => {
 }
 
 export const getAssistant = async (assistantId: Assistant['id']) => {
-  const data = await requestHandler(`/api/assistants/${assistantId}`, {
+  const data = await requestHandler(`/api/users/me/assistants/${assistantId}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -155,13 +152,13 @@ export const getAssistant = async (assistantId: Assistant['id']) => {
     return null
   }
 
-  return formatAssistant(data.assistant)
+  return formatAssistant(data.data)
 }
 
 export const updateAssistant = async (
   assistant: Pick<Assistant, 'id' | 'name' | 'config' | 'description' | 'isPublic' | 'avatar'>
 ) => {
-  const data = await requestHandler(`/api/assistants/${assistant.id}`, {
+  const data = await requestHandler(`/api/users/me/assistants/${assistant.id}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
@@ -174,5 +171,5 @@ export const updateAssistant = async (
     throw new Error(data.message)
   }
 
-  return data.assistant
+  return data.data
 }

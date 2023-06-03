@@ -32,18 +32,18 @@ export const router = createBrowserRouter([
       const token = localStorage.getItem('token')
       if (!token) {
         userStore.clear()
+        console.log('no token')
         return redirect('/login')
       }
       if (userStore.isLogin) {
         return null
       }
       try {
-        const user = await getUserInfo({
-          withInfo: true
-        })
+        const user = await getUserInfo()
         userStore.setUser(user)
         return null
       } catch (error) {
+        console.log(error)
         return redirect('/login')
       }
     },

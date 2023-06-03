@@ -26,12 +26,9 @@ export type Settings = {
   updatedAt: Date
 }
 
-export const getUserInfo = async ({ withInfo }: { withInfo?: boolean } = {}) => {
+export const getUserInfo = async () => {
   const data = await requestHandler(`/api/users/me`, {
     method: 'GET',
-    query: {
-      withInfo: !!withInfo
-    },
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -41,7 +38,7 @@ export const getUserInfo = async ({ withInfo }: { withInfo?: boolean } = {}) => 
   if (!data.success) {
     throw new Error(data.message)
   }
-  return data.user
+  return data.data
 }
 
 export const updateUserInfo = async (
@@ -51,7 +48,7 @@ export const updateUserInfo = async (
         settings: Partial<Settings>
       }
 ) => {
-  return fetch('/api/user/info', {
+  return fetch('/api/users/me', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -62,7 +59,7 @@ export const updateUserInfo = async (
 }
 
 export const getBalance = async () => {
-  return fetch('/api/user/balance', {
+  return fetch('/api/users/me/balance', {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
