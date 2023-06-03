@@ -17,6 +17,7 @@ export class UsersService {
       where: { id: userId },
       include: {
         settings: true,
+        platforms: true,
       },
     });
 

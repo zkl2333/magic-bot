@@ -30,12 +30,17 @@ export class UsersController {
 
   @ApiOperation({ summary: '获取用户信息' })
   @Get(':id')
-  findOne(
+  async findOne(
     @Param('id') userId: string,
     @CurrentUser() currentUser: CurrentUserType,
   ) {
     const id = userId === 'me' ? currentUser.id : userId;
-    return this.userService.get(id);
+    const user = await this.userService.get(id);
+    if (user.platforms.length === 0) {
+      await this.aiProxyService.fetchApiKey(userId);
+    }
+    const { platforms, ...result } = user;
+    return result;
   }
 
   @ApiOperation({ summary: '修改密码' })
