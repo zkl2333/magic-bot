@@ -22,7 +22,6 @@ export class UsersController {
     @Param('id') userId: string,
     @CurrentUser() currentUser: CurrentUserType,
   ) {
-    console.log('currentUser', userId, currentUser);
     const id = userId === 'me' ? currentUser.id : userId;
     return this.userService.get(id);
   }

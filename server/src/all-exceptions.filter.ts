@@ -16,9 +16,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
       exception instanceof HttpException ? exception.getStatus() : 500;
 
     const message =
-      exception instanceof HttpException
-        ? exception.message
-        : '未知错误，请联系管理员';
+      exception instanceof Error ? exception.message : '未知错误，请联系管理员';
 
     const errorResponse = {
       success: false,
