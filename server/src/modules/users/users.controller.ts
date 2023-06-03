@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { UsersService } from './user.service';
 import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
@@ -8,13 +16,17 @@ import {
 } from 'src/common/decorators/currentUser.decorator';
 import { UpdateUserDto } from './dto/updateUser.dto';
 import { UserId } from './decorators/user-id.decorator';
+import { AiProxyService } from 'src/common/aiProxy/ai-proxy.service';
 
 @ApiTags('Users')
 @Controller('users')
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
 export class UsersController {
-  constructor(private readonly userService: UsersService) {}
+  constructor(
+    private readonly userService: UsersService,
+    private readonly aiProxyService: AiProxyService,
+  ) {}
 
   @ApiOperation({ summary: '获取用户信息' })
   @Get(':id')
@@ -29,7 +41,7 @@ export class UsersController {
   @ApiOperation({ summary: '修改密码' })
   @Post(':id/password')
   updatePassword(
-    @Param('id') userId: string,
+    @UserId() userId: string,
     @Body()
     { oldPassword, newPassword }: { oldPassword: string; newPassword: string },
   ) {
@@ -40,5 +52,17 @@ export class UsersController {
   @Post(':id')
   update(@UserId() userId: string, @Body() updateUser: UpdateUserDto) {
     return this.userService.update(userId, updateUser);
+  }
+
+  @ApiOperation({ summary: '获取用户的余额' })
+  @Get(':id/balance')
+  getBalance(@UserId() userId: string) {
+    return this.aiProxyService.getPointAccount(userId);
+  }
+
+  @ApiOperation({ summary: '获取用户的交易记录' })
+  @Get(':id/transactions')
+  getTransactions(@UserId() userId: string, @Query('page') page: number) {
+    return this.aiProxyService.listTransaction(userId, page);
   }
 }

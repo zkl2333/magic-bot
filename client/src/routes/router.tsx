@@ -102,7 +102,7 @@ export const router = createBrowserRouter([
               console.log(params)
               const url = new URL(request.url)
               const page = url.searchParams.get('page')
-              return await requestHandler('/api/user/transaction', {
+              return await requestHandler('/api/users/me/transactions', {
                 query: {
                   page: page || 1
                 }
