@@ -93,7 +93,7 @@ const MarkdownRenderer = ({ text, className }: MarkdownRendererProps) => {
     return (
       <>
         <ReactMarkdown
-          className={classNames('prose markdown-body dark:prose-invert', className)}
+          className={classNames('markdown-body dark:prose-invert', className)}
           components={{
             code: CodeBlock
           }}

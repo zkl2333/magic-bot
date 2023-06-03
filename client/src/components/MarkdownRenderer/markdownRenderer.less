@@ -1,7 +1,7 @@
 .markdown-body {
-  word-wrap: break-word;
-  font-size: 14px;
-
+  pre code {
+    font-size: 1.2em;
+  }
   a {
     color: hsl(var(--p));
 
@@ -30,11 +30,6 @@
     list-style-type: disc;
   }
 
-  pre code,
-  pre tt {
-    line-height: 1.65;
-  }
-
   code.inline {
     padding: 0;
     font-weight: bolder;
@@ -54,43 +49,5 @@
 
   code.hljs {
     padding: 0;
-  }
-
-  .code-block {
-    &-wrapper {
-      position: relative;
-      // padding-top: 24px;
-    }
-
-    &-header {
-      position: absolute;
-      top: 5px;
-      right: 0;
-      width: 100%;
-      padding: 0 1rem;
-      display: flex;
-      justify-content: flex-end;
-      align-items: center;
-      color: #b3b3b3;
-
-      &__copy {
-        cursor: pointer;
-        margin-left: 0.5rem;
-        user-select: none;
-
-        &:hover {
-          color: #65a665;
-        }
-      }
-    }
-  }
-}
-
-.markdown-body.dark {
-  .message-reply {
-    .whitespace-pre-wrap {
-      white-space: pre-wrap;
-      color: hsl(var(--bc));
-    }
   }
 }

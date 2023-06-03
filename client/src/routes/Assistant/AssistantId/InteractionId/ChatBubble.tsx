@@ -29,6 +29,8 @@ const ChatBubble = (props: ChatBubbleProps) => {
   } = props
   const isAssistant = role === 'assistant'
 
+  const classnames = 'prose-sm md:prose-md'
+
   return (
     <div className={`group chat ${isAssistant ? 'chat-start' : 'chat-end'}`}>
       {isAssistant ? (
@@ -52,13 +54,17 @@ const ChatBubble = (props: ChatBubbleProps) => {
       {isAssistant ? (
         <div className='flex w-full'>
           <div className='flex-1 w-0'>
-            <MarkdownRenderer className='chat-bubble bg-base-100 text-base-content p-3' text={text} />
+            <MarkdownRenderer
+              className={classNames(classnames, 'chat-bubble bg-base-100 text-base-content p-3')}
+              text={text}
+            />
           </div>
         </div>
       ) : (
         <div
           className={classNames(
-            'prose prose-sm md:prose-md lg:prose-lg chat-bubble bg-base-100 text-base-content markdown-body p-3 shadow whitespace-pre-wrap'
+            classnames,
+            'chat-bubble bg-base-100 text-base-content p-3 shadow whitespace-pre-wrap'
           )}
         >
           {text}

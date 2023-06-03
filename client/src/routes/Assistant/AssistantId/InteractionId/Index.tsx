@@ -114,12 +114,17 @@ const AssistantInteraction = observer(() => {
             chatStore.updateMessage(messageId, datas.join(''))
           }
         },
-        error: (error: string) => console.error('Error:', error)
+        done: () => {
+          chatStore.setLoading(false)
+        },
+        error: (error: string) => {
+          chatStore.setLoading(false)
+          console.error('Error:', error)
+        }
       })
     } catch (error) {
       console.error(error)
     }
-    chatStore.setLoading(false)
   }
 
   const onRetry = async (id?: string) => {

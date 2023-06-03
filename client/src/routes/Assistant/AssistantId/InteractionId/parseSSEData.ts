@@ -2,6 +2,7 @@
 interface EventHandlers {
   message?: (data: string) => void
   error?: (err: string) => void
+  done?: () => void
   [key: string]: ((data: string) => void) | undefined
 }
 
@@ -20,7 +21,10 @@ async function parseSSEData(response: Response, handlers: EventHandlers = {}) {
 
   while (true) {
     const { done, value } = await reader.read()
-    if (done) break
+    if (done) {
+      handlers.done?.()
+      break
+    }
 
     dataBuffer += decoder.decode(value)
 
