@@ -5,6 +5,10 @@ import ReactMarkdown from 'react-markdown'
 import SyntaxHighlighter from 'react-syntax-highlighter'
 import classNames from 'classnames'
 import { useMemo, useState } from 'react'
+import remarkGfm from 'remark-gfm'
+import remarkMath from 'remark-math'
+import rehypeKatex from 'rehype-katex'
+import 'katex/dist/katex.min.css'
 
 interface MarkdownRendererProps {
   className?: string
@@ -93,6 +97,8 @@ const MarkdownRenderer = ({ text, className }: MarkdownRendererProps) => {
     return (
       <>
         <ReactMarkdown
+          remarkPlugins={[remarkGfm, remarkMath]}
+          rehypePlugins={[rehypeKatex]}
           className={classNames('markdown-body dark:prose-invert', className)}
           components={{
             code: CodeBlock
