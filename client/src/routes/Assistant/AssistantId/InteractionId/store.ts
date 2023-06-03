@@ -43,8 +43,24 @@ class ChatStore {
     }
   }
 
+  setMessagesLoading(id: string, loading: boolean) {
+    const index = this.messages.findIndex(m => m.id === id)
+    if (index !== -1) {
+      this.messages[index] = {
+        ...this.messages[index],
+        loading
+      }
+    }
+  }
+
   setLoading(loading: boolean) {
     this.loading = loading
+    if (loading === false) {
+      this.messages = this.messages.map(m => ({
+        ...m,
+        loading: false
+      }))
+    }
   }
 }
 

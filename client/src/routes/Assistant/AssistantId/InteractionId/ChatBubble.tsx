@@ -64,11 +64,11 @@ const ChatBubble = (props: ChatBubbleProps) => {
           {text}
         </div>
       )}
-      <div className='group-hover:visible chat-footer pt-1 text-xs'>
+      <div className='group-hover:visible chat-footer pt-1 text-xs flex space-x-2'>
         <span className='opacity-40'>{dayjs(updatedAt).format('YY/MM/DD HH:mm')}</span>
         {onDeleted && (
           <button
-            className='ml-2 opacity-50 text-xs hover:text-primary hover:opacity-100'
+            className='opacity-50 text-xs hover:text-primary hover:opacity-100'
             onClick={() => {
               onDeleted(id)
             }}
@@ -78,7 +78,7 @@ const ChatBubble = (props: ChatBubbleProps) => {
         )}
         {onRetry && role === 'assistant' && !loading && (
           <button
-            className='ml-2 opacity-50 text-xs hover:text-primary hover:opacity-100'
+            className='opacity-50 text-xs hover:text-primary hover:opacity-100'
             onClick={() => {
               onRetry(id)
             }}
@@ -88,7 +88,7 @@ const ChatBubble = (props: ChatBubbleProps) => {
         )}
         {onUpdate && role === 'user' && (
           <button
-            className='ml-2 opacity-50 text-xs hover:text-primary hover:opacity-100'
+            className='opacity-50 text-xs hover:text-primary hover:opacity-100'
             onClick={() => {
               const newMessage = prompt('编辑您消息', text)
               if (!newMessage) return
@@ -98,6 +98,7 @@ const ChatBubble = (props: ChatBubbleProps) => {
             编辑
           </button>
         )}
+        {loading && <div className='loading loading-ring loading-xs' />}
       </div>
     </div>
   )

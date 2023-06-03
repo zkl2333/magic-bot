@@ -8,6 +8,7 @@ export interface Message extends BaseMessage {
   interactionId: string
   createdAt: number
   updatedAt: number
+  loading?: boolean
 }
 
 export interface Interaction {

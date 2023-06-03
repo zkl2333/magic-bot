@@ -17,7 +17,7 @@ import { AssistantWithLocal } from '../../../../service/assistant'
 import { formatChatErrorResponse } from './utils'
 
 const IconBtn: React.FC<React.ButtonHTMLAttributes<HTMLButtonElement>> = ({ children, ...props }) => (
-  <div className='ml-1 md:ml-2 h-full inline-flex rounded-md items-center justify-center hover:bg-base-300 min-w-[25px] md:min-w-[40px] relative'>
+  <div className='ml-1 md:ml-2 h-full inline-flex rounded-md items-center justify-center hover:bg-base-300 min-w-[40px] relative'>
     <button
       {...props}
       className={classNames('h-full flex w-full gap-2 items-center justify-center', props.className)}
@@ -77,8 +77,8 @@ const AssistantInteraction = observer(() => {
     chatStore.addMessage(message)
     const messageId = message.id
     chatStore.setLoading(true)
+    chatStore.setMessagesLoading(messageId, true)
     const response = await getAssistantReply(realContext)
-
     if (!response.headers.get('content-type')?.includes('event-stream')) {
       if (response.headers.get('content-type')?.includes('json')) {
         const data = await response.json()
@@ -168,7 +168,7 @@ const AssistantInteraction = observer(() => {
         {chatStore.messages.map(message => (
           <ChatBubble
             {...message}
-            loading={false}
+            loading={message?.loading || false}
             key={message.id}
             onRetry={onRetry}
             onDeleted={async id => {
