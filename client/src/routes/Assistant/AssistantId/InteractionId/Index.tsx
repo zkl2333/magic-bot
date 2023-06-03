@@ -79,14 +79,23 @@ const AssistantInteraction = observer(() => {
     chatStore.setLoading(true)
     const response = await getAssistantReply(realContext)
 
-    if (response.headers.get('content-type') !== 'text/event-stream') {
-      const data = await response.json()
-      console.log('Received data:', data)
-      const message = formatChatErrorResponse(data)
-      updateMessage(messageId, message)
-      chatStore.updateMessage(messageId, message)
-      chatStore.setLoading(false)
-      return
+    if (!response.headers.get('content-type')?.includes('event-stream')) {
+      if (response.headers.get('content-type')?.includes('json')) {
+        const data = await response.json()
+        console.log('Received data:', data)
+        const message = formatChatErrorResponse(data)
+        updateMessage(messageId, message)
+        chatStore.updateMessage(messageId, message)
+        chatStore.setLoading(false)
+        return
+      } else {
+        const data = await response.text()
+        console.log('Received Text data:', data)
+        const message = formatChatErrorResponse(data)
+        updateMessage(messageId, message)
+        chatStore.updateMessage(messageId, message)
+        chatStore.setLoading(false)
+      }
     }
 
     try {
@@ -96,10 +105,10 @@ const AssistantInteraction = observer(() => {
           if (sseData) {
             try {
               const data = JSON.parse(sseData)
-              console.log('Received data:', data)
+              console.log('Received stream Json data:', data)
               datas.push(data.choices[0].delta.content)
             } catch (error) {
-              console.log('Received Not Json data:', sseData)
+              console.log('Received stream Text data:', sseData)
             }
             updateMessage(messageId, datas.join(''))
             chatStore.updateMessage(messageId, datas.join(''))
