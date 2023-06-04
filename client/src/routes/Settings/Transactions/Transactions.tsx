@@ -83,9 +83,9 @@ const Transactions = () => {
             </tr>
           </thead>
           <tbody>
-            {data.records.map(item => {
+            {data.records.map((item, index) => {
               return (
-                <tr className='hover'>
+                <tr className='hover' key={index}>
                   <td>{item.gmtCreate}</td>
                   <td>
                     <span

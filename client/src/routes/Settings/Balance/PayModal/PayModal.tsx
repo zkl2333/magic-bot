@@ -43,7 +43,7 @@ function PayModal({ id, points, onFinish }: PayModalProps & DialogProps) {
       pay_type: res.data.payType,
       price: res.data.price,
       order_id: res.data.id,
-      order_uid: res.data.orderUid,
+      order_uid: res.data.userId,
       notify_url: res.data.notifyUrl,
       sign: res.data.sign
     }
