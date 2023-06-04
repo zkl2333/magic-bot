@@ -43,9 +43,9 @@ const Balance = () => {
       {priceList.success && (
         <div>
           <div className='text-xl font-bold'>购买积分</div>
-          <div className='mt-4'>
+          <div className='w-full max-w-[900px] mt-4 grid justify-start grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-4'>
             {priceList.data.map(item => (
-              <div key={item.points} className='w-[220px] mr-4 mb-4 stats shadow'>
+              <div key={item.points} className='stats shadow w-full overflow-hidden'>
                 <div className='stat'>
                   <div className='stat-title'>积分</div>
                   <div className='stat-value'>{item.points}</div>
