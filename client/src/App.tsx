@@ -4,6 +4,7 @@ import './common/daisyUI.less'
 import userStore from './store/UserStore'
 import { RouterProvider } from 'react-router-dom'
 import { router } from './routes/router'
+import Dialog from './components/PortalDialog'
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
       <div className='safe-area bg-base-200 h-full w-full overflow-hidden lg:border-base-300 lg:border lg:rounded-md lg:shadow-lg'>
         <RouterProvider router={router} />
       </div>
+      <Dialog />
     </div>
   )
 }
