@@ -19,7 +19,7 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
         containerRoot: 'lg:!top-8 lg:!right-8'
       }}
       style={{ top: '4rem' }}
-      autoHideDuration={3000}
+      autoHideDuration={1000}
     >
       <App />
     </SnackbarProvider>

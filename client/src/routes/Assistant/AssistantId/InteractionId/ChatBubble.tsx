@@ -29,7 +29,7 @@ const ChatBubble = (props: ChatBubbleProps) => {
   } = props
   const isAssistant = role === 'assistant'
 
-  const classnames = 'prose-sm md:prose-md'
+  const bubbleClassnames = 'prose-sm md:prose-md shadow chat-bubble bg-base-100 text-base-content p-3'
 
   return (
     <div className={`group chat ${isAssistant ? 'chat-start' : 'chat-end'}`}>
@@ -54,21 +54,11 @@ const ChatBubble = (props: ChatBubbleProps) => {
       {isAssistant ? (
         <div className='flex w-full'>
           <div className='flex-1 w-0'>
-            <MarkdownRenderer
-              className={classNames(classnames, 'chat-bubble bg-base-100 text-base-content p-3')}
-              text={text}
-            />
+            <MarkdownRenderer className={classNames(bubbleClassnames)} text={text} />
           </div>
         </div>
       ) : (
-        <div
-          className={classNames(
-            classnames,
-            'chat-bubble bg-base-100 text-base-content p-3 shadow whitespace-pre-wrap'
-          )}
-        >
-          {text}
-        </div>
+        <div className={classNames(bubbleClassnames, 'whitespace-pre-wrap')}>{text}</div>
       )}
       <div className='group-hover:visible chat-footer pt-1 text-xs flex space-x-2'>
         <span className='opacity-40'>{dayjs(updatedAt).format('YY/MM/DD HH:mm')}</span>

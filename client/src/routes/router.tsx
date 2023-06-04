@@ -76,6 +76,10 @@ export const router = createBrowserRouter([
               const response = await updateUserInfo(data)
               const res = await response.json()
               if (res.success) {
+                userStore.setUser({
+                  ...userStore,
+                  ...data
+                })
                 return res.data
               } else {
                 return {
