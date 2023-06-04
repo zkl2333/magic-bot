@@ -1,4 +1,4 @@
-import { Controller, Post, Body, UseGuards } from '@nestjs/common';
+import { Controller, Post, Body, UseGuards, HttpCode } from '@nestjs/common';
 import { OrderService } from './order.service';
 import { OrderCreateDto } from './dto/order-create.dto';
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
@@ -34,6 +34,7 @@ export class OrderController {
 
   @Public()
   @Post('payment-callback')
+  @HttpCode(200)
   async handlePaymentCallback(
     @Body() callbackData: PaymentCallbackDto,
   ): Promise<any> {
