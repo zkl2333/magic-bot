@@ -1,7 +1,7 @@
-import { PrismaClient, Role } from '@prisma/client'
-import bcrypt from 'bcrypt'
+import { PrismaClient, Role } from '@prisma/client';
+import * as bcrypt from 'bcrypt';
 
-const prisma = new PrismaClient()
+const prisma = new PrismaClient();
 
 async function main() {
   const admin = await prisma.user.create({
@@ -10,9 +10,9 @@ async function main() {
       emailVerified: true,
       username: 'admin',
       password: await bcrypt.hash('password', 0),
-      role: Role.ADMIN
-    }
-  })
+      role: Role.ADMIN,
+    },
+  });
 
   const user = await prisma.user.create({
     data: {
@@ -20,18 +20,18 @@ async function main() {
       emailVerified: true,
       username: 'user',
       password: await bcrypt.hash('password', 0),
-      role: Role.USER
-    }
-  })
-  console.log('Seeded')
-  console.log({ admin, user })
+      role: Role.USER,
+    },
+  });
+  console.log('Seeded');
+  console.log({ admin, user });
 }
 
 main()
-  .catch(e => {
-    console.error(e)
-    process.exit(1)
+  .catch((e) => {
+    console.error(e);
+    process.exit(1);
   })
   .finally(async () => {
-    await prisma.$disconnect()
-  })
+    await prisma.$disconnect();
+  });

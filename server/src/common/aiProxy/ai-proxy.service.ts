@@ -1,11 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../../common/prisma/prisma.service';
+import { PrismaService } from '../../prisma/prisma.service';
 
 const sessionId = 'AIP_MANAGE_KEY';
 const baseUrl = 'https://aiproxy.io/api';
 
 const api = {
   createApiKey: '/user/createApiKey',
+  updateApiKey: '/user/updateApiKey',
   getPointAccount: '/point/getPointAccount',
   listTransaction: '/point/listTransaction',
 };
@@ -203,6 +204,44 @@ export class AiProxyService {
 
     if (!responseBody.success) {
       console.error('listTransaction error', responseBody);
+      throw new Error(responseBody.message);
+    }
+
+    return responseBody.data;
+  }
+
+  async addKeyPoints(uid: string, addPoints: number) {
+    const allApiKeys = await this.listApiKey();
+    const matchingApiKey = allApiKeys.find(
+      (key: any) => key.externalId === uid,
+    );
+
+    const newPoints = matchingApiKey.currentPoints + addPoints;
+
+    const headers = {
+      'content-type': 'application/json',
+      cookie: `sessionId=${sessionId}`,
+    };
+
+    console.log('updateKeyPoints', matchingApiKey, newPoints);
+
+    const response = await fetch(this.createUrl(api.updateApiKey), {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({
+        ...matchingApiKey,
+        initPoint: newPoints,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Request failed with status code ${response.status}`);
+    }
+
+    const responseBody = await response.json();
+
+    if (!responseBody.success) {
+      console.error('updateKeyPoints error', responseBody);
       throw new Error(responseBody.message);
     }
 

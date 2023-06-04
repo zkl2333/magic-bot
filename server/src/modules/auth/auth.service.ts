@@ -1,8 +1,12 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from 'src/modules/users/user.service';
 import * as bcrypt from 'bcrypt';
-import { PrismaService } from 'src/common/prisma/prisma.service';
+import { PrismaService } from 'src/prisma/prisma.service';
 import * as nodemailer from 'nodemailer';
 import { RegisterDto } from './dto/register.dto';
 
@@ -17,11 +21,15 @@ export class AuthService {
   async validateUser(usernameOrEmail: string, password: string): Promise<any> {
     const user = await this.usersService.getByUsernameOrEmail(usernameOrEmail);
 
-    if (user && (await bcrypt.compare(password, user.password))) {
+    if (!user) {
+      throw new UnauthorizedException('用户不存在');
+    }
+
+    if (await bcrypt.compare(password, user.password)) {
       const { password, ...result } = user;
       return result;
     }
-    return null;
+    throw new UnauthorizedException('密码错误');
   }
 
   async login(user: { id: string }) {

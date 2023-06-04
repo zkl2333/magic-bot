@@ -27,10 +27,10 @@ model User {
   createdAt     DateTime        @default(now())
   updatedAt     DateTime        @updatedAt
   settings      Settings?
-  account       Account?
   platforms     UserPlatform[]
   UserAssistant UserAssistant[]
   Assistant     Assistant[]
+  orders        Order[]
   emailVerified Boolean         @default(false)
 }
 
@@ -53,24 +53,20 @@ model Settings {
   user      User     @relation(fields: [userId], references: [id])
 }
 
-model Account {
-  id           Int           @id @default(autoincrement())
-  userId       String        @unique
-  balance      Float         @default(0)
-  transactions Transaction[]
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
-  user         User          @relation(fields: [userId], references: [id])
-}
-
-model Transaction {
-  id          Int      @id @default(autoincrement())
-  accountId   Int
-  type        String
-  amount      Float
-  description String?
-  createdAt   DateTime @default(now())
-  account     Account  @relation(fields: [accountId], references: [id])
+model Order {
+  id              String    @id @default(cuid())
+  userId          String
+  pointsPurchased Int
+  paymentAmount   Decimal
+  paymentStatus   String
+  updateStatus    String
+  retries         Int
+  name            String
+  payType         String
+  notifyUrl       String
+  paymentTime     DateTime?
+  aoid            String?
+  User            User      @relation(fields: [userId], references: [id])
 }
 
 model Assistant {

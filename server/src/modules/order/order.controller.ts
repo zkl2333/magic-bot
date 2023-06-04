@@ -1,0 +1,40 @@
+import { Controller, Post, Body, UseGuards } from '@nestjs/common';
+import { OrderService } from './order.service';
+import { OrderCreateDto } from './dto/order-create.dto';
+import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
+import { PaymentCallbackDto } from './dto/payment-callback.dto';
+
+@ApiTags('Orders')
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard)
+@Controller('orders')
+export class OrderController {
+  constructor(private readonly orderService: OrderService) {}
+
+  @Post('create')
+  async createOrder(@Body() orderCreateDto: OrderCreateDto) {
+    const createdOrder = await this.orderService.createOrder(orderCreateDto);
+
+    const sign = this.orderService.createSign({
+      order: createdOrder,
+    });
+
+    return {
+      id: createdOrder.id,
+      name: createdOrder.name,
+      payType: createdOrder.payType,
+      price: createdOrder.paymentAmount,
+      userId: createdOrder.userId,
+      notifyUrl: createdOrder.notifyUrl,
+      sign: sign,
+    };
+  }
+
+  @Post('payment-callback')
+  async handlePaymentCallback(
+    @Body() callbackData: PaymentCallbackDto,
+  ): Promise<any> {
+    return this.orderService.handlePaymentCallback(callbackData);
+  }
+}

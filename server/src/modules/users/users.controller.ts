@@ -19,9 +19,9 @@ import { UserId } from './decorators/user-id.decorator';
 import { AiProxyService } from 'src/common/aiProxy/ai-proxy.service';
 
 @ApiTags('Users')
-@Controller('users')
-@UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
+@UseGuards(JwtAuthGuard)
+@Controller('users')
 export class UsersController {
   constructor(
     private readonly userService: UsersService,
@@ -31,7 +31,7 @@ export class UsersController {
   @ApiOperation({ summary: '获取用户信息' })
   @Get(':id')
   async findOne(
-    @Param('id') userId: string,
+    @UserId() userId: string,
     @CurrentUser() currentUser: CurrentUserType,
   ) {
     const id = userId === 'me' ? currentUser.id : userId;
