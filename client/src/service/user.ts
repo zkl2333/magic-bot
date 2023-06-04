@@ -67,3 +67,13 @@ export const getBalance = async () => {
     }
   })
 }
+
+export const getPriceList = async () => {
+  return fetch('/api/orders/price-list', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${localStorage.getItem('token')}`
+    }
+  })
+}

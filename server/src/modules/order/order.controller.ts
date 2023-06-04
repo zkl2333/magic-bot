@@ -1,4 +1,4 @@
-import { Controller, Post, Body, UseGuards } from '@nestjs/common';
+import { Controller, Post, Body, UseGuards, Get } from '@nestjs/common';
 import { OrderService } from './order.service';
 import { OrderCreateDto } from './dto/order-create.dto';
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
@@ -36,5 +36,11 @@ export class OrderController {
     @Body() callbackData: PaymentCallbackDto,
   ): Promise<any> {
     return this.orderService.handlePaymentCallback(callbackData);
+  }
+
+  // 获取套餐列表
+  @Get('price-list')
+  async getPriceList(): Promise<any> {
+    return this.orderService.getPriceList();
   }
 }

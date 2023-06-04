@@ -15,7 +15,7 @@ import Root from './Root/Root'
 import Settings from './Settings/Settings'
 import User from './Settings/User/User'
 import Security, { changePasswordAction } from './Settings/Security/Security'
-import Balance from './Settings/Balance/Balance'
+import Balance, { balanceLoader } from './Settings/Balance/Balance'
 import Transactions from './Settings/Transactions/Transactions'
 import { getUserInfo, getBalance, updateUserInfo } from '../service/user'
 import Edit, { assistantEditAction as assistantIdEditAction } from './Assistant/AssistantId/Edit/Edit'
@@ -96,7 +96,7 @@ export const router = createBrowserRouter([
           {
             path: 'balance',
             element: <Balance />,
-            loader: getBalance
+            loader: balanceLoader
           },
           {
             path: 'transactions',

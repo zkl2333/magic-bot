@@ -8,13 +8,14 @@ import { AiProxyService } from 'src/common/aiProxy/ai-proxy.service';
 
 const appSecret = 'XOR_SECRET';
 
+// 利润率
+const profitRate = 1.2;
 // 积分价格
 const priceList = [
-  { points: 10, price: 0.01 },
-  { points: 10000, price: 10 },
-  { points: 20000, price: 20 },
-  { points: 50000, price: 50 },
-  { points: 100000, price: 100 },
+  { points: 10000, price: 10 * profitRate },
+  { points: 20000, price: 20 * profitRate },
+  { points: 50000, price: 50 * profitRate },
+  { points: 100000, price: 100 * profitRate },
 ];
 
 @Injectable()
@@ -24,8 +25,9 @@ export class OrderService {
     private readonly aiProxyService: AiProxyService,
   ) {}
 
-  getOrders() {
-    return this.prisma.order.findMany();
+  // 获取套餐列表
+  getPriceList(): { points: number; price: number }[] {
+    return priceList;
   }
 
   createSign({ order }: { order: Order }): string {
@@ -72,15 +74,6 @@ export class OrderService {
     });
 
     return createdOrder;
-  }
-
-  async updateOrder(id: string, data: Partial<Order>) {
-    return this.prisma.order.update({
-      where: {
-        id,
-      },
-      data,
-    });
   }
 
   async handlePaymentCallback(callbackData: PaymentCallbackDto) {
