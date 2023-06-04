@@ -193,8 +193,9 @@ const AssistantInteraction = observer(() => {
         {/* 操作 */}
         <div className='flex space-x-2 mb-2'>
           <div
-            className={classNames('btn btn-primary btn-xs md:btn-sm', {
-              'btn-disabled': chatStore.messages.length === 0
+            className={classNames('btn btn-xs md:btn-sm', {
+              'btn-disabled': chatStore.messages.length === 0,
+              'btn-primary': chatStore.messages.length > 0
             })}
             onClick={async () => {
               navigate(`/assistant/${assistant.id}/${createId()}`)
