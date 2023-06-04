@@ -48,7 +48,7 @@ const AssistantId = () => {
   const { setTitle } = context
 
   const navigateToInteraction = async () => {
-    if (!params.interactionId) {
+    if (location.pathname === `/assistant/${assistant.id}`) {
       if (assistant.interactionIds.length === 0) {
         navigate(`/assistant/${assistant.id}/${createId()}`, { replace: true })
       } else {
