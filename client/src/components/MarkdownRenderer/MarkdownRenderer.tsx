@@ -23,7 +23,7 @@ function CodeBlock({ node, inline, className, children, ...props }: any) {
   const [clipboard, setClipboard] = useState(false)
 
   return !inline ? (
-    <div className='bg-black rounded-md border border-gray-800'>
+    <div data-theme='dark' className='bg-black rounded-md border border-gray-800'>
       <div className='flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans justify-between'>
         <span>{language}</span>
         {clipboard ? (
