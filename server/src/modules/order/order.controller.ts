@@ -4,6 +4,7 @@ import { OrderCreateDto } from './dto/order-create.dto';
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
 import { PaymentCallbackDto } from './dto/payment-callback.dto';
+import { Public } from 'src/common/decorators/public.decorator';
 
 @ApiTags('Orders')
 @ApiBearerAuth()
@@ -31,6 +32,7 @@ export class OrderController {
     };
   }
 
+  @Public()
   @Post('payment-callback')
   async handlePaymentCallback(
     @Body() callbackData: PaymentCallbackDto,
