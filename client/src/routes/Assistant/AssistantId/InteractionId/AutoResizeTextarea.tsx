@@ -28,8 +28,9 @@ const AutoResizeTextarea = (props: AutoResizeTextareaProps) => {
       } else if (inputRef.current) {
         const { selectionStart, selectionEnd } = inputRef.current
         const newValue = props.value.slice(0, selectionStart) + '\n' + props.value.slice(selectionEnd)
-        props.onChange(newValue)
+        inputRef.current.value = newValue
         inputRef.current.selectionStart = inputRef.current.selectionEnd = selectionStart + 1
+        onChange(newValue)
       }
     }
   }
