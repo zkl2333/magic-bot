@@ -12,7 +12,6 @@ import classNames from 'classnames'
 import AutoResizeTextarea from './AutoResizeTextarea'
 import RestartIcon from './RestartIcon'
 import StopIcon from './StopIcon'
-import './index.css'
 import { AssistantWithLocal } from '../../../../service/assistant'
 import { formatChatErrorResponse } from './utils'
 

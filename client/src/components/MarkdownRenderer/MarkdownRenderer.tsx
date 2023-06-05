@@ -11,6 +11,7 @@ import rehypeKatex from 'rehype-katex'
 import 'katex/dist/katex.min.css'
 
 interface MarkdownRendererProps {
+  showRow?: boolean
   className?: string
   text: string
 }
@@ -23,7 +24,7 @@ function CodeBlock({ node, inline, className, children, ...props }: any) {
   const [clipboard, setClipboard] = useState(false)
 
   return !inline ? (
-    <div data-theme='dark' className='bg-black rounded-md border border-gray-800'>
+    <div data-theme='dark' className='bg-black rounded-md border border-gray-800 min-w-[200px]'>
       <div className='flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans justify-between'>
         <span>{language}</span>
         {clipboard ? (
@@ -81,8 +82,8 @@ function CodeBlock({ node, inline, className, children, ...props }: any) {
         language={language}
         useInlineStyles={false}
         children={String(children).replace(/\n$/, '')}
-        PreTag={props => <div {...props} className={classNames('p-4 overflow-y-auto')} />}
-        CodeTag={props => <code {...props} className={classNames(className, 'hljs', className)} />}
+        PreTag={props => <div {...props} className={classNames('p-4 overflow-y-auto', className)} />}
+        CodeTag={props => <code {...props} className={classNames('hljs')} />}
       />
     </div>
   ) : (
@@ -92,23 +93,28 @@ function CodeBlock({ node, inline, className, children, ...props }: any) {
   )
 }
 
-const MarkdownRenderer = ({ text, className }: MarkdownRendererProps) => {
+const MarkdownRenderer = ({ text, className, showRow }: MarkdownRendererProps) => {
   return useMemo(() => {
     return (
-      <>
-        <ReactMarkdown
-          remarkPlugins={[remarkGfm, remarkMath]}
-          rehypePlugins={[rehypeKatex]}
-          className={classNames('markdown-body dark:prose-invert', className)}
-          components={{
-            code: CodeBlock
-          }}
-        >
-          {text}
-        </ReactMarkdown>
-      </>
+      <div className={classNames('markdown-body dark:prose-invert', className)}>
+        {showRow ? (
+          <CodeBlock inline={false} className='language-markdown'>
+            {text}
+          </CodeBlock>
+        ) : (
+          <ReactMarkdown
+            remarkPlugins={[remarkGfm, remarkMath]}
+            rehypePlugins={[rehypeKatex]}
+            components={{
+              code: CodeBlock
+            }}
+          >
+            {text}
+          </ReactMarkdown>
+        )}
+      </div>
     )
-  }, [text])
+  }, [text, showRow])
 }
 
 export default MarkdownRenderer

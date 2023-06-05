@@ -6,6 +6,7 @@ import Avatar from '../../../../components/Avatar'
 import userStore from '../../../../store/UserStore'
 import MarkdownRenderer from '../../../../components/MarkdownRenderer/MarkdownRenderer'
 import { AssistantWithLocal } from '../../../../service/assistant'
+import { useState } from 'react'
 
 interface ChatBubbleProps extends Message {
   loading: boolean
@@ -31,6 +32,8 @@ const ChatBubble = (props: ChatBubbleProps) => {
 
   const bubbleClassnames = 'prose-sm md:prose-md shadow chat-bubble bg-base-100 text-base-content p-3'
 
+  const [showRow, setShowRow] = useState(false)
+
   return (
     <div className={`group chat ${isAssistant ? 'chat-start' : 'chat-end'}`}>
       {isAssistant ? (
@@ -54,7 +57,7 @@ const ChatBubble = (props: ChatBubbleProps) => {
       {isAssistant ? (
         <div className='flex w-full'>
           <div className='flex-1 w-0'>
-            <MarkdownRenderer className={classNames(bubbleClassnames)} text={text} />
+            <MarkdownRenderer showRow={showRow} className={classNames(bubbleClassnames)} text={text} />
           </div>
         </div>
       ) : (
@@ -62,6 +65,17 @@ const ChatBubble = (props: ChatBubbleProps) => {
       )}
       <div className='group-hover:visible chat-footer pt-1 text-xs flex space-x-2'>
         <span className='opacity-40'>{dayjs(updatedAt).format('YY/MM/DD HH:mm')}</span>
+        {/* 显示原文 */}
+        {isAssistant && (
+          <button
+            className='opacity-50 text-xs hover:text-primary hover:opacity-100'
+            onClick={() => {
+              setShowRow(!showRow)
+            }}
+          >
+            {showRow ? '隐藏原文' : '显示原文'}
+          </button>
+        )}
         {onDeleted && (
           <button
             className='opacity-50 text-xs hover:text-primary hover:opacity-100'
