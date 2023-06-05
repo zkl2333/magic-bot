@@ -43,7 +43,7 @@ export function SidebarLayout({
           {children}
         </div>
         {hasSidebar && (
-          <div className='drawer-side h-full absolute'>
+          <div className='drawer-side h-full absolute z-10'>
             <label
               className='drawer-overlay'
               onClick={() => {

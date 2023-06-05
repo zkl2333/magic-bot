@@ -72,7 +72,7 @@ const AssistantId = () => {
       <div className='drawer-content h-full overflow-hidden flex flex-col justify-between'>
         <Outlet context={{ ...context, showAssistantIdSidebar, setAssistantIdShowSidebar }} />
       </div>
-      <div className='drawer-side h-full absolute'>
+      <div className='drawer-side h-full absolute z-10'>
         <label onClick={() => setAssistantIdShowSidebar(false)} className='drawer-overlay'></label>
         <AssistantInteractionSidebar
           interactions={interactions}
