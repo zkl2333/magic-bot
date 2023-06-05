@@ -3,13 +3,19 @@ import requestHandler from '@/service/request'
 import userStore from '@/store/UserStore'
 import { useState } from 'react'
 
+const cashierUrl = 'https://xorpay.com/api/cashier/25266'
+const qrUrl = 'https://xorpay.com/qr?data='
+
 interface PayModalProps {
   points: number
   onFinish: () => void
 }
 
+function isWechat() {
+  return /MicroMessenger/i.test(window.navigator.userAgent)
+}
+
 function PayModal({ id, points, onFinish }: PayModalProps & DialogProps) {
-  console.log('PayModal', id, points)
   const [order, setOrder] = useState<{
     id: string
     name: string
@@ -19,12 +25,11 @@ function PayModal({ id, points, onFinish }: PayModalProps & DialogProps) {
     notifyUrl: string
     sign: string
   } | null>(null)
-  const [qrcode, setQrcode] = useState<string>('')
+  const [payUrl, setPayUrl] = useState<string>('')
+
+  const isWechatBrowser = isWechat()
 
   const handleBuy = async (points: number) => {
-    const url = 'https://xorpay.com/api/cashier/25266'
-    const qrUrl = 'https://xorpay.com/qr?data='
-
     const res = await requestHandler('/api/orders/create', {
       method: 'POST',
       body: JSON.stringify({
@@ -35,9 +40,7 @@ function PayModal({ id, points, onFinish }: PayModalProps & DialogProps) {
         notifyUrl: 'https://ai.zkl2333.com/api/orders/payment-callback'
       })
     })
-
     setOrder(res.data)
-
     const payPrarms = {
       name: res.data.name,
       pay_type: res.data.payType,
@@ -47,10 +50,8 @@ function PayModal({ id, points, onFinish }: PayModalProps & DialogProps) {
       notify_url: res.data.notifyUrl,
       sign: res.data.sign
     }
-
-    const payUrl = url + '?' + new URLSearchParams(payPrarms)
-    const imgUrl = qrUrl + encodeURIComponent(payUrl)
-    setQrcode(imgUrl)
+    const payUrl = cashierUrl + '?' + new URLSearchParams(payPrarms)
+    setPayUrl(payUrl)
   }
 
   return (
@@ -65,19 +66,44 @@ function PayModal({ id, points, onFinish }: PayModalProps & DialogProps) {
           </button>
         )}
         <h3 className='font-bold text-lg'>购买积分</h3>
-        <p className='py-4'>您将购买 {points} 积分, 点击下方按钮后，将展示二维码，使用微信扫码完成支付。</p>
+        <p className='py-4'>
+          您将购买 {points} 积分,
+          {order
+            ? isWechatBrowser
+              ? '点击“点我支付哦”按钮，在新打开的页面完成支付'
+              : '请使用微信扫码完成支付'
+            : isWechatBrowser
+            ? '点击下方按钮后，将展示订单信息，点击“点我支付哦”按钮后，将跳转到支付页面。'
+            : '点击下方按钮后，将展示订单信息，请使用微信扫码完成支付。'}
+        </p>
         {order ? (
           <div className='flex justify-between flex-col sm:flex-row'>
-            <div className='mx-auto mb-4 sm:mb-0'>
-              <img src={qrcode} alt='' className='w-[200px] h-[200px]' />
-            </div>
+            {!isWechatBrowser && (
+              <div className='mx-auto mb-4 sm:mb-0'>
+                <img src={qrUrl + encodeURIComponent(payUrl)} alt='' className='w-[200px] h-[200px]' />
+              </div>
+            )}
             <div className='flex-1 pl-4 flex flex-col items-center'>
               {/* 订单信息 */}
               <div className='flex-1 mb-4'>
                 <div>订单名称：{order.name}</div>
                 <div>订单金额：{order.price} 元</div>
               </div>
-              <div className='space-x-4 flex justify-end'>
+              <div className='space-y-4 space-x-0 flex justify-end flex-col sm:flex-row sm:space-y-0 sm:space-x-4  w-full'>
+                {isWechatBrowser && (
+                  <a href={payUrl} target='_blank' rel='noreferrer' className='btn btn-primary'>
+                    点我支付哦
+                  </a>
+                )}
+                <button
+                  className='btn btn-primary btn-outline'
+                  onClick={() => {
+                    dialogStore.closeDialog(id)
+                    onFinish()
+                  }}
+                >
+                  已完成支付
+                </button>
                 <button
                   className='btn'
                   onClick={() => {
@@ -85,15 +111,6 @@ function PayModal({ id, points, onFinish }: PayModalProps & DialogProps) {
                   }}
                 >
                   取消支付
-                </button>
-                <button
-                  className='btn btn-primary'
-                  onClick={() => {
-                    dialogStore.closeDialog(id)
-                    onFinish()
-                  }}
-                >
-                  已完成支付
                 </button>
               </div>
             </div>
