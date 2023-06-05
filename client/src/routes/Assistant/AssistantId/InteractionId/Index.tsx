@@ -43,6 +43,10 @@ const AssistantInteraction = observer(() => {
     }
   }
 
+  useEffect(() => {
+    fetchInteraction()
+  }, [_interaction.id])
+
   const finishHandler = async () => {
     console.log('结束')
     fetchInteraction()
