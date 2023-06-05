@@ -11,6 +11,8 @@ import {
   updateAssistant
 } from '../../../../service/assistant'
 import { useDebounce } from '../../../../hooks'
+import Select from '@mui/base/Select'
+import Option from '@mui/base/Option'
 
 export const assistantEditAction: ActionFunction = async ({ request }) => {
   const formData = await request.formData()
@@ -79,6 +81,35 @@ const Edit = () => {
   const itemClassName =
     'w-full h-full flex flex-col bg-base-100 rounded-box justify-between items-center p-4 lg:p-8 shadow-xl'
 
+  const modalList = [
+    {
+      name: 'gpt-4',
+      value: 'gpt-4'
+    },
+    {
+      name: 'gpt-4-0314',
+      value: 'gpt-4-0314'
+    },
+    {
+      name: 'gpt-4-32k',
+      value: 'gpt-4-32k',
+      disabled: true
+    },
+    {
+      name: 'gpt-4-32k-0314',
+      value: 'gpt-4-32k-0314',
+      disabled: true
+    },
+    {
+      name: 'gpt-3.5-turbo',
+      value: 'gpt-3.5-turbo'
+    },
+    {
+      name: 'gpt-3.5-turbo-0301',
+      value: 'gpt-3.5-turbo-0301'
+    }
+  ]
+
   return (
     <div className='p-4 grid gap-4 grid-cols-[repeat(auto-fit,minmax(300px,auto))] grid-flow-row-dense overflow-y-auto'>
       <div className={itemClassName}>
@@ -106,7 +137,8 @@ const Edit = () => {
               {!_assistant.isPublic && (
                 <div
                   className={classNames('btn btn-sm', {
-                    'btn-disabled': _assistant.forks.length > 0 || _assistant.updatedAt === _assistant.createdAt
+                    'btn-disabled':
+                      _assistant.forks.length > 0 || _assistant.updatedAt === _assistant.createdAt
                   })}
                   onClick={() => {
                     pushAssistant({
@@ -155,17 +187,34 @@ const Edit = () => {
           <label className='label'>
             <span className='label-text'>模型：</span>
           </label>
-          <input
-            type='text'
+          <Select
             value={assistant.config.model}
-            className='input input-bordered w-full'
-            onChange={e => {
+            className='select select-bordered w-full flex items-center font-normal'
+            slotProps={{ listbox: { className: 'menu bg-base-100 shadow rounded-box' } }}
+            onChange={(_, value) => {
               setModalConfig({
                 ...assistant.config,
-                model: e.target.value
+                model: value
               })
             }}
-          />
+          >
+            {modalList.map((item, index) => {
+              return (
+                <Option
+                  key={index}
+                  value={item.value}
+                  disabled={item.disabled}
+                  slotProps={{
+                    root: {
+                      className: item.disabled ? 'disabled' : ''
+                    }
+                  }}
+                >
+                  <a>{item.name}</a>
+                </Option>
+              )
+            })}
+          </Select>
         </div>
         <div className='form-control w-full'>
           <label className='label'>
@@ -189,7 +238,7 @@ const Edit = () => {
           </label>
           <textarea
             value={assistant.description}
-            className='textarea input-bordered w-full'
+            className='textarea textarea-bordered w-full'
             onChange={e => {
               setAssistant({
                 ...assistant,
@@ -204,7 +253,7 @@ const Edit = () => {
           </label>
           <textarea
             value={assistant.config.initialMessage}
-            className='textarea input-bordered w-full'
+            className='textarea textarea-bordered w-full'
             onChange={e => {
               setAssistant({
                 ...assistant,

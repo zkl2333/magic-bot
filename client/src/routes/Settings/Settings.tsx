@@ -32,7 +32,7 @@ const User = () => {
                 })
               }
             >
-              🤖 神奇海螺
+              返回
             </NavLink>
           </div>
           <ul className='menu p-4 text-base-content'>
