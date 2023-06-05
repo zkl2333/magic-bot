@@ -6,19 +6,16 @@ const errorTemplate = `## 哎呀！好像坏掉啦！
 
 export function formatChatErrorResponse(msg: object | string) {
   const tips = errorTemplate
-  if (typeof msg === 'string') {
-    try {
-      return [tips, '```json\n', JSON.stringify(JSON.parse(msg), null, 2), '\n```'].join('')
-    } catch (error) {
-      return [tips, msg].join('')
-    }
-  } else if (typeof msg === 'object') {
-    try {
-      return [tips, '```json\n', JSON.stringify(msg, null, 2), '\n```'].join('')
-    } catch (error) {
-      return [tips, msg].join('')
-    }
-  } else {
-    return tips
+  let message
+  let isJson = false
+
+  try {
+    message = JSON.stringify(typeof msg === 'string' ? JSON.parse(msg) : msg, null, 2)
+    isJson = true // If JSON.stringify doesn't throw an error, the message is JSON
+  } catch (error) {
+    // If parsing or stringifying fails, use original message or empty string if it's an object
+    message = typeof msg === 'string' ? msg : ''
   }
+
+  return `${tips}\n\`\`\`${isJson ? 'json' : ''}\n${message}\n\`\`\``
 }

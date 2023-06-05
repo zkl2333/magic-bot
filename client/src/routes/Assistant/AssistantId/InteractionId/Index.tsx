@@ -1,5 +1,5 @@
 import { useLoaderData, useNavigate, useOutletContext, useRouteLoaderData } from 'react-router-dom'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Message, Interaction, BaseMessage } from '../../types'
 import { getMessage, addMessage, deleteMessage, updateMessage } from '../../../../service/message'
 import { createId } from '@paralleldrive/cuid2'
@@ -14,6 +14,7 @@ import RestartIcon from './RestartIcon'
 import StopIcon from './StopIcon'
 import { AssistantWithLocal } from '../../../../service/assistant'
 import { formatChatErrorResponse } from './utils'
+import { getInteraction } from '@/service/interaction'
 
 const IconBtn: React.FC<React.ButtonHTMLAttributes<HTMLButtonElement>> = ({ children, ...props }) => (
   <div className='ml-1 md:ml-2 h-full inline-flex rounded-md items-center justify-center hover:bg-base-300 min-w-[40px] relative'>
@@ -28,15 +29,23 @@ const IconBtn: React.FC<React.ButtonHTMLAttributes<HTMLButtonElement>> = ({ chil
 
 const AssistantInteraction = observer(() => {
   const { assistant } = useRouteLoaderData('assistant') as { assistant: AssistantWithLocal }
-  const { interaction } = useLoaderData() as { interaction: Interaction }
+  const { interaction: _interaction } = useLoaderData() as { interaction: Interaction }
   const { setAssistantIdShowSidebar } = useOutletContext<AssistantIdContentProps>()
   const navigate = useNavigate()
   const abortController = useRef(new AbortController())
-  // const submit = useSubmit()
+  const [interaction, setInteraction] = useState<Interaction>(_interaction)
+
+  const fetchInteraction = async () => {
+    const interaction = await getInteraction(_interaction.id)
+    if (interaction) {
+      console.log('获取到新的 interaction', interaction)
+      setInteraction(interaction)
+    }
+  }
 
   const finishHandler = async () => {
-    console.log('finishHandler')
-    // await submit(null)
+    console.log('结束')
+    fetchInteraction()
     chatStore.setLoading(false)
   }
 
@@ -85,11 +94,12 @@ const AssistantInteraction = observer(() => {
     chatStore.setLoading(true)
     chatStore.setMessagesLoading(messageId, true)
     const response = await getAssistantReply(realContext)
+    // 如果请求头不包含 event-stream，说明是普通的请求，直接返回
     if (!response.headers.get('content-type')?.includes('event-stream')) {
       if (response.headers.get('content-type')?.includes('json')) {
         const data = await response.json()
         console.log('Received data:', data)
-        const message = formatChatErrorResponse(data)
+        const message = formatChatErrorResponse(data?.message ? data.message : data)
         updateMessage(messageId, message)
         chatStore.updateMessage(messageId, message)
         finishHandler()
