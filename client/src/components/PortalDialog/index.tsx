@@ -1,13 +1,14 @@
-import { observer } from 'mobx-react-lite'
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import ReactDOM from 'react-dom'
+import { observer } from 'mobx-react-lite'
 import dialogStore from './dialogStore'
 
 const Dialog: React.FC = observer(() => {
   const el = document.createElement('div')
-  const root = document.getElementById('dialog-root')
+  const rootRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
+    const root = rootRef.current
     root?.appendChild(el)
 
     return () => {
@@ -17,8 +18,9 @@ const Dialog: React.FC = observer(() => {
 
   return (
     <>
+      <div ref={rootRef}></div>
       {dialogStore.dialogs.map(({ id, content: Content, props }) =>
-        ReactDOM.createPortal(<Content id={id} {...props} />, el)
+        ReactDOM.createPortal(<Content key={id} id={id} {...props} />, el)
       )}
     </>
   )
