@@ -32,6 +32,13 @@ const AssistantInteraction = observer(() => {
   const { setAssistantIdShowSidebar } = useOutletContext<AssistantIdContentProps>()
   const navigate = useNavigate()
   const abortController = useRef(new AbortController())
+  // const submit = useSubmit()
+
+  const finishHandler = async () => {
+    console.log('finishHandler')
+    // await submit(null)
+    chatStore.setLoading(false)
+  }
 
   const getAssistantReply = async (messages: BaseMessage[]) => {
     abortController.current = new AbortController()
@@ -85,7 +92,7 @@ const AssistantInteraction = observer(() => {
         const message = formatChatErrorResponse(data)
         updateMessage(messageId, message)
         chatStore.updateMessage(messageId, message)
-        chatStore.setLoading(false)
+        finishHandler()
         return
       } else {
         const data = await response.text()
@@ -93,32 +100,34 @@ const AssistantInteraction = observer(() => {
         const message = formatChatErrorResponse(data)
         updateMessage(messageId, message)
         chatStore.updateMessage(messageId, message)
-        chatStore.setLoading(false)
+        finishHandler()
+      }
+    }
+
+    const messageHandler = (sseData: string, datas: string[]) => {
+      if (sseData) {
+        try {
+          const data = JSON.parse(sseData)
+          console.log('Received stream Json data:', data)
+          datas.push(data.choices[0].delta.content)
+        } catch (error) {
+          console.log('Received stream Text data:', sseData)
+        }
+        updateMessage(messageId, datas.join(''))
+        chatStore.updateMessage(messageId, datas.join(''))
       }
     }
 
     try {
       const datas: string[] = []
       parseSSEData(response, {
-        message: (sseData: string) => {
-          if (sseData) {
-            try {
-              const data = JSON.parse(sseData)
-              console.log('Received stream Json data:', data)
-              datas.push(data.choices[0].delta.content)
-            } catch (error) {
-              console.log('Received stream Text data:', sseData)
-            }
-            updateMessage(messageId, datas.join(''))
-            chatStore.updateMessage(messageId, datas.join(''))
-          }
-        },
+        message: sseData => messageHandler(sseData, datas),
         done: () => {
-          chatStore.setLoading(false)
+          finishHandler()
         },
         error: (error: string) => {
-          chatStore.setLoading(false)
           console.error('Error:', error)
+          finishHandler()
         }
       })
     } catch (error) {
@@ -133,10 +142,13 @@ const AssistantInteraction = observer(() => {
     if (id) {
       const index = chatStore.messages.findIndex(item => item.id === id)
       let userMsgIndex = index
-      for (let i = index - 1; i >= 0; i--) {
-        if (chatStore.messages[i].role === 'user') {
-          userMsgIndex = i
-          break
+
+      if (chatStore.messages[index].role !== 'user') {
+        for (let i = index - 1; i >= 0; i--) {
+          if (chatStore.messages[i].role === 'user') {
+            userMsgIndex = i
+            break
+          }
         }
       }
 
@@ -226,7 +238,7 @@ const AssistantInteraction = observer(() => {
             <IconBtn
               onClick={() => {
                 abortController.current.abort()
-                chatStore.setLoading(false)
+                finishHandler()
               }}
             >
               <StopIcon />

@@ -7,6 +7,7 @@ import userStore from '../../../../store/UserStore'
 import MarkdownRenderer from '../../../../components/MarkdownRenderer/MarkdownRenderer'
 import { AssistantWithLocal } from '../../../../service/assistant'
 import { useState } from 'react'
+import { TextareaAutosize } from '@mui/base'
 
 interface ChatBubbleProps extends Message {
   loading: boolean
@@ -69,20 +70,21 @@ const ChatBubble = (props: ChatBubbleProps) => {
         </div>
       ) : (
         <div
-          className={classNames(bubbleClassnames, 'flex flex-col whitespace-pre-wrap', {
-            'w-full max-w-[500px]': isEditing,
-            'min-h-[300px]': isEditing
+          className={classNames(bubbleClassnames, 'whitespace-pre-wrap', {
+            'w-full max-w-[500px]': isEditing
           })}
         >
           {isEditing && onUpdate ? (
             <>
-              <textarea
-                className='resize-none textarea textarea-bordered mb-4 w-full h-full flex-1'
+              <TextareaAutosize
+                className='resize-none textarea textarea-bordered mb-4 w-full h-full'
                 value={editingText}
+                minRows={1}
+                maxRows={6}
                 onChange={e => {
                   setEditingText(e.target.value)
                 }}
-              ></textarea>
+              />
               <div className='flex justify-end space-x-4'>
                 <button
                   className='btn btn-xs md:btn-sm'
@@ -145,6 +147,7 @@ const ChatBubble = (props: ChatBubbleProps) => {
             className='opacity-50 text-xs hover:text-primary hover:opacity-100'
             onClick={() => {
               setIsEditing(true)
+              setEditingText(text)
             }}
           >
             编辑
