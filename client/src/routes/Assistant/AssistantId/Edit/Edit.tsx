@@ -80,7 +80,7 @@ const Edit = () => {
     'w-full h-full flex flex-col bg-base-100 rounded-box justify-between items-center p-4 lg:p-8 shadow-xl'
 
   return (
-    <div className='p-4 grid gap-4 grid-cols-[repeat(auto-fit,minmax(300px,auto))] grid-flow-row-dense'>
+    <div className='p-4 grid gap-4 grid-cols-[repeat(auto-fit,minmax(300px,auto))] grid-flow-row-dense overflow-y-auto'>
       <div className={itemClassName}>
         <div className='flex-1 w-full flex flex-col justify-center items-center'>
           <div className='online avatar mb-3'>
