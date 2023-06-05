@@ -33,9 +33,16 @@ const ChatBubble = (props: ChatBubbleProps) => {
   const bubbleClassnames = 'prose-sm md:prose-md shadow chat-bubble bg-base-100 text-base-content p-3'
 
   const [showRow, setShowRow] = useState(false)
+  const [isEditing, setIsEditing] = useState(false)
+  const [editingText, setEditingText] = useState(text)
 
   return (
-    <div className={`group chat ${isAssistant ? 'chat-start' : 'chat-end'}`}>
+    <div
+      className={classNames('chat', {
+        'chat-start': isAssistant,
+        'chat-end': !isAssistant
+      })}
+    >
       {isAssistant ? (
         assistant.avatar ? (
           <Avatar className='chat-image w-10 rounded-full overflow-hidden' url={assistant.avatar} />
@@ -61,11 +68,48 @@ const ChatBubble = (props: ChatBubbleProps) => {
           </div>
         </div>
       ) : (
-        <div className={classNames(bubbleClassnames, 'whitespace-pre-wrap')}>{text}</div>
+        <div
+          className={classNames(bubbleClassnames, 'flex flex-col whitespace-pre-wrap', {
+            'w-full max-w-[500px]': isEditing,
+            'min-h-[300px]': isEditing
+          })}
+        >
+          {isEditing && onUpdate ? (
+            <>
+              <textarea
+                className='resize-none textarea textarea-bordered mb-4 w-full h-full flex-1'
+                value={editingText}
+                onChange={e => {
+                  setEditingText(e.target.value)
+                }}
+              ></textarea>
+              <div className='flex justify-end space-x-4'>
+                <button
+                  className='btn btn-xs md:btn-sm'
+                  onClick={() => {
+                    setIsEditing(false)
+                  }}
+                >
+                  取消
+                </button>
+                <button
+                  className='btn btn-primary btn-xs md:btn-sm'
+                  onClick={() => {
+                    setIsEditing(false)
+                    onUpdate(id, editingText.trim())
+                  }}
+                >
+                  保存并提交
+                </button>
+              </div>
+            </>
+          ) : (
+            text
+          )}
+        </div>
       )}
-      <div className='group-hover:visible chat-footer pt-1 text-xs flex space-x-2'>
+      <div className='chat-footer pt-1 text-xs flex space-x-2'>
         <span className='opacity-40'>{dayjs(updatedAt).format('YY/MM/DD HH:mm')}</span>
-        {/* 显示原文 */}
         {isAssistant && (
           <button
             className='opacity-50 text-xs hover:text-primary hover:opacity-100'
@@ -100,9 +144,7 @@ const ChatBubble = (props: ChatBubbleProps) => {
           <button
             className='opacity-50 text-xs hover:text-primary hover:opacity-100'
             onClick={() => {
-              const newMessage = prompt('编辑您消息', text)
-              if (!newMessage) return
-              onUpdate(id, newMessage)
+              setIsEditing(true)
             }}
           >
             编辑

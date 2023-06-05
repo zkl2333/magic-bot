@@ -126,7 +126,7 @@ const AssistantInteraction = observer(() => {
     }
   }
 
-  const onRetry = async (id?: string) => {
+  const retryHandler = async (id?: string) => {
     let context: Message[] = []
     let needDeleteMessages: Message[] = []
 
@@ -174,7 +174,7 @@ const AssistantInteraction = observer(() => {
             {...message}
             loading={message?.loading || false}
             key={message.id}
-            onRetry={onRetry}
+            onRetry={retryHandler}
             onDeleted={async id => {
               await deleteMessage(id)
               chatStore.removeMessage(id)
@@ -182,6 +182,7 @@ const AssistantInteraction = observer(() => {
             onUpdate={async (id, input) => {
               await updateMessage(id, input)
               chatStore.updateMessage(id, input)
+              retryHandler(id)
             }}
             assistant={assistant}
           />
@@ -238,9 +239,9 @@ const AssistantInteraction = observer(() => {
                     .filter(item => item.role === 'assistant')
                     .slice(-1)?.[0]
                   if (lastAssistantMessage) {
-                    onRetry(lastAssistantMessage.id)
+                    retryHandler(lastAssistantMessage.id)
                   } else {
-                    onRetry()
+                    retryHandler()
                   }
                 }}
               >
