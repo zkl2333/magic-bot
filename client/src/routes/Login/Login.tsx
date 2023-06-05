@@ -41,14 +41,27 @@ const Login = () => {
   }
 
   const verify = () => {
-    if (!usernameOrEmail) {
-      setError('用户名不能为空')
-
-      return false
+    if (isNewUser) {
+      if (!email) {
+        setError('邮箱不能为空')
+        return false
+      }
+      if (!username) {
+        setError('用户名不能为空')
+        return false
+      }
+      if (!emailCode) {
+        setError('邮箱验证码不能为空')
+        return false
+      }
+    } else {
+      if (!usernameOrEmail) {
+        setError('用户名或邮箱不能为空')
+        return false
+      }
     }
     if (!password) {
       setError('密码不能为空')
-
       return false
     }
     return true
