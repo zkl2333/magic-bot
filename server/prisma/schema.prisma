@@ -1,5 +1,5 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
+// 这是您的 Prisma 架构文件，
+// 在文档中了解更多信息：https://pris.ly/d/prisma-schema
 
 generator client {
   provider = "prisma-client-js"
@@ -11,16 +11,19 @@ datasource db {
   shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
+// 用户角色枚举
 enum Role {
-  ADMIN
-  USER
+  ADMIN // 管理员
+  USER // 普通用户
 }
 
+// 服务类型枚举
 enum ServiceType {
   GPT35
   GPT4
 }
 
+// 用户模型
 model User {
   id            String          @id @default(cuid())
   email         String          @unique
@@ -35,8 +38,8 @@ model User {
   Assistant     Assistant[]
   orders        Order[]
   emailVerified Boolean         @default(false)
-  ServiceUsage  ServiceUsage[]
-  Membership    Membership[]
+  ServiceUsage  ServiceUsage[] // 用户对服务的使用记录
+  Membership    Membership[] // 用户的会员资格
   createdAt     DateTime        @default(now())
   updatedAt     DateTime        @updatedAt
 }
@@ -126,7 +129,7 @@ model Config {
   value String
 }
 
-
+// 服务模型
 model Service {
   id                    Int                     @id @default(autoincrement())
   name                  String                  @unique
@@ -134,47 +137,50 @@ model Service {
   usages                ServiceUsage[]
   createdAt             DateTime                @default(now())
   updatedAt             DateTime                @updatedAt
-  MembershipTierService MembershipTierService[]
+  MembershipTierService MembershipTierService[] // 服务与会员级别之间的关联
 }
 
+// 会员级别模型
 model MembershipTier {
   id         Int                     @id @default(autoincrement())
   name       String
-  isMonthly  Boolean                 @default(false)
-  duration   Int
-  services   MembershipTierService[]
-  Membership Membership[]
+  isMonthly  Boolean                 @default(false) // 是否为按月计费
+  duration   Int // 会员级别的时长
+  services   MembershipTierService[] // 会员级别包含的服务
+  Membership Membership[] // 拥有该会员级别的用户
 }
 
+// 会员级别与服务之间的关联
 model MembershipTierService {
   id           Int            @id @default(autoincrement())
-  limit        Int
-  membershipId Int
+  limit        Int // 服务的使用限制
+  membershipId Int // 关联的会员级别 ID
   membership   MembershipTier @relation(fields: [membershipId], references: [id])
-  serviceId    Int
+  serviceId    Int // 关联的服务 ID
   service      Service        @relation(fields: [serviceId], references: [id])
 }
 
+// 服务使用记录模型
 model ServiceUsage {
-  id          Int      @id @default(autoincrement())
-  userId      String
-  user        User     @relation(fields: [userId], references: [id])
-  serviceId   Int
-  service     Service  @relation(fields: [serviceId], references: [id])
-  description String?
-  date        DateTime @default(now())
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id        Int      @id @default(autoincrement())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  serviceId Int
+  service   Service  @relation(fields: [serviceId], references: [id])
+  date      DateTime @default(now())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
+// 会员资格模型
 model Membership {
   id        String         @id @default(cuid())
   user      User           @relation(fields: [userId], references: [id])
   userId    String
-  tierId    Int
+  tierId    Int // 会员级别 ID
   tier      MembershipTier @relation(fields: [tierId], references: [id])
-  startDate DateTime       @default(now())
-  endDate   DateTime // The end date should be calculated when a new Membership is created
+  startDate DateTime       @default(now()) // 开始日期
+  endDate   DateTime // 结束日期，创建新的会员资格时计算
   createdAt DateTime       @default(now())
   updatedAt DateTime       @updatedAt
 }
