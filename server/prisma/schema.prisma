@@ -16,6 +16,11 @@ enum Role {
   USER
 }
 
+enum ServiceType {
+  GPT35
+  GPT4
+}
+
 model User {
   id            String          @id @default(cuid())
   email         String          @unique
@@ -24,14 +29,16 @@ model User {
   password      String
   role          Role            @default(USER)
   avatarUrl     String?
-  createdAt     DateTime        @default(now())
-  updatedAt     DateTime        @updatedAt
   settings      Settings?
   platforms     UserPlatform[]
   UserAssistant UserAssistant[]
   Assistant     Assistant[]
   orders        Order[]
   emailVerified Boolean         @default(false)
+  ServiceUsage  ServiceUsage[]
+  Membership    Membership[]
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
 }
 
 model UserPlatform {
@@ -48,9 +55,9 @@ model Settings {
   id        Int      @id @default(autoincrement())
   userId    String   @unique
   theme     String?
+  user      User     @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  user      User     @relation(fields: [userId], references: [id])
 }
 
 model Order {
@@ -67,6 +74,8 @@ model Order {
   paymentTime     DateTime?
   aoid            String?
   User            User      @relation(fields: [userId], references: [id])
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
 }
 
 model Assistant {
@@ -92,6 +101,8 @@ model UserAssistant {
   userId      String
   assistant   Assistant @relation(fields: [assistantId], references: [id], onDelete: Cascade)
   assistantId Int
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 
   @@id([userId, assistantId])
 }
@@ -113,4 +124,57 @@ model Config {
   id    Int    @id @default(autoincrement())
   key   String @unique
   value String
+}
+
+
+model Service {
+  id                    Int                     @id @default(autoincrement())
+  name                  String                  @unique
+  type                  ServiceType
+  usages                ServiceUsage[]
+  createdAt             DateTime                @default(now())
+  updatedAt             DateTime                @updatedAt
+  MembershipTierService MembershipTierService[]
+}
+
+model MembershipTier {
+  id         Int                     @id @default(autoincrement())
+  name       String
+  isMonthly  Boolean                 @default(false)
+  duration   Int
+  services   MembershipTierService[]
+  Membership Membership[]
+}
+
+model MembershipTierService {
+  id           Int            @id @default(autoincrement())
+  limit        Int
+  membershipId Int
+  membership   MembershipTier @relation(fields: [membershipId], references: [id])
+  serviceId    Int
+  service      Service        @relation(fields: [serviceId], references: [id])
+}
+
+model ServiceUsage {
+  id          Int      @id @default(autoincrement())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  serviceId   Int
+  service     Service  @relation(fields: [serviceId], references: [id])
+  description String?
+  date        DateTime @default(now())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Membership {
+  id        String         @id @default(cuid())
+  user      User           @relation(fields: [userId], references: [id])
+  userId    String
+  tierId    Int
+  tier      MembershipTier @relation(fields: [tierId], references: [id])
+  startDate DateTime       @default(now())
+  endDate   DateTime // The end date should be calculated when a new Membership is created
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
 }

@@ -1,0 +1,196 @@
+//// ------------------------------------------------------
+//// THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+//// ------------------------------------------------------
+
+Table User {
+  id String [pk]
+  email String [unique, not null]
+  username String [unique, not null]
+  nickname String
+  password String [not null]
+  role Role [not null, default: 'USER']
+  avatarUrl String
+  settings Settings
+  platforms UserPlatform [not null]
+  UserAssistant UserAssistant [not null]
+  Assistant Assistant [not null]
+  orders Order [not null]
+  emailVerified Boolean [not null, default: false]
+  ServiceUsage ServiceUsage [not null]
+  Membership Membership [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table UserPlatform {
+  id Int [pk, increment]
+  platform String [not null]
+  apiKey String [not null]
+  user User [not null]
+  userId String [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table Settings {
+  id Int [pk, increment]
+  userId String [unique, not null]
+  theme String
+  user User [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table Order {
+  id String [pk]
+  userId String [not null]
+  pointsPurchased Int [not null]
+  paymentAmount Decimal [not null]
+  paymentStatus String [not null]
+  updateStatus String [not null]
+  retries Int [not null]
+  name String [not null]
+  payType String [not null]
+  notifyUrl String [not null]
+  paymentTime DateTime
+  aoid String
+  User User [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table Assistant {
+  id Int [pk, increment]
+  name String [not null]
+  authorId String [not null]
+  author User [not null]
+  avatar String
+  config String [not null]
+  description String [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  isPublic Boolean [not null, default: false]
+  users UserAssistant [not null]
+  forkedFrom Assistant
+  forkedFromId Int
+  forks Assistant [not null]
+  lastSyncAt DateTime
+}
+
+Table UserAssistant {
+  user User [not null]
+  userId String [not null]
+  assistant Assistant [not null]
+  assistantId Int [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+
+  indexes {
+    (userId, assistantId) [pk]
+  }
+}
+
+Table VerificationCode {
+  id Int [pk, increment]
+  contact String [unique, not null]
+  type ContactType [not null]
+  createdAt DateTime [default: `now()`, not null]
+  code String [not null]
+}
+
+Table Config {
+  id Int [pk, increment]
+  key String [unique, not null]
+  value String [not null]
+}
+
+Table Service {
+  id Int [pk, increment]
+  name String [unique, not null]
+  type ServiceType [not null]
+  usages ServiceUsage [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  MembershipTierService MembershipTierService [not null]
+}
+
+Table MembershipTier {
+  id Int [pk, increment]
+  name String [not null]
+  duration Int [not null]
+  services MembershipTierService [not null]
+  Membership Membership [not null]
+}
+
+Table MembershipTierService {
+  id Int [pk, increment]
+  limit Int [not null]
+  membershipId Int [not null]
+  membership MembershipTier [not null]
+  serviceId Int [not null]
+  service Service [not null]
+}
+
+Table ServiceUsage {
+  id Int [pk, increment]
+  user User [not null]
+  userId String [not null]
+  serviceId Int [not null]
+  service Service [not null]
+  date DateTime [default: `now()`, not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table Membership {
+  id String [pk]
+  user User [not null]
+  userId String [not null]
+  tierId Int [not null]
+  tier MembershipTier [not null]
+  startDate DateTime [default: `now()`, not null]
+  endDate DateTime [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Enum Role {
+  ADMIN
+  USER
+}
+
+Enum ServiceType {
+  GPT35
+  GPT4
+}
+
+Enum ContactType {
+  EMAIL
+  PHONE
+}
+
+Ref: UserPlatform.userId > User.id
+
+Ref: Settings.userId - User.id
+
+Ref: Order.userId > User.id
+
+Ref: Assistant.authorId > User.id
+
+Ref: Assistant.forkedFromId - Assistant.id
+
+Ref: UserAssistant.userId > User.id [delete: Cascade]
+
+Ref: UserAssistant.assistantId > Assistant.id [delete: Cascade]
+
+Ref: MembershipTierService.membershipId > MembershipTier.id
+
+Ref: MembershipTierService.serviceId > Service.id
+
+Ref: ServiceUsage.userId > User.id
+
+Ref: ServiceUsage.serviceId > Service.id
+
+Ref: Membership.userId > User.id
+
+Ref: Membership.tierId > MembershipTier.id
