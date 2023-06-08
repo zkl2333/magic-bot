@@ -10,7 +10,6 @@ export default defineConfig(({ mode }) => {
   return {
     plugins: [
       VitePWA({
-        registerType: 'autoUpdate',
         injectRegister: 'auto',
         manifest: {
           name: '神奇海螺',
@@ -18,14 +17,15 @@ export default defineConfig(({ mode }) => {
           description: '神奇海螺',
           icons: [
             {
-              src: '/robot_160.png',
+              src: '/logo_160.png',
               sizes: '160x160',
               type: 'image/png'
             }
           ]
         },
         workbox: {
-          globPatterns: ['**/*.{js,css,html,ico,png,svg}']
+          globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
+          navigateFallbackDenylist: [/^\/api/]
         }
       }),
       react()

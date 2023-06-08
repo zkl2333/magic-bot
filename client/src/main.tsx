@@ -5,6 +5,16 @@ import './common/index.css'
 import dayjs from 'dayjs'
 import 'dayjs/locale/zh-cn'
 import { SnackbarProvider } from 'notistack'
+import { registerSW } from 'virtual:pwa-register'
+
+const updateSW = registerSW({
+  onNeedRefresh() {
+    confirm('有新版本，是否更新？') && updateSW()
+  },
+  onOfflineReady() {
+    console.log('offline ready')
+  }
+})
 
 dayjs.locale('zh-cn')
 

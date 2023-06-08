@@ -37,7 +37,7 @@ function PayModal({ id, points, onFinish }: PayModalProps & DialogProps) {
         payType: 'jsapi',
         orderUid: userStore.id.toString(),
         points: points,
-        notifyUrl: 'https://ai.zkl2333.com/api/orders/payment-callback'
+        notifyUrl: location.origin + '/api/orders/payment-callback'
       })
     })
     setOrder(res.data)
