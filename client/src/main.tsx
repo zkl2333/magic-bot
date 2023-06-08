@@ -5,17 +5,18 @@ import './common/index.css'
 import dayjs from 'dayjs'
 import 'dayjs/locale/zh-cn'
 import { SnackbarProvider } from 'notistack'
+import { registerSW } from 'virtual:pwa-register'
+
+const updateSW = registerSW({
+  onNeedRefresh() {
+    confirm('有新版本，是否更新？') && updateSW()
+  },
+  onOfflineReady() {
+    console.log('offline ready')
+  }
+})
 
 dayjs.locale('zh-cn')
-
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.addEventListener('controllerchange', () => {
-    // 在这里弹出通知或以其他方式提示用户刷新页面
-    if (window.confirm('新内容可用。 您要刷新页面吗？')) {
-      window.location.reload()
-    }
-  })
-}
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>

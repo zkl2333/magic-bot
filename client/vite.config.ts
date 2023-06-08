@@ -10,7 +10,6 @@ export default defineConfig(({ mode }) => {
   return {
     plugins: [
       VitePWA({
-        registerType: 'autoUpdate',
         injectRegister: 'auto',
         manifest: {
           name: '神奇海螺',
