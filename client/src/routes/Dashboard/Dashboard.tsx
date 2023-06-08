@@ -8,14 +8,47 @@ import VerifiedUserOutlinedIcon from '@mui/icons-material/VerifiedUserOutlined'
 import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined'
 import AccountBalanceWalletOutlinedIcon from '@mui/icons-material/AccountBalanceWalletOutlined'
 import classNames from 'classnames'
-const User = () => {
+import userStore from '@/store/UserStore'
+
+const Dashboard = () => {
   const [showUserLayoutSidebar, setUserLayoutShowSidebar] = useState(false)
   const { title, setTitle } = useOutletContext<RootContextProps>()
 
   const navLinkClassNames = ({ isActive }: { isActive: boolean; isPending: boolean }) =>
     classNames({
-      '!active': isActive
+      active: isActive
     })
+
+  const sidebarLinks = [
+    {
+      path: '/dashboard/user',
+      icon: <PersonOutlinedIcon />,
+      label: '个人信息'
+    },
+    {
+      path: '/dashboard/security',
+      icon: <VerifiedUserOutlinedIcon />,
+      label: '安全设置'
+    },
+    {
+      path: '/dashboard/balance',
+      icon: <AccountBalanceWalletOutlinedIcon />,
+      label: '账户余额'
+    },
+    {
+      path: '/dashboard/transactions',
+      icon: <DescriptionOutlinedIcon />,
+      label: '积分明细'
+    }
+  ]
+
+  const adminSidebarLinks = [
+    {
+      path: '/dashboard/membership',
+      icon: <PersonOutlinedIcon />,
+      label: '会员管理'
+    }
+  ]
 
   return (
     <SidebarLayout
@@ -36,50 +69,39 @@ const User = () => {
             </NavLink>
           </div>
           <ul className='menu p-4 text-base-content'>
-            <li>
-              <NavLink to='/settings/user' className={navLinkClassNames}>
-                {({ isPending }) => (
-                  <>
-                    <PersonOutlinedIcon />
-                    个人信息
-                    {isPending && <span className='loading loading-ring loading-xs'></span>}
-                  </>
-                )}
-              </NavLink>
-            </li>
-            <li>
-              <NavLink to='/settings/security' className={navLinkClassNames}>
-                {({ isPending }) => (
-                  <>
-                    <VerifiedUserOutlinedIcon />
-                    安全设置
-                    {isPending && <span className='loading loading-ring loading-xs'></span>}
-                  </>
-                )}
-              </NavLink>
-            </li>
-            <li>
-              <NavLink to='/settings/balance' className={navLinkClassNames}>
-                {({ isPending }) => (
-                  <>
-                    <AccountBalanceWalletOutlinedIcon />
-                    账户余额
-                    {isPending && <span className='loading loading-ring loading-xs'></span>}
-                  </>
-                )}
-              </NavLink>
-            </li>
-            <li>
-              <NavLink to='/settings/transactions' className={navLinkClassNames}>
-                {({ isPending }) => (
-                  <>
-                    <DescriptionOutlinedIcon />
-                    积分明细
-                    {isPending && <span className='loading loading-ring loading-xs'></span>}
-                  </>
-                )}
-              </NavLink>
-            </li>
+            {sidebarLinks.map(link => (
+              <li key={link.path}>
+                <NavLink to={link.path} className={navLinkClassNames}>
+                  {({ isPending }) => (
+                    <>
+                      {link.icon}
+                      {link.label}
+                      {isPending && <span className='loading loading-ring loading-xs'></span>}
+                    </>
+                  )}
+                </NavLink>
+              </li>
+            ))}
+            {userStore.role === 'ADMIN' && (
+              <>
+                <li className='menu-title'>
+                  <span>管理员</span>
+                </li>
+                {adminSidebarLinks.map(link => (
+                  <li key={link.path}>
+                    <NavLink to={link.path} className={navLinkClassNames}>
+                      {({ isPending }) => (
+                        <>
+                          {link.icon}
+                          {link.label}
+                          {isPending && <span className='loading loading-ring loading-xs'></span>}
+                        </>
+                      )}
+                    </NavLink>
+                  </li>
+                ))}
+              </>
+            )}
           </ul>
         </div>
       }
@@ -102,4 +124,4 @@ const User = () => {
   )
 }
 
-export default User
+export default Dashboard
