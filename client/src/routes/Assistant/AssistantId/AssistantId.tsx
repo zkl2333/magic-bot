@@ -52,7 +52,7 @@ const AssistantId = () => {
       if (assistant.interactionIds.length === 0) {
         navigate(`/assistant/${assistant.id}/${createId()}`, { replace: true })
       } else {
-        const interactionId = assistant.interactionIds[0]
+        const interactionId = assistant.interactionIds[assistant.interactionIds.length - 1]
         navigate(`/assistant/${assistant.id}/${interactionId}`, { replace: true })
       }
     }
@@ -61,6 +61,7 @@ const AssistantId = () => {
   useEffect(() => {
     setTitle(assistant.name)
     navigateToInteraction()
+    fetchInteractions()
     return () => {
       setTitle('')
     }
@@ -83,7 +84,9 @@ const AssistantId = () => {
               if (interactions.length === 0) {
                 navigate(`/assistant/${assistant.id}/${createId()}`, { replace: true })
               } else {
-                navigate(`/assistant/${assistant.id}/${interactions[0].id}`, { replace: true })
+                navigate(`/assistant/${assistant.id}/${interactions[0].id}`, {
+                  replace: true
+                })
               }
             }
           }}
