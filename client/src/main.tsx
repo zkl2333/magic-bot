@@ -8,6 +8,15 @@ import { SnackbarProvider } from 'notistack'
 
 dayjs.locale('zh-cn')
 
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    // 在这里弹出通知或以其他方式提示用户刷新页面
+    if (window.confirm('新内容可用。 您要刷新页面吗？')) {
+      window.location.reload()
+    }
+  })
+}
+
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
     <SnackbarProvider
