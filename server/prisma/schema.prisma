@@ -161,11 +161,12 @@ model Service {
 }
 
 model ServiceUsage {
-  id         Int      @id @default(autoincrement())
-  userId     String
-  user       User     @relation(fields: [userId], references: [id])
-  serviceId  Int
-  service    Service  @relation(fields: [serviceId], references: [id])
-  usageCount Int // 这里存储用户对各项服务的使用次数
-  date       DateTime @default(now())
+  id          Int     @id @default(autoincrement())
+  userId      String
+  user        User    @relation(fields: [userId], references: [id])
+  serviceId   Int
+  service     Service @relation(fields: [serviceId], references: [id])
+  usageCount  Int // 这里存储用户对各项服务的使用次数
+  description String
+  date DateTime @default(now())
 }
