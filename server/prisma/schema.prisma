@@ -19,23 +19,23 @@ enum Role {
 
 // 用户模型
 model User {
-  id            String          @id @default(cuid())
-  email         String          @unique
-  username      String          @unique
-  nickname      String?
-  password      String
-  role          Role            @default(USER)
-  avatarUrl     String?
-  settings      Settings?
-  platforms     UserPlatform[]
-  UserAssistant UserAssistant[]
-  Assistant     Assistant[]
-  orders        Order[]
-  emailVerified Boolean         @default(false)
-  ServiceUsage  ServiceUsage[] // 用户对服务的使用记录
-  Membership    Membership? // 用户的会员资格
-  createdAt     DateTime        @default(now())
-  updatedAt     DateTime        @updatedAt
+  id             String             @id @default(cuid())
+  email          String             @unique
+  username       String             @unique
+  nickname       String?
+  password       String
+  role           Role               @default(USER)
+  avatarUrl      String?
+  settings       Settings?
+  platforms      UserPlatform[]
+  UserAssistant  UserAssistant[]
+  Assistant      Assistant[]
+  orders         Order[]
+  emailVerified  Boolean            @default(false)
+  ServiceUsage   ServiceUsage[] // 用户对服务的使用记录
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+  UserMembership UserSubscription[]
 }
 
 model UserPlatform {
@@ -123,36 +123,49 @@ model Config {
   value String
 }
 
-model Membership {
-  id               String         @id @default(cuid())
-  userId           String         @unique
-  user             User           @relation(fields: [userId], references: [id])
-  membershipTierId Int
-  membershipTier   MembershipTier @relation(fields: [membershipTierId], references: [id])
-  startDate        DateTime       @default(now())
-  endDate          DateTime
-  createdAt        DateTime       @default(now())
-  updatedAt        DateTime       @updatedAt
+model Subscription {
+  id                      Int                        @id @default(autoincrement())
+  name                    String                     @default("Free") // 例如 "Free", "Plus", "Premium"
+  duration                Int
+  isMonthly               Boolean
+  userMemberships         UserSubscription[]
+  membershipServiceLimits SubscriptionServiceLimit[] // 限制关联
 }
 
-// 服务类型枚举
-enum ServiceType {
-  GPT35
-  GPT4
+model UserSubscription {
+  id                       Int          @id @default(autoincrement())
+  userId                   String
+  user                     User         @relation(fields: [userId], references: [id])
+  membershipId             Int
+  membership               Subscription @relation(fields: [membershipId], references: [id])
+  membershipStartDate      DateTime
+  membershipExpirationDate DateTime
+}
+
+model SubscriptionServiceLimit {
+  id           Int          @id @default(autoincrement())
+  membershipId Int
+  membership   Subscription @relation(fields: [membershipId], references: [id])
+  serviceId    Int
+  service      Service      @relation(fields: [serviceId], references: [id])
+  usageLimits  Int // 添加使用限制，例如对于 "Service A", Free 订阅可能是 10, Plus 是 100
+}
+
+model Service {
+  id            Int                        @id @default(autoincrement())
+  name          String // 例如 "Service A", "Service B"
+  description   String
+  type          String
+  serviceUsage  ServiceUsage[]
+  serviceLimits SubscriptionServiceLimit[] // 添加服务限制关联
 }
 
 model ServiceUsage {
-  id          Int         @id @default(autoincrement())
-  userId      String
-  user        User        @relation(fields: [userId], references: [id])
-  serviceType ServiceType
-  date        DateTime    @default(now())
-  createdAt   DateTime    @default(now())
-}
-
-model MembershipTier {
-  id         Int          @id @default(autoincrement())
-  name       String
-  services   Json // 使用 JSON 来存储服务的限制，如 { "A": { "daily": 100, "monthly": 1000 }, "B": { "monthly": 50 } }
-  Membership Membership[]
+  id         Int      @id @default(autoincrement())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  serviceId  Int
+  service    Service  @relation(fields: [serviceId], references: [id])
+  usageCount Int // 这里存储用户对各项服务的使用次数
+  date       DateTime @default(now())
 }
