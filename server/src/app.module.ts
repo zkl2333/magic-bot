@@ -6,8 +6,7 @@ import { JwtService } from '@nestjs/jwt';
 import { AssistantsModule } from './modules/assistants/assistants.module';
 import { ChatModule } from './modules/chat/chat.module';
 import { OrderModule } from './modules/order/order.module';
-import { PrismaModule } from './prisma/prisma.module';
-import { MembershipModule } from './modules/membership/membership.module';
+import { PrismaModule } from './prisma/prisma.module'; 
 
 @Module({
   imports: [
@@ -17,8 +16,7 @@ import { MembershipModule } from './modules/membership/membership.module';
     AssistantsModule,
     ChatModule,
     OrderModule,
-    PrismaModule,
-    MembershipModule,
+    PrismaModule, 
   ],
   providers: [JwtService],
 })
