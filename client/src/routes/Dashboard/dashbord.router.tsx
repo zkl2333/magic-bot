@@ -7,7 +7,8 @@ import Dashboard from './Dashboard'
 import Security, { changePasswordAction } from './Security/Security'
 import Transactions from './Transactions/Transactions'
 import User from './User/User'
-import Membership from './Membership/Membership'
+import Subscription from './Subscription/Subscription'
+import Service, { serviceAction, serviceLoader } from './Service/Service'
 
 const dashboardRouter: RouteObject = {
   path: '/dashboard',
@@ -71,8 +72,14 @@ const dashboardRouter: RouteObject = {
       }
     },
     {
-      path: 'membership',
-      element: <Membership />
+      path: 'service',
+      element: <Service />,
+      loader: serviceLoader,
+      action: serviceAction
+    },
+    {
+      path: 'subscription',
+      element: <Subscription />
     }
   ]
 }

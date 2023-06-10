@@ -1,8 +1,8 @@
-const Membership = () => {
+const Subscription = () => {
   return (
     <div>
       <div>
-        会员服务
+        订阅服务
         <button className='btn btn-primary' type='submit' form='updateUserInfoForm'>
           创建
         </button>
@@ -13,4 +13,4 @@ const Membership = () => {
   )
 }
 
-export default Membership
+export default Subscription

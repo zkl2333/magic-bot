@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useLoaderData, useOutletContext, Link, useSubmit } from 'react-router-dom'
-import { RootContextProps } from '../../Root/Root'
+import { RootContextProps } from '../../Root'
 import { openPayModal } from './PayModal/PayModal'
 import { getBalance, getPriceList } from '@/service/user'
 

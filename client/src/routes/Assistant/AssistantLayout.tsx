@@ -15,7 +15,7 @@ import MenuIcon from '@mui/icons-material/Menu'
 import userStore from '../../store/UserStore'
 import Avatar from '../../components/Avatar'
 import { SidebarLayout } from '../../components/SidebarLayout'
-import { RootContextProps } from '../Root/Root'
+import { RootContextProps } from '../Root'
 import { Assistant } from '../../service/assistant'
 
 function AssistantLayout() {

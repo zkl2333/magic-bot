@@ -15,7 +15,7 @@ function isWechat() {
   return /MicroMessenger/i.test(window.navigator.userAgent)
 }
 
-function PayModal({ id, points, onFinish }: PayModalProps & DialogProps) {
+function PayModal({ dialogId, points, onFinish }: PayModalProps & DialogProps) {
   const [order, setOrder] = useState<{
     id: string
     name: string
@@ -55,12 +55,16 @@ function PayModal({ id, points, onFinish }: PayModalProps & DialogProps) {
   }
 
   return (
-    <dialog className='modal modal-bottom sm:modal-middle' open onClose={() => dialogStore.closeDialog(id)}>
+    <dialog
+      className='modal modal-bottom sm:modal-middle'
+      open
+      onClose={() => dialogStore.closeDialog(dialogId)}
+    >
       <div className='modal-box'>
         {order === null && (
           <button
             className='btn btn-sm btn-circle btn-ghost absolute right-2 top-2'
-            onClick={() => dialogStore.closeDialog(id)}
+            onClick={() => dialogStore.closeDialog(dialogId)}
           >
             ✕
           </button>
@@ -98,7 +102,7 @@ function PayModal({ id, points, onFinish }: PayModalProps & DialogProps) {
                 <button
                   className='btn btn-primary btn-outline'
                   onClick={() => {
-                    dialogStore.closeDialog(id)
+                    dialogStore.closeDialog(dialogId)
                     onFinish()
                   }}
                 >
@@ -107,7 +111,7 @@ function PayModal({ id, points, onFinish }: PayModalProps & DialogProps) {
                 <button
                   className='btn'
                   onClick={() => {
-                    dialogStore.closeDialog(id)
+                    dialogStore.closeDialog(dialogId)
                   }}
                 >
                   取消支付

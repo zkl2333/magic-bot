@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { ActionFunction, Form, useActionData, useOutletContext } from 'react-router-dom'
-import { RootContextProps } from '../../Root/Root'
+import { RootContextProps } from '../../Root'
 import classNames from 'classnames'
 import requestHandler from '@/service/request'
 import { useSnackbar } from 'notistack'

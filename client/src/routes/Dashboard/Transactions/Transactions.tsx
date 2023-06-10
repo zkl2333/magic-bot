@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useLoaderData, useNavigate, useOutletContext } from 'react-router-dom'
-import { RootContextProps } from '../../Root/Root'
+import { RootContextProps } from '../../Root'
 import classNames from 'classnames'
 
 const transactionTypeMap = {

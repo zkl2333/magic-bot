@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { SidebarLayout } from '../../components/SidebarLayout'
 import MenuIcon from '@mui/icons-material/Menu'
 import { NavLink, Outlet, useOutletContext } from 'react-router-dom'
-import { RootContextProps } from '../Root/Root'
+import { RootContextProps } from '../Root'
 import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined'
 import VerifiedUserOutlinedIcon from '@mui/icons-material/VerifiedUserOutlined'
 import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined'
@@ -44,9 +44,14 @@ const Dashboard = () => {
 
   const adminSidebarLinks = [
     {
-      path: '/dashboard/membership',
+      path: '/dashboard/service',
       icon: <PersonOutlinedIcon />,
-      label: '会员管理'
+      label: '服务管理'
+    },
+    {
+      path: '/dashboard/subscription',
+      icon: <PersonOutlinedIcon />,
+      label: '订阅管理'
     }
   ]
 

@@ -2,13 +2,13 @@ import { makeAutoObservable } from 'mobx'
 import { createId } from '@paralleldrive/cuid2'
 
 interface Dialog<T = {}> {
-  id: string
+  dialogId: string
   content: React.FC<T>
   props?: T
 }
 
 export interface DialogProps {
-  id: string
+  dialogId: string
 }
 
 class DialogStore {
@@ -19,13 +19,14 @@ class DialogStore {
   }
 
   openDialog<T>(content: React.FC<T & DialogProps>, props?: T): string {
-    const id = createId()
-    this.dialogs.push({ id, content, props })
-    return id
+    const dialogId = createId()
+    this.dialogs.push({ dialogId, content, props })
+    return dialogId
   }
 
-  closeDialog(id: string) {
-    this.dialogs = this.dialogs.filter(dialog => dialog.id !== id)
+  closeDialog(dialogId: string) {
+    console.log('closeDialog', dialogId)
+    this.dialogs = this.dialogs.filter(dialog => dialog.dialogId !== dialogId)
   }
 }
 

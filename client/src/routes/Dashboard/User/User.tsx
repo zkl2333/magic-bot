@@ -2,7 +2,7 @@ import { Form, useActionData, useOutletContext } from 'react-router-dom'
 
 import { useSnackbar } from 'notistack'
 import { useEffect, useState } from 'react'
-import { RootContextProps } from '../../Root/Root'
+import { RootContextProps } from '../../Root'
 import type { User } from '../../../service/user'
 import classNames from 'classnames'
 import userStore from '../../../store/UserStore'

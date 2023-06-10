@@ -7,6 +7,7 @@ import { AssistantsModule } from './modules/assistants/assistants.module'
 import { ChatModule } from './modules/chat/chat.module'
 import { OrderModule } from './modules/order/order.module'
 import { PrismaModule } from './prisma/prisma.module'
+import { SubscriptionModule } from './modules/subscription/subscription.module';
 
 @Module({
   imports: [
@@ -18,7 +19,8 @@ import { PrismaModule } from './prisma/prisma.module'
     AssistantsModule,
     ChatModule,
     OrderModule,
-    PrismaModule
+    PrismaModule,
+    SubscriptionModule
   ],
   providers: [JwtService]
 })
