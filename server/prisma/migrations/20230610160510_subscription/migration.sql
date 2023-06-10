@@ -27,9 +27,9 @@ CREATE TABLE `Subscription` (
 CREATE TABLE `UserSubscription` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `userId` VARCHAR(191) NOT NULL,
-    `membershipId` INTEGER NOT NULL,
-    `membershipStartDate` DATETIME(3) NOT NULL,
-    `membershipExpirationDate` DATETIME(3) NOT NULL,
+    `subscriptionId` INTEGER NOT NULL,
+    `startDate` DATETIME(3) NOT NULL,
+    `expirationDate` DATETIME(3) NOT NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -37,7 +37,7 @@ CREATE TABLE `UserSubscription` (
 -- CreateTable
 CREATE TABLE `SubscriptionServiceLimit` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `membershipId` INTEGER NOT NULL,
+    `subscriptionId` INTEGER NOT NULL,
     `serviceId` INTEGER NOT NULL,
     `usageLimits` INTEGER NOT NULL,
 
@@ -60,6 +60,7 @@ CREATE TABLE `ServiceUsage` (
     `userId` VARCHAR(191) NOT NULL,
     `serviceId` INTEGER NOT NULL,
     `usageCount` INTEGER NOT NULL,
+    `description` VARCHAR(191) NOT NULL,
     `date` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
     PRIMARY KEY (`id`)
@@ -69,10 +70,10 @@ CREATE TABLE `ServiceUsage` (
 ALTER TABLE `UserSubscription` ADD CONSTRAINT `UserSubscription_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `UserSubscription` ADD CONSTRAINT `UserSubscription_membershipId_fkey` FOREIGN KEY (`membershipId`) REFERENCES `Subscription`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `UserSubscription` ADD CONSTRAINT `UserSubscription_subscriptionId_fkey` FOREIGN KEY (`subscriptionId`) REFERENCES `Subscription`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `SubscriptionServiceLimit` ADD CONSTRAINT `SubscriptionServiceLimit_membershipId_fkey` FOREIGN KEY (`membershipId`) REFERENCES `Subscription`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `SubscriptionServiceLimit` ADD CONSTRAINT `SubscriptionServiceLimit_subscriptionId_fkey` FOREIGN KEY (`subscriptionId`) REFERENCES `Subscription`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `SubscriptionServiceLimit` ADD CONSTRAINT `SubscriptionServiceLimit_serviceId_fkey` FOREIGN KEY (`serviceId`) REFERENCES `Service`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
