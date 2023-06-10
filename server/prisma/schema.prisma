@@ -127,9 +127,11 @@ model Subscription {
   id                        Int                        @id @default(autoincrement())
   name                      String                     @default("Free") // 例如 "Free", "Plus", "Premium"
   duration                  Int
+  price                     Decimal
   isMonthly                 Boolean
   userSubscriptions         UserSubscription[]
   subscriptionServiceLimits SubscriptionServiceLimit[] // 限制关联
+  deletedAt                 DateTime?
 }
 
 model UserSubscription {

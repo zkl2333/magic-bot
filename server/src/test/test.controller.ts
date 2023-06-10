@@ -1,9 +1,12 @@
-import { Body, Controller, Post } from '@nestjs/common'
-import { ApiOperation, ApiTags } from '@nestjs/swagger'
+import { Body, Controller, Post, UseGuards } from '@nestjs/common'
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger'
 import { AiProxyService } from 'src/common/aiProxy/ai-proxy.service'
+import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
 
 @Controller('test')
 @ApiTags('test')
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard)
 export class TestController {
   constructor(private readonly aiproxyService: AiProxyService) {}
 
