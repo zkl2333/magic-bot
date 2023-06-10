@@ -9,7 +9,11 @@ const api = {
   createApiKey: '/user/createApiKey',
   updateApiKey: '/user/updateApiKey',
   getPointAccount: '/point/getPointAccount',
-  listTransaction: '/point/listTransaction'
+  listTransaction: '/point/listTransaction',
+  createLibrary: '/library/create',
+  createDocumentByUrl: '/library/document/createByUrl',
+  createDocumentByText: '/library/document/createByText',
+  libraryAsk: '/library/ask'
 }
 
 const defaultModelPermission = [
@@ -239,5 +243,118 @@ export class AiProxyService {
     }
 
     return responseBody.data
+  }
+
+  async createLibrary(name: string, description: string) {
+    const headers = {
+      'content-type': 'application/json',
+      cookie: `sessionId=${sessionId}`
+    }
+
+    const response = await fetch(this.createUrl(api.createLibrary), {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({
+        libraryName: name,
+        description: description
+      })
+    })
+
+    return response.json()
+  }
+
+  async createDocumentByURL(libraryId: number, url: string) {
+    const headers = {
+      'content-type': 'application/json',
+      cookie: `sessionId=${sessionId}`
+    }
+
+    const response = await fetch(this.createUrl(api.createDocumentByUrl), {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({
+        refresh: true,
+        libraryId: libraryId,
+        urls: [url]
+      })
+    })
+
+    if (!response.ok) {
+      throw new Error(`Request failed with status code ${response.status}`)
+    }
+
+    const responseBody = await response.json()
+
+    if (!responseBody.success) {
+      console.error('createDocumentByURL error', responseBody)
+      throw new Error(responseBody.message)
+    }
+
+    return responseBody.data
+  }
+
+  async createDocumentByText(libraryId: number, title: string, text: string) {
+    const headers = {
+      'content-type': 'application/json',
+      cookie: `sessionId=${sessionId}`
+    }
+
+    const response = await fetch(this.createUrl(api.createDocumentByText), {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({
+        libraryId: libraryId,
+        title: title,
+        text: text
+      })
+    })
+
+    if (!response.ok) {
+      throw new Error(`Request failed with status code ${response.status}`)
+    }
+
+    if (!response.ok) {
+      throw new Error(`Request failed with status code ${response.status}`)
+    }
+
+    const responseBody = await response.json()
+
+    if (!responseBody.success) {
+      console.error('createDocumentByURL error', responseBody)
+      throw new Error(responseBody.message)
+    }
+
+    return responseBody.data
+  }
+
+  async libraryAsk(libraryId: number, query: string) {
+    const headers = {
+      'content-type': 'application/json',
+      Authorization: `Bearer ap-gYU7bfjqMApGuUN5UKDz9IS1UIwbYlrm7mx6dTFwfF283azA`
+    }
+
+    const response = await fetch('https://api.aiproxy.io/api' + api.libraryAsk, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({
+        libraryId: libraryId,
+        query: query,
+        model: 'gpt-3.5-turbo',
+        stream: false
+      })
+    })
+
+    if (!response.ok) {
+      throw new Error(`Request failed with status code ${response.status}`)
+    }
+
+    const responseBody = await response.json()
+
+    if (!responseBody.success) {
+      console.error('libraryAsk error', responseBody)
+      throw new Error(responseBody.message)
+    }
+
+    return responseBody
   }
 }
