@@ -133,7 +133,10 @@ const Security = () => {
           <p className='text-error text-sm'>{actionData?.errors?.confirmNewPassword}</p>
         )}
       </div>
-      <button className='w-full bg-primary text-primary-content font-semibold px-4 py-2 rounded-md' type='submit'>
+      <button
+        className='w-full bg-primary text-primary-content font-semibold px-4 py-2 rounded-md'
+        type='submit'
+      >
         保存
       </button>
     </Form>

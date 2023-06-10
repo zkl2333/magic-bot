@@ -1,7 +1,7 @@
-import { Controller, Get } from '@nestjs/common';
-import { AssistantsService } from './assistants.service';
-import { ApiBasicAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { Assistant } from '@prisma/client';
+import { Controller, Get } from '@nestjs/common'
+import { AssistantsService } from './assistants.service'
+import { ApiBasicAuth, ApiOperation, ApiTags } from '@nestjs/swagger'
+import { Assistant } from '@prisma/client'
 
 @ApiTags('Assistants')
 @ApiBasicAuth()
@@ -12,6 +12,6 @@ export class AssistantsController {
   @ApiOperation({ summary: '获取公共助手列表' })
   @Get()
   async listPublic(): Promise<Assistant[]> {
-    return this.assistantsService.listPublicAssistants();
+    return this.assistantsService.listPublicAssistants()
   }
 }

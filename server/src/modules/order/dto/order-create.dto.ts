@@ -1,14 +1,14 @@
-import { IsNotEmpty } from 'class-validator';
+import { IsNotEmpty } from 'class-validator'
 
 export class OrderCreateDto {
   @IsNotEmpty()
-  name: string;
+  name: string
   @IsNotEmpty()
-  payType: string;
+  payType: string
   @IsNotEmpty()
-  points: number;
+  points: number
   @IsNotEmpty()
-  orderUid: string;
+  orderUid: string
   @IsNotEmpty()
-  notifyUrl: string;
+  notifyUrl: string
 }
