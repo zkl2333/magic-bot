@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { PrismaService } from '../../prisma/prisma.service'
+import { ConfigService } from '@nestjs/config'
 
 const sessionId = 'AIP_MANAGE_KEY'
 const baseUrl = 'https://aiproxy.io/api'
@@ -32,7 +33,7 @@ const defaultModelPermission = [
 
 @Injectable()
 export class AiProxyService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService, private configService: ConfigService) {}
 
   private printSensitiveLog(message: string, sensitiveData: string) {
     const prefix = sensitiveData.slice(0, 7)
@@ -70,13 +71,14 @@ export class AiProxyService {
   }
 
   async createApiKey(userId: string) {
+    const isDev = this.configService.get('NODE_ENV') === 'development'
     const headers = {
       'content-type': 'application/json',
       cookie: `sessionId=${sessionId}`
     }
 
     const data = {
-      name: `web-user-${userId.slice(0, 7)}`,
+      name: isDev ? `test-user-${userId.slice(0, 7)}` : `web-user-${userId.slice(0, 7)}`,
       externalId: userId,
       enableSubPointAccount: true,
       initPoint: '1000.00',
