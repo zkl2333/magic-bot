@@ -129,6 +129,7 @@ model Subscription {
   duration                  Int
   price                     Decimal
   isMonthly                 Boolean
+  isDefault                 Boolean                    @default(false)
   userSubscriptions         UserSubscription[]
   subscriptionServiceLimits SubscriptionServiceLimit[] // 限制关联
   deletedAt                 DateTime?
@@ -160,5 +161,6 @@ model ServiceUsage {
   serviceType String
   usageCount  Int // 这里存储用户对各项服务的使用次数
   description String
-  date        DateTime @default(now())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }

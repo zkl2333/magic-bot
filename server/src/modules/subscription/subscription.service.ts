@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import { BadRequestException, Injectable } from '@nestjs/common'
 import { PrismaService } from 'src/prisma/prisma.service'
 import { CreateSubscriptionDto } from './dto/create-subscription.dto'
 import { DeleteSubscriptionDto } from './dto/delete-subscription.dto'
@@ -84,5 +84,69 @@ export class SubscriptionService {
         usageLimits: +createSubServiceLimitDto.usageLimits
       }
     })
+  }
+
+  async useService({
+    userId,
+    serviceType,
+    description
+  }: {
+    userId: string
+    serviceType: string
+    description: string
+  }) {
+    let userSubscription = (await this.prisma.userSubscription.findFirst({
+      where: { userId },
+      include: { subscription: { include: { subscriptionServiceLimits: true } } }
+    })) as any
+
+    // 如果用户没有订阅，假设使用免费订阅
+    if (!userSubscription) {
+      const defaultSubscription = await this.prisma.subscription.findFirst({
+        where: {
+          isDefault: true,
+          deletedAt: null
+        },
+        include: { subscriptionServiceLimits: true }
+      })
+
+      if (!defaultSubscription) {
+        throw new BadRequestException('Default subscription not found')
+      }
+
+      userSubscription = {
+        userId,
+        subscription: defaultSubscription
+      }
+    }
+
+    if (!userSubscription) {
+      throw new BadRequestException('No subscription available')
+    }
+
+    const serviceLimit = userSubscription.subscription.subscriptionServiceLimits.find(
+      limit => limit.serviceType === serviceType
+    )
+
+    const currentUsage = await this.prisma.serviceUsage.findFirst({
+      where: { userId, serviceType }
+    })
+
+    if (serviceLimit) {
+      if (currentUsage && currentUsage.usageCount >= serviceLimit.usageLimits) {
+        throw new BadRequestException('Service usage limit reached')
+      }
+    }
+
+    if (currentUsage) {
+      await this.prisma.serviceUsage.update({
+        where: { id: currentUsage.id },
+        data: { usageCount: { increment: 1 }, description }
+      })
+    } else {
+      await this.prisma.serviceUsage.create({
+        data: { userId, serviceType, usageCount: 1, description }
+      })
+    }
   }
 }

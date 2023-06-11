@@ -5,6 +5,8 @@ import { Configuration, OpenAIApi } from 'openai'
 import { AiProxyService } from 'src/common/aiProxy/ai-proxy.service'
 import { Readable } from 'node:stream'
 import { AccountBannedException, InsufficientBalanceException } from 'src/exceptions'
+import { SubscriptionService } from '../subscription/subscription.service'
+import { getServiceType } from 'src/common/serviceList'
 
 // 将可读流转换为字符串
 function streamToString(stream: Readable): Promise<string> {
@@ -20,8 +22,21 @@ const baseUrl = 'https://api.aiproxy.io/v1'
 
 @Injectable()
 export class ChatService {
-  constructor(private aiProxyService: AiProxyService) {}
+  constructor(
+    private readonly aiProxyService: AiProxyService,
+    private readonly subscriptionService: SubscriptionService
+  ) {}
   async createChatCompletion(uid: string, body: ChatDto): Promise<IncomingMessage> {
+    const serviceType = getServiceType(body.config.model)
+
+    if (serviceType) {
+      await this.subscriptionService.useService({
+        userId: uid,
+        serviceType: serviceType,
+        description: 'chat completion'
+      })
+    }
+
     const apiKey = await this.aiProxyService.fetchApiKey(uid)
 
     const configuration = new Configuration({
@@ -59,6 +74,8 @@ export class ChatService {
           }
         }
         throw new Error(`[外部错误] ${status} ${cleanDataString}`)
+      } else {
+        throw error
       }
     }
   }
