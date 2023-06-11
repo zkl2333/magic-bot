@@ -25,7 +25,6 @@ class DialogStore {
   }
 
   closeDialog(dialogId: string) {
-    console.log('closeDialog', dialogId)
     this.dialogs = this.dialogs.filter(dialog => dialog.dialogId !== dialogId)
   }
 }

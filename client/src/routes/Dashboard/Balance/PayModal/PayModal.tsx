@@ -137,7 +137,6 @@ function PayModal({ dialogId, points, onFinish }: PayModalProps & DialogProps) {
 }
 
 export const openPayModal = (props: PayModalProps) => {
-  console.log('openPayModal', props)
   dialogStore.openDialog(PayModal, props)
 }
 

@@ -1,5 +1,6 @@
 import requestHandler from '@/service/request'
 import { ActionFunction, Form, LoaderFunction, useLoaderData, useSubmit } from 'react-router-dom'
+import { Subscription, openAddOrEditSubscriptionModal } from './AddOrEditSubscriptionModal'
 
 export const subscriptionLoader: LoaderFunction = async () => {
   const res = await requestHandler('/api/subscription')
@@ -35,20 +36,28 @@ const Service = () => {
   const loaderData = useLoaderData() as any
   const submit = useSubmit()
 
-  const save = async (data: any) => {}
+  const save = async (data: Subscription) => {
+    const formData = new FormData()
+    Object.entries(data).forEach(([key, value]) => {
+      formData.append(key, value.toString())
+    })
+    if (data.id) {
+      return await submit(formData, {
+        method: 'PUT'
+      })
+    }
+    await submit(formData, {
+      method: 'POST'
+    })
+  }
 
   return (
     <div className='p-4 w-full'>
       <div
         className='btn btn-primary mb-4 btn-sm'
         onClick={() => {
-          const formData = new FormData()
-          formData.append('name', 'test')
-          formData.append('isMonthly', 'true')
-          formData.append('duration', '1')
-          formData.append('price', '10')
-          submit(formData, {
-            method: 'POST'
+          openAddOrEditSubscriptionModal({
+            onSubmit: save
           })
         }}
       >
@@ -75,7 +84,21 @@ const Service = () => {
                 <td>{item.duration}</td>
                 <td>{item.price}</td>
                 <td>
-                  <div className='btn btn-xs btn-ghost' onClick={() => {}}>
+                  <div
+                    className='btn btn-xs btn-ghost'
+                    onClick={() => {
+                      openAddOrEditSubscriptionModal({
+                        subscription: {
+                          id: item.id,
+                          name: item.name,
+                          isMonthly: item.isMonthly,
+                          duration: item.duration,
+                          price: item.price
+                        },
+                        onSubmit: save
+                      })
+                    }}
+                  >
                     编辑
                   </div>
                   <Form method='delete' className='inline'>

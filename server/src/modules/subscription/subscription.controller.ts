@@ -7,6 +7,7 @@ import { DeleteServiceDto } from './dto/delete-service.dto'
 import { UpdateServiceDto } from './dto/update-service.dto'
 import { CreateSubscriptionDto } from './dto/create-subscription.dto'
 import { DeleteSubscriptionDto } from './dto/delete-subscription.dto'
+import { UpdateSubscriptionDto } from './dto/update-subscription.dto'
 
 @ApiTags('subscription')
 @ApiBearerAuth()
@@ -31,6 +32,12 @@ export class SubscriptionController {
   @ApiOperation({ summary: '删除订阅' })
   async deleteSubscription(@Body() deleteSubscriptionDto: DeleteSubscriptionDto) {
     return this.subscriptionService.deleteSubscription(deleteSubscriptionDto)
+  }
+
+  @Put()
+  @ApiOperation({ summary: '修改订阅' })
+  async updateSubscription(@Body() updateSubscriptionDto: UpdateSubscriptionDto) {
+    return this.subscriptionService.updateSubscription(updateSubscriptionDto)
   }
 
   @Get('service')

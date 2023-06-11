@@ -4,6 +4,9 @@ import { CreateServiceDto } from './dto/create-service.dto'
 import { DeleteServiceDto } from './dto/delete-service.dto'
 import { UpdateServiceDto } from './dto/update-service.dto'
 import { CreateSubscriptionDto } from './dto/create-subscription.dto'
+import { DeleteSubscriptionDto } from './dto/delete-subscription.dto'
+import { UpdateSubscriptionDto } from './dto/update-subscription.dto'
+
 @Injectable()
 export class SubscriptionService {
   constructor(private prisma: PrismaService) {}
@@ -62,13 +65,27 @@ export class SubscriptionService {
     })
   }
 
-  deleteSubscription(deleteSubscriptionDto: DeleteServiceDto) {
+  deleteSubscription(deleteSubscriptionDto: DeleteSubscriptionDto) {
     return this.prisma.subscription.update({
       where: {
         id: +deleteSubscriptionDto.id
       },
       data: {
         deletedAt: new Date()
+      }
+    })
+  }
+
+  updateSubscription(createSubscriptionDto: UpdateSubscriptionDto) {
+    return this.prisma.subscription.update({
+      where: {
+        id: +createSubscriptionDto.id
+      },
+      data: {
+        name: createSubscriptionDto.name,
+        isMonthly: createSubscriptionDto.isMonthly === 'true',
+        duration: +createSubscriptionDto.duration,
+        price: +createSubscriptionDto.price
       }
     })
   }
