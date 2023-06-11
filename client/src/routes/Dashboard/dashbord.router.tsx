@@ -8,7 +8,10 @@ import Security, { changePasswordAction } from './Security/Security'
 import Transactions from './Transactions/Transactions'
 import User from './User/User'
 import Subscription, { subscriptionAction, subscriptionLoader } from './Subscription/Subscription'
-import Service, { serviceAction, serviceLoader } from './Service/Service'
+import SubscriptionServiceLimit, {
+  subscriptionServiceLimitAction,
+  subscriptionServiceLimitLoader
+} from './SubscriptionServiceLimit/SubscriptionServiceLimit'
 
 const dashboardRouter: RouteObject = {
   path: '/dashboard',
@@ -72,16 +75,16 @@ const dashboardRouter: RouteObject = {
       }
     },
     {
-      path: 'service',
-      element: <Service />,
-      loader: serviceLoader,
-      action: serviceAction
-    },
-    {
       path: 'subscription',
       element: <Subscription />,
       loader: subscriptionLoader,
       action: subscriptionAction
+    },
+    {
+      path: 'subscription-service-limit',
+      element: <SubscriptionServiceLimit />,
+      loader: subscriptionServiceLimitLoader,
+      action: subscriptionServiceLimitAction
     }
   ]
 }

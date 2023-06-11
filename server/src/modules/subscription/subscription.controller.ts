@@ -1,13 +1,12 @@
-import { Body, Controller, Delete, Get, Post, Put, UseGuards } from '@nestjs/common'
+import { Body, Controller, Delete, Get, Post, Put, Query, UseGuards } from '@nestjs/common'
 import { ApiTags, ApiBearerAuth, ApiOperation } from '@nestjs/swagger'
 import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard'
 import { SubscriptionService } from './subscription.service'
-import { CreateServiceDto } from './dto/create-service.dto'
-import { DeleteServiceDto } from './dto/delete-service.dto'
-import { UpdateServiceDto } from './dto/update-service.dto'
 import { CreateSubscriptionDto } from './dto/create-subscription.dto'
 import { DeleteSubscriptionDto } from './dto/delete-subscription.dto'
 import { UpdateSubscriptionDto } from './dto/update-subscription.dto'
+import { UpsertSubServiceLimitDto } from './dto/upsert-sub-service-limit.dto'
+import serviceList from 'src/common/serviceList'
 
 @ApiTags('subscription')
 @ApiBearerAuth()
@@ -18,8 +17,8 @@ export class SubscriptionController {
 
   @Get()
   @ApiOperation({ summary: '获取所有订阅' })
-  async listSubscription() {
-    return this.subscriptionService.listSubscription()
+  async listSubscription(@Query('limit') limit: boolean) {
+    return this.subscriptionService.listSubscription(limit)
   }
 
   @Post()
@@ -43,24 +42,12 @@ export class SubscriptionController {
   @Get('service')
   @ApiOperation({ summary: '获取所有服务' })
   async listService() {
-    return this.subscriptionService.listService()
+    return serviceList
   }
 
-  @Post('service')
-  @ApiOperation({ summary: '创建服务' })
-  async createService(@Body() createServiceDto: CreateServiceDto) {
-    return this.subscriptionService.createService(createServiceDto)
-  }
-
-  @Delete('service')
-  @ApiOperation({ summary: '删除服务' })
-  async deleteService(@Body() deleteServiceDto: DeleteServiceDto) {
-    return this.subscriptionService.deleteService(deleteServiceDto)
-  }
-
-  @Put('service')
-  @ApiOperation({ summary: '修改服务' })
-  async updateService(@Body() updateServiceDto: UpdateServiceDto) {
-    return this.subscriptionService.updateService(updateServiceDto)
+  @Post('service-limit')
+  @ApiOperation({ summary: '编辑服务限制' })
+  async upsertServiceLimit(@Body() upsertSubServiceLimitDto: UpsertSubServiceLimitDto) {
+    return this.subscriptionService.createServiceLimit(upsertSubServiceLimitDto)
   }
 }

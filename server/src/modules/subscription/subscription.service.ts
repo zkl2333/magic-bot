@@ -1,55 +1,21 @@
 import { Injectable } from '@nestjs/common'
 import { PrismaService } from 'src/prisma/prisma.service'
-import { CreateServiceDto } from './dto/create-service.dto'
-import { DeleteServiceDto } from './dto/delete-service.dto'
-import { UpdateServiceDto } from './dto/update-service.dto'
 import { CreateSubscriptionDto } from './dto/create-subscription.dto'
 import { DeleteSubscriptionDto } from './dto/delete-subscription.dto'
 import { UpdateSubscriptionDto } from './dto/update-subscription.dto'
+import { UpsertSubServiceLimitDto } from './dto/upsert-sub-service-limit.dto'
 
 @Injectable()
 export class SubscriptionService {
   constructor(private prisma: PrismaService) {}
 
-  listService() {
-    return this.prisma.service.findMany()
-  }
-
-  createService(createServiceDto: CreateServiceDto) {
-    return this.prisma.service.create({
-      data: {
-        name: createServiceDto.name,
-        description: createServiceDto.description || '',
-        type: createServiceDto.type
-      }
-    })
-  }
-
-  deleteService(deleteServiceDto: DeleteServiceDto) {
-    return this.prisma.service.delete({
-      where: {
-        id: +deleteServiceDto.id
-      }
-    })
-  }
-
-  updateService(createServiceDto: UpdateServiceDto) {
-    return this.prisma.service.update({
-      where: {
-        id: +createServiceDto.id
-      },
-      data: {
-        name: createServiceDto.name,
-        description: createServiceDto.description || '',
-        type: createServiceDto.type
-      }
-    })
-  }
-
-  listSubscription() {
+  listSubscription(limit: boolean) {
     return this.prisma.subscription.findMany({
       where: {
         deletedAt: null
+      },
+      include: {
+        subscriptionServiceLimits: limit
       }
     })
   }
@@ -86,6 +52,36 @@ export class SubscriptionService {
         isMonthly: createSubscriptionDto.isMonthly === 'true',
         duration: +createSubscriptionDto.duration,
         price: +createSubscriptionDto.price
+      }
+    })
+  }
+
+  createServiceLimit(createSubServiceLimitDto: UpsertSubServiceLimitDto) {
+    if (+createSubServiceLimitDto.usageLimits < 0) {
+      return this.prisma.subscriptionServiceLimit.delete({
+        where: {
+          subscriptionId_serviceType: {
+            subscriptionId: +createSubServiceLimitDto.subscriptionId,
+            serviceType: createSubServiceLimitDto.serviceType
+          }
+        }
+      })
+    }
+
+    return this.prisma.subscriptionServiceLimit.upsert({
+      where: {
+        subscriptionId_serviceType: {
+          subscriptionId: +createSubServiceLimitDto.subscriptionId,
+          serviceType: createSubServiceLimitDto.serviceType
+        }
+      },
+      update: {
+        usageLimits: +createSubServiceLimitDto.usageLimits
+      },
+      create: {
+        subscriptionId: +createSubServiceLimitDto.subscriptionId,
+        serviceType: createSubServiceLimitDto.serviceType,
+        usageLimits: +createSubServiceLimitDto.usageLimits
       }
     })
   }
