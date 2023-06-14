@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { ActionFunction, Form, useActionData, useOutletContext } from 'react-router-dom'
-import { RootContextProps } from '../../Root/Root'
+import { RootContextProps } from '../../Root'
 import classNames from 'classnames'
 import requestHandler from '@/service/request'
 import { useSnackbar } from 'notistack'
@@ -133,7 +133,10 @@ const Security = () => {
           <p className='text-error text-sm'>{actionData?.errors?.confirmNewPassword}</p>
         )}
       </div>
-      <button className='w-full bg-primary text-primary-content font-semibold px-4 py-2 rounded-md' type='submit'>
+      <button
+        className='w-full bg-primary text-primary-content font-semibold px-4 py-2 rounded-md'
+        type='submit'
+      >
         保存
       </button>
     </Form>

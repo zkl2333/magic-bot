@@ -9,7 +9,7 @@ import {
 } from 'react-router-dom'
 import { Interaction } from '../types'
 import AssistantInteractionSidebar from './AssistantIdSidebar'
-import { RootContextProps } from '../../Root/Root'
+import { RootContextProps } from '../../Root'
 import { deleteInteraction, getInteraction } from '../../../service/interaction'
 import { AssistantWithLocal } from '../../../service/assistant'
 import { createId } from '@paralleldrive/cuid2'

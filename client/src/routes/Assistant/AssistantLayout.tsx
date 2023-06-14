@@ -15,7 +15,7 @@ import MenuIcon from '@mui/icons-material/Menu'
 import userStore from '../../store/UserStore'
 import Avatar from '../../components/Avatar'
 import { SidebarLayout } from '../../components/SidebarLayout'
-import { RootContextProps } from '../Root/Root'
+import { RootContextProps } from '../Root'
 import { Assistant } from '../../service/assistant'
 
 function AssistantLayout() {
@@ -82,7 +82,7 @@ function AssistantLayout() {
               className='menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-36 z-40'
             >
               <li>
-                <NavLink to='/settings'>设置</NavLink>
+                <NavLink to='/dashboard'>设置</NavLink>
               </li>
               <li
                 onClick={() => {

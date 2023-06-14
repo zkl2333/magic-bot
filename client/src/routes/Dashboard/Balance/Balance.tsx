@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useLoaderData, useOutletContext, Link, useSubmit } from 'react-router-dom'
-import { RootContextProps } from '../../Root/Root'
+import { RootContextProps } from '../../Root'
 import { openPayModal } from './PayModal/PayModal'
 import { getBalance, getPriceList } from '@/service/user'
 
@@ -79,7 +79,7 @@ const Balance = () => {
             </p>
             <p>
               具体积分和 Token 的消耗可在
-              <Link className='px-1 link link-primary link-hover' to='/settings/transactions'>
+              <Link className='px-1 link link-primary link-hover' to='/dashboard/transactions'>
                 积分明细
               </Link>
               中查看。

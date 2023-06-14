@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus } from '@nestjs/common';
+import { HttpException, HttpStatus } from '@nestjs/common'
 
 export class AccountBannedException extends HttpException {
   constructor() {
@@ -6,9 +6,9 @@ export class AccountBannedException extends HttpException {
       {
         status: HttpStatus.OK,
         code: 1001,
-        message: '账号被禁用',
+        message: '账号被禁用'
       },
-      HttpStatus.OK,
-    );
+      HttpStatus.OK
+    )
   }
 }

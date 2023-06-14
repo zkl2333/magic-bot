@@ -7,6 +7,7 @@ interface User {
   email: string
   token: string
   avatarUrl: string | null
+  role: 'USER' | 'ADMIN'
   settings: {
     theme: string
   }
@@ -19,6 +20,7 @@ class UserStore {
   nickname = ''
   email = ''
   token = ''
+  role: 'USER' | 'ADMIN' = 'USER'
   settings = { theme: 'light' }
   avatarUrl: string | null = null
 
@@ -28,12 +30,13 @@ class UserStore {
 
   setUser(user: User) {
     this.isLogin = true
-    const { id, username, email, avatarUrl, settings } = user
+    const { id, username, email, avatarUrl, settings, role } = user
     this.id = id
     this.username = username
     this.nickname = username
     this.avatarUrl = avatarUrl
     this.email = email
+    this.role = role
     if (settings) {
       this.settings = user.settings
     }

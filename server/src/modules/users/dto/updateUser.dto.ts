@@ -1,8 +1,8 @@
 export class UpdateUserDto {
-  username?: string;
-  nickname?: string;
-  email?: string;
+  username?: string
+  nickname?: string
+  email?: string
   settings?: {
-    theme: string;
-  };
+    theme: string
+  }
 }

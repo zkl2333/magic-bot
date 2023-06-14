@@ -1,3 +1,3 @@
 export class findOneParamsDto {
-  id: string;
+  id: string
 }

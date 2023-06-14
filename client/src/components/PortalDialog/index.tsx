@@ -19,8 +19,8 @@ const Dialog: React.FC = observer(() => {
   return (
     <>
       <div ref={rootRef}></div>
-      {dialogStore.dialogs.map(({ id, content: Content, props }) =>
-        ReactDOM.createPortal(<Content key={id} id={id} {...props} />, el)
+      {dialogStore.dialogs.map(({ dialogId, content: Content, props }) =>
+        ReactDOM.createPortal(<Content key={dialogId} dialogId={dialogId} {...props} />, el)
       )}
     </>
   )

@@ -1,7 +1,7 @@
 import { defaultAssistantList } from '../constants'
 import { useFetcher, useLoaderData, useOutletContext } from 'react-router-dom'
 import { useEffect } from 'react'
-import { RootContextProps } from '../../Root/Root'
+import { RootContextProps } from '../../Root'
 import { Assistant } from '../../../service/assistant'
 import AssistantItem from '../components/AssistantItem'
 import { PublicAssistantItem } from './PublicAssistantItem'

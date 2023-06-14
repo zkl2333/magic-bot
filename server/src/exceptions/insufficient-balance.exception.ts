@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus } from '@nestjs/common';
+import { HttpException, HttpStatus } from '@nestjs/common'
 
 export class InsufficientBalanceException extends HttpException {
   constructor() {
@@ -6,9 +6,9 @@ export class InsufficientBalanceException extends HttpException {
       {
         status: HttpStatus.OK,
         code: 1002,
-        message: '余额不足',
+        message: '余额不足'
       },
-      HttpStatus.OK,
-    );
+      HttpStatus.OK
+    )
   }
 }

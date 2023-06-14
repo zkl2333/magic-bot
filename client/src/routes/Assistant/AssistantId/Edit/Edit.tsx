@@ -14,7 +14,7 @@ import { useDebounce } from '../../../../hooks'
 import Select from '@mui/base/Select'
 import Option from '@mui/base/Option'
 
-export const assistantEditAction: ActionFunction = async ({ request }) => {
+export const assistantIdEditAction: ActionFunction = async ({ request }) => {
   const formData = await request.formData()
   switch (request.method) {
     case 'PUT':

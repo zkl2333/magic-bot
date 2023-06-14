@@ -1,5 +1,5 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
+// 这是您的 Prisma 架构文件，
+// 在文档中了解更多信息：https://pris.ly/d/prisma-schema
 
 generator client {
   provider = "prisma-client-js"
@@ -11,27 +11,31 @@ datasource db {
   shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
+// 用户角色枚举
 enum Role {
-  ADMIN
-  USER
+  ADMIN // 管理员
+  USER // 普通用户
 }
 
+// 用户模型
 model User {
-  id            String          @id @default(cuid())
-  email         String          @unique
-  username      String          @unique
-  nickname      String?
-  password      String
-  role          Role            @default(USER)
-  avatarUrl     String?
-  createdAt     DateTime        @default(now())
-  updatedAt     DateTime        @updatedAt
-  settings      Settings?
-  platforms     UserPlatform[]
-  UserAssistant UserAssistant[]
-  Assistant     Assistant[]
-  orders        Order[]
-  emailVerified Boolean         @default(false)
+  id                String             @id @default(cuid())
+  email             String             @unique
+  username          String             @unique
+  nickname          String?
+  password          String
+  role              Role               @default(USER)
+  avatarUrl         String?
+  settings          Settings?
+  platforms         UserPlatform[]
+  userAssistants    UserAssistant[]
+  createdAssistants Assistant[]
+  orders            Order[]
+  emailVerified     Boolean            @default(false)
+  serviceUsages     ServiceUsage[] // 用户对服务的使用记录
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  userSubscriptions UserSubscription[]
 }
 
 model UserPlatform {
@@ -48,9 +52,9 @@ model Settings {
   id        Int      @id @default(autoincrement())
   userId    String   @unique
   theme     String?
+  user      User     @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  user      User     @relation(fields: [userId], references: [id])
 }
 
 model Order {
@@ -67,6 +71,8 @@ model Order {
   paymentTime     DateTime?
   aoid            String?
   User            User      @relation(fields: [userId], references: [id])
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
 }
 
 model Assistant {
@@ -92,6 +98,8 @@ model UserAssistant {
   userId      String
   assistant   Assistant @relation(fields: [assistantId], references: [id], onDelete: Cascade)
   assistantId Int
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 
   @@id([userId, assistantId])
 }
@@ -113,4 +121,46 @@ model Config {
   id    Int    @id @default(autoincrement())
   key   String @unique
   value String
+}
+
+model Subscription {
+  id                        Int                        @id @default(autoincrement())
+  name                      String                     @default("Free") // 例如 "Free", "Plus", "Premium"
+  duration                  Int
+  price                     Decimal
+  isMonthly                 Boolean
+  isDefault                 Boolean                    @default(false)
+  userSubscriptions         UserSubscription[]
+  subscriptionServiceLimits SubscriptionServiceLimit[] // 限制关联
+  deletedAt                 DateTime?
+}
+
+model UserSubscription {
+  id             Int          @id @default(autoincrement())
+  userId         String
+  user           User         @relation(fields: [userId], references: [id])
+  subscriptionId Int
+  subscription   Subscription @relation(fields: [subscriptionId], references: [id])
+  startDate      DateTime
+  expirationDate DateTime
+}
+
+model SubscriptionServiceLimit {
+  subscriptionId Int
+  subscription   Subscription @relation(fields: [subscriptionId], references: [id])
+  serviceType    String // 这里我们使用服务的名称，而不是从数据库中引用它
+  usageLimits    Int // 添加使用限制，例如对于 "Service A", Free 订阅可能是 10, Plus 是 100
+
+  @@id([subscriptionId, serviceType])
+}
+
+model ServiceUsage {
+  id          Int      @id @default(autoincrement())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  serviceType String
+  usageCount  Int // 这里存储用户对各项服务的使用次数
+  description String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
