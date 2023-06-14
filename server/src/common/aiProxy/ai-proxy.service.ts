@@ -52,7 +52,7 @@ export class AiProxyService {
   async getPointAccount(uid: string) {
     const headers = {
       'content-type': 'application/json',
-      Authorization: `Bearer ${manageKey}`
+      'Api-Key': manageKey
     }
 
     const response = await fetch(this.createUrl(`${api.getPointAccount}?externalId=${uid}`), {
@@ -78,7 +78,7 @@ export class AiProxyService {
     const isDev = this.configService.get('NODE_ENV') === 'development'
     const headers = {
       'content-type': 'application/json',
-      Authorization: `Bearer ${manageKey}`
+      'Api-Key': manageKey
     }
 
     const data = {
@@ -112,7 +112,7 @@ export class AiProxyService {
   async listApiKey() {
     const headers = {
       'content-type': 'application/json',
-      Authorization: `Bearer ${manageKey}`
+      'Api-Key': manageKey
     }
 
     const response = await fetch(this.createUrl('/user/listApiKey'), {
@@ -180,7 +180,7 @@ export class AiProxyService {
 
     const headers = {
       'content-type': 'application/json',
-      Authorization: `Bearer ${manageKey}`
+      'Api-Key': manageKey
     }
 
     const response = await fetch(this.createUrl(api.listTransaction), {
@@ -217,7 +217,7 @@ export class AiProxyService {
 
     const headers = {
       'content-type': 'application/json',
-      Authorization: `Bearer ${manageKey}`
+      'Api-Key': manageKey
     }
 
     console.log('updateKeyPoints', matchingApiKey, newPoints)
@@ -248,7 +248,7 @@ export class AiProxyService {
   async createLibrary(name: string, description: string) {
     const headers = {
       'content-type': 'application/json',
-      Authorization: `Bearer ${manageKey}`
+      'Api-Key': manageKey
     }
 
     const response = await fetch(this.createUrl(api.createLibrary), {
@@ -266,7 +266,7 @@ export class AiProxyService {
   async createDocumentByURL(libraryId: number, url: string) {
     const headers = {
       'content-type': 'application/json',
-      Authorization: `Bearer ${manageKey}`
+      'Api-Key': manageKey
     }
 
     const response = await fetch(this.createUrl(api.createDocumentByUrl), {
@@ -296,7 +296,7 @@ export class AiProxyService {
   async createDocumentByText(libraryId: number, title: string, text: string) {
     const headers = {
       'content-type': 'application/json',
-      Authorization: `Bearer ${manageKey}`
+      'Api-Key': manageKey
     }
 
     const response = await fetch(this.createUrl(api.createDocumentByText), {
