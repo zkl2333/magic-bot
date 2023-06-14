@@ -1,17 +1,14 @@
 # 使用Node官方提供的LTS版镜像作为基础镜像
-FROM node:lts
+FROM node:lts-alpine
 
 # 将工作目录设为/app，所有的路径都将以/app为基础
 WORKDIR /app
 
-# 将package.json 和 package-lock.json(如果有的话)复制到工作目录
-COPY package*.json ./
-
-# 安装项目依赖
-RUN npm install
-
 # 将你的app的源代码复制到工作目录
 COPY . .
+
+# 安装项目依赖
+RUN npm ci
 
 # 生成Prisma客户端
 RUN npx prisma generate
