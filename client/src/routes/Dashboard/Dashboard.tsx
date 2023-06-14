@@ -7,6 +7,7 @@ import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined'
 import VerifiedUserOutlinedIcon from '@mui/icons-material/VerifiedUserOutlined'
 import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined'
 import AccountBalanceWalletOutlinedIcon from '@mui/icons-material/AccountBalanceWalletOutlined'
+import CardMembershipIcon from '@mui/icons-material/CardMembership'
 import classNames from 'classnames'
 import userStore from '@/store/UserStore'
 
@@ -26,9 +27,9 @@ const Dashboard = () => {
       label: '个人信息'
     },
     {
-      path: '/dashboard/security',
-      icon: <VerifiedUserOutlinedIcon />,
-      label: '安全设置'
+      path: '/dashboard/my-subscription',
+      icon: <CardMembershipIcon />,
+      label: '我的订阅'
     },
     {
       path: '/dashboard/balance',
@@ -41,9 +42,9 @@ const Dashboard = () => {
       label: '积分明细'
     },
     {
-      path: '/dashboard/my-subscription',
-      icon: <PersonOutlinedIcon />,
-      label: '我的订阅'
+      path: '/dashboard/security',
+      icon: <VerifiedUserOutlinedIcon />,
+      label: '安全设置'
     }
   ]
 

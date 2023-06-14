@@ -104,14 +104,14 @@ export class SubscriptionService {
     if (!userSubscription) {
       const defaultSubscription = await this.prisma.subscription.findFirst({
         where: {
-          isDefault: true,
+          price: 0,
           deletedAt: null
         },
         include: { subscriptionServiceLimits: true }
       })
 
       if (!defaultSubscription) {
-        throw new BadRequestException('Default subscription not found')
+        throw new BadRequestException('未找到默认订阅')
       }
 
       userSubscription = {
@@ -121,7 +121,7 @@ export class SubscriptionService {
     }
 
     if (!userSubscription) {
-      throw new BadRequestException('No subscription available')
+      throw new BadRequestException('没有可用的订阅')
     }
 
     const serviceLimit = userSubscription.subscription.subscriptionServiceLimits.find(
@@ -134,7 +134,7 @@ export class SubscriptionService {
 
     if (serviceLimit && serviceLimit.usageLimits !== -1) {
       if (currentUsage && currentUsage.usageCount >= serviceLimit.usageLimits) {
-        throw new BadRequestException('Service usage limit reached')
+        throw new BadRequestException('已达到服务使用限制')
       }
     }
 
