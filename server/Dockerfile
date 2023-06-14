@@ -20,4 +20,4 @@ RUN npm run build
 EXPOSE 3000
 
 # 启动你的app
-CMD ["/bin/bash", "/app/start.sh"]
+CMD ["/bin/sh", "/app/start.sh"]

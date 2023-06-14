@@ -1,3 +1,3 @@
-#!/bin/bash
+#!/bin/sh
 npm run deploy
 npm run start:prod
