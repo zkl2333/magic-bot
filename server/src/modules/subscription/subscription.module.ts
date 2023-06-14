@@ -5,6 +5,7 @@ import { AiProxyService } from 'src/common/aiProxy/ai-proxy.service'
 
 @Module({
   controllers: [SubscriptionController],
-  providers: [SubscriptionService, AiProxyService]
+  providers: [SubscriptionService, AiProxyService],
+  exports: [SubscriptionService]
 })
 export class SubscriptionModule {}

@@ -57,7 +57,7 @@ export class SubscriptionService {
   }
 
   createServiceLimit(createSubServiceLimitDto: UpsertSubServiceLimitDto) {
-    if (+createSubServiceLimitDto.usageLimits < 0) {
+    if (+createSubServiceLimitDto.usageLimits === 0) {
       return this.prisma.subscriptionServiceLimit.delete({
         where: {
           subscriptionId_serviceType: {
@@ -132,7 +132,7 @@ export class SubscriptionService {
       where: { userId, serviceType }
     })
 
-    if (serviceLimit) {
+    if (serviceLimit && serviceLimit.usageLimits !== -1) {
       if (currentUsage && currentUsage.usageCount >= serviceLimit.usageLimits) {
         throw new BadRequestException('Service usage limit reached')
       }
@@ -148,5 +148,12 @@ export class SubscriptionService {
         data: { userId, serviceType, usageCount: 1, description }
       })
     }
+  }
+
+  async getUserSubscription(userId: string) {
+    return this.prisma.userSubscription.findFirst({
+      where: { userId },
+      include: { subscription: { include: { subscriptionServiceLimits: true } } }
+    })
   }
 }

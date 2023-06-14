@@ -55,7 +55,7 @@ const AddOrEditSubscriptionServiceLimitModal = ({
               <input
                 type='number'
                 className='input input-bordered w-full max-w-xs'
-                value={data.usageLimits || 0}
+                value={data.usageLimits}
                 onChange={e => setData({ ...data, usageLimits: e.target.value })}
               />
             </label>

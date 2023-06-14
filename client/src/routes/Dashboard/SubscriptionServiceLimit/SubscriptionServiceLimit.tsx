@@ -60,13 +60,14 @@ const SubscriptionServiceLimit = () => {
                     (s: any) => s.serviceType === service.type
                   ) || {
                     subscriptionId: item.id,
-                    serviceType: service.type
+                    serviceType: service.type,
+                    usageLimits: 0
                   }
                   return (
                     <li key={service.type}>
                       <a>
                         <div>
-                          {service.name}({limit?.usageLimits === undefined ? '无限制' : limit?.usageLimits})
+                          {service.name}({limit?.usageLimits === -1 ? '无限制' : limit?.usageLimits})
                         </div>
                         <div>
                           <div

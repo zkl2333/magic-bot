@@ -39,6 +39,11 @@ const Dashboard = () => {
       path: '/dashboard/transactions',
       icon: <DescriptionOutlinedIcon />,
       label: '积分明细'
+    },
+    {
+      path: '/dashboard/my-subscription',
+      icon: <PersonOutlinedIcon />,
+      label: '我的订阅'
     }
   ]
 
