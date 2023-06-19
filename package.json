@@ -10,5 +10,8 @@
   "devDependencies": {
     "@types/node": "^20.2.5",
     "concurrently": "^8.0.1"
+  },
+  "volta": {
+    "node": "18.16.0"
   }
 }
