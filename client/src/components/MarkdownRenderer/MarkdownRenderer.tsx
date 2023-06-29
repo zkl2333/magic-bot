@@ -4,16 +4,43 @@ import './markdownRenderer.less'
 import ReactMarkdown from 'react-markdown'
 import SyntaxHighlighter from 'react-syntax-highlighter'
 import classNames from 'classnames'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import remarkGfm from 'remark-gfm'
 import remarkMath from 'remark-math'
 import rehypeKatex from 'rehype-katex'
+import mermaid from 'mermaid'
 import 'katex/dist/katex.min.css'
+
+mermaid.initialize({
+  startOnLoad: true,
+  theme: 'dark',
+  flowchart: { useMaxWidth: false, htmlLabels: true }
+})
 
 interface MarkdownRendererProps {
   showRow?: boolean
   className?: string
   text: string
+}
+
+const MermaidBlock = ({ value }: { value: string }) => {
+  const [innerHtml, setInnerHtml] = useState('')
+  const id = useMemo(() => Math.random().toString(36).slice(2, 7), [])
+
+  const render = async () => {
+    try {
+      if (await mermaid.parse(value)) {
+        const { svg } = await mermaid.render('mermaid-svg' + id, value)
+        setInnerHtml(svg)
+      }
+    } catch (error) {}
+  }
+
+  useEffect(() => {
+    render()
+  }, [value])
+
+  return <div className='p-4 overflow-y-auto' dangerouslySetInnerHTML={{ __html: innerHtml }} />
 }
 
 function CodeBlock({ node, inline, className, children, ...props }: any) {
@@ -77,14 +104,19 @@ function CodeBlock({ node, inline, className, children, ...props }: any) {
           </button>
         )}
       </div>
-      <SyntaxHighlighter
-        {...props}
-        language={language}
-        useInlineStyles={false}
-        children={String(children).replace(/\n$/, '')}
-        PreTag={props => <div {...props} className={classNames('p-4 overflow-y-auto', className)} />}
-        CodeTag={props => <code {...props} className={classNames('hljs')} />}
-      />
+
+      {language === 'mermaid' ? (
+        <MermaidBlock value={value} />
+      ) : (
+        <SyntaxHighlighter
+          {...props}
+          language={language}
+          useInlineStyles={false}
+          children={String(children).replace(/\n$/, '')}
+          PreTag={props => <div {...props} className={classNames('p-4 overflow-y-auto', className)} />}
+          CodeTag={props => <code {...props} className={classNames('hljs')} />}
+        />
+      )}
     </div>
   ) : (
     <code {...props} className={classNames(className, 'inline')}>
