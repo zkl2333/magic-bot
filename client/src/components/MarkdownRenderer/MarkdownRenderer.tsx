@@ -4,18 +4,46 @@ import './markdownRenderer.less'
 import ReactMarkdown from 'react-markdown'
 import SyntaxHighlighter from 'react-syntax-highlighter'
 import classNames from 'classnames'
-import { useEffect, useMemo, useState } from 'react'
+import { forwardRef, useEffect, useMemo, useRef, useState, useImperativeHandle } from 'react'
 import remarkGfm from 'remark-gfm'
 import remarkMath from 'remark-math'
 import rehypeKatex from 'rehype-katex'
 import mermaid from 'mermaid'
 import 'katex/dist/katex.min.css'
+import DownloadIcon from '@mui/icons-material/Download'
+import OpenInNewIcon from '@mui/icons-material/OpenInNew'
 
 mermaid.initialize({
-  startOnLoad: true,
-  theme: 'dark',
+  startOnLoad: false,
   flowchart: { useMaxWidth: false, htmlLabels: true }
 })
+
+function downloadInlineSVG(svgString: string, filename = 'download.svg') {
+  // 创建一个新的 Blob 对象
+  const svgData = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' })
+
+  // 创建一个 <a> 元素，并设置下载属性
+  const linkElement = document.createElement('a')
+  linkElement.href = URL.createObjectURL(svgData)
+  linkElement.download = filename
+
+  // 触发点击事件进行下载
+  linkElement.click()
+}
+
+function openInlineSVG(svgString: string) {
+  // 创建一个新的 Blob 对象
+  const svgData = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' })
+
+  // 创建一个临时的 URL
+  const url = URL.createObjectURL(svgData)
+
+  // 在新窗口中打开 SVG
+  window.open(url, '_blank')
+
+  // 释放 URL 对象
+  URL.revokeObjectURL(url)
+}
 
 interface MarkdownRendererProps {
   showRow?: boolean
@@ -23,15 +51,25 @@ interface MarkdownRendererProps {
   text: string
 }
 
-const MermaidBlock = ({ value }: { value: string }) => {
+const MermaidBlock = forwardRef<
+  {
+    download: () => void
+    open: () => void
+  },
+  { value: string }
+>(({ value }, ref) => {
   const [innerHtml, setInnerHtml] = useState('')
   const id = useMemo(() => Math.random().toString(36).slice(2, 7), [])
+  const divRef = useRef<HTMLDivElement>(null)
 
   const render = async () => {
     try {
       if (await mermaid.parse(value)) {
-        const { svg } = await mermaid.render('mermaid-svg' + id, value)
+        const { svg, bindFunctions } = await mermaid.render('mermaid-svg-' + id, value)
         setInnerHtml(svg)
+        if (divRef.current && bindFunctions) {
+          bindFunctions(divRef.current)
+        }
       }
     } catch (error) {}
   }
@@ -40,8 +78,26 @@ const MermaidBlock = ({ value }: { value: string }) => {
     render()
   }, [value])
 
-  return <div className='p-4 overflow-y-auto' dangerouslySetInnerHTML={{ __html: innerHtml }} />
-}
+  useImperativeHandle(ref, () => ({
+    download: () => {
+      downloadInlineSVG(innerHtml, id + '.svg')
+    },
+    open: () => {
+      openInlineSVG(innerHtml)
+    }
+  }))
+
+  return (
+    <div
+      ref={divRef}
+      style={{
+        fontFamily: "'trebuchet ms', verdana, arial"
+      }}
+      className='p-4 bg-white min-w-[300px] min-h-[300px] overflow-auto'
+      dangerouslySetInnerHTML={{ __html: innerHtml }}
+    />
+  )
+})
 
 function CodeBlock({ node, inline, className, children, ...props }: any) {
   const value = typeof children === 'string' ? children : children.join('\n')
@@ -50,63 +106,110 @@ function CodeBlock({ node, inline, className, children, ...props }: any) {
 
   const [clipboard, setClipboard] = useState(false)
 
+  const isMermaid = language === 'mermaid'
+
+  const ref = useRef<{
+    download: () => void
+    open: () => void
+  }>(null)
+
   return !inline ? (
-    <div data-theme='dark' className='bg-black rounded-md border border-gray-800 min-w-[200px]'>
+    <div
+      data-theme='dark'
+      className={classNames('bg-black rounded-md border border-gray-800 overflow-hidden', {
+        'w-full': isMermaid,
+        'min-w-[200px]': !isMermaid
+      })}
+    >
       <div className='flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans justify-between'>
-        <span>{language}</span>
-        {clipboard ? (
-          <>
-            <button className='flex ml-auto gap-2'>
-              <svg
-                stroke='currentColor'
-                fill='none'
-                strokeWidth='2'
-                viewBox='0 0 24 24'
-                strokeLinecap='round'
-                strokeLinejoin='round'
-                className='h-4 w-4'
-                height='1em'
-                width='1em'
-                xmlns='http://www.w3.org/2000/svg'
+        <span className='flex'>
+          <span>{language}</span>
+          {isMermaid && (
+            <>
+              <button
+                className='flex ml-2 gap-2'
+                onClick={() => {
+                  ref.current?.open()
+                }}
               >
-                <polyline points='20 6 9 17 4 12'></polyline>
-              </svg>
-              Copied!
-            </button>
-          </>
-        ) : (
-          <button
-            className='flex ml-auto gap-2'
-            onClick={() => {
-              navigator.clipboard.writeText(value)
-              setClipboard(true)
-              setTimeout(() => {
-                setClipboard(false)
-              }, 1000)
-            }}
-          >
-            <svg
-              stroke='currentColor'
-              fill='none'
-              strokeWidth='2'
-              viewBox='0 0 24 24'
-              strokeLinecap='round'
-              strokeLinejoin='round'
-              className='h-4 w-4'
-              height='1em'
-              width='1em'
-              xmlns='http://www.w3.org/2000/svg'
-            >
-              <path d='M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2'></path>
-              <rect x='8' y='2' width='8' height='4' rx='1' ry='1'></rect>
-            </svg>
-            Copy code
-          </button>
-        )}
+                <OpenInNewIcon
+                  style={{
+                    fontSize: '1rem'
+                  }}
+                />
+              </button>
+              <button
+                className='flex ml-2 gap-2'
+                onClick={() => {
+                  ref.current?.download()
+                }}
+              >
+                <DownloadIcon
+                  style={{
+                    fontSize: '1rem'
+                  }}
+                />
+              </button>
+            </>
+          )}
+        </span>
+        <div className='flex'>
+          <span>
+            {clipboard ? (
+              <>
+                <button className='flex ml-auto gap-2'>
+                  <svg
+                    stroke='currentColor'
+                    fill='none'
+                    strokeWidth='2'
+                    viewBox='0 0 24 24'
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    className='h-4 w-4'
+                    height='1em'
+                    width='1em'
+                    xmlns='http://www.w3.org/2000/svg'
+                  >
+                    <polyline points='20 6 9 17 4 12'></polyline>
+                  </svg>
+                  Copied!
+                </button>
+              </>
+            ) : (
+              <button
+                className='flex ml-auto gap-2'
+                onClick={() => {
+                  navigator.clipboard.writeText(value)
+                  setClipboard(true)
+                  setTimeout(() => {
+                    setClipboard(false)
+                  }, 1000)
+                }}
+              >
+                <svg
+                  stroke='currentColor'
+                  fill='none'
+                  strokeWidth='2'
+                  viewBox='0 0 24 24'
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  className='h-4 w-4'
+                  height='1em'
+                  width='1em'
+                  xmlns='http://www.w3.org/2000/svg'
+                >
+                  <path d='M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2'></path>
+                  <rect x='8' y='2' width='8' height='4' rx='1' ry='1'></rect>
+                </svg>
+                Copy code
+              </button>
+            )}
+          </span>
+        </div>
       </div>
 
-      {language === 'mermaid' ? (
-        <MermaidBlock value={value} />
+      {isMermaid ? (
+        <MermaidBlock value={value} ref={ref} />
       ) : (
         <SyntaxHighlighter
           {...props}
