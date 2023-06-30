@@ -26,7 +26,7 @@ const AssistantSidebar = ({
               })
             }
           >
-            添加
+            新建
           </NavLink>
         </div>
         <div className='flex-1 overflow-auto'>

@@ -12,6 +12,7 @@ import mermaid from 'mermaid'
 import 'katex/dist/katex.min.css'
 import DownloadIcon from '@mui/icons-material/Download'
 import OpenInNewIcon from '@mui/icons-material/OpenInNew'
+import { useDebounce } from '@/hooks'
 
 mermaid.initialize({
   startOnLoad: false,
@@ -61,22 +62,29 @@ const MermaidBlock = forwardRef<
   const [innerHtml, setInnerHtml] = useState('')
   const id = useMemo(() => Math.random().toString(36).slice(2, 7), [])
   const divRef = useRef<HTMLDivElement>(null)
+  const bindFunctionsRef = useRef<((element: Element) => void) | null>(null)
 
-  const render = async () => {
+  const render = useDebounce(async () => {
     try {
       if (await mermaid.parse(value)) {
         const { svg, bindFunctions } = await mermaid.render('mermaid-svg-' + id, value)
         setInnerHtml(svg)
-        if (divRef.current && bindFunctions) {
-          bindFunctions(divRef.current)
+        if (bindFunctions) {
+          bindFunctionsRef.current = bindFunctions
         }
       }
     } catch (error) {}
-  }
+  }, 300)
 
   useEffect(() => {
     render()
   }, [value])
+
+  useEffect(() => {
+    if (divRef.current && bindFunctionsRef.current) {
+      bindFunctionsRef.current(divRef.current)
+    }
+  }, [innerHtml])
 
   useImperativeHandle(ref, () => ({
     download: () => {
@@ -89,13 +97,13 @@ const MermaidBlock = forwardRef<
 
   return (
     <div
-      ref={divRef}
       style={{
         fontFamily: "'trebuchet ms', verdana, arial"
       }}
-      className='p-4 bg-white min-w-[300px] min-h-[300px] overflow-auto'
-      dangerouslySetInnerHTML={{ __html: innerHtml }}
-    />
+      className='p-4 overflow-auto'
+    >
+      <div className='min-w-[300px] min-h-[50px]' ref={divRef} dangerouslySetInnerHTML={{ __html: innerHtml }} />
+    </div>
   )
 })
 
@@ -116,9 +124,9 @@ function CodeBlock({ node, inline, className, children, ...props }: any) {
   return !inline ? (
     <div
       data-theme='dark'
-      className={classNames('bg-black rounded-md border border-gray-800 overflow-hidden', {
-        'w-full': isMermaid,
-        'min-w-[200px]': !isMermaid
+      className={classNames('rounded-md border border-gray-800 overflow-hidden', {
+        'bg-white w-full': isMermaid,
+        'bg-black min-w-[200px]': !isMermaid
       })}
     >
       <div className='flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans justify-between'>
