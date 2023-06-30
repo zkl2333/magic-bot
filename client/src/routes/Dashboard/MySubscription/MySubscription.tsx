@@ -18,7 +18,7 @@ export const mySubscriptionLoader: LoaderFunction = async () => {
   }
 }
 
-const mySubscription = () => {
+const MySubscription = () => {
   const { mySubscription, allSubscription, serviceList } = useLoaderData() as any
 
   return (
@@ -73,4 +73,4 @@ const mySubscription = () => {
   )
 }
 
-export default mySubscription
+export default MySubscription

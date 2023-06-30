@@ -12,7 +12,7 @@ import SubscriptionServiceLimit, {
   subscriptionServiceLimitAction,
   subscriptionServiceLimitLoader
 } from './SubscriptionServiceLimit/SubscriptionServiceLimit'
-import MySubscription, { mySubscriptionLoader } from './MySubscription/mySubscription'
+import MySubscription, { mySubscriptionLoader } from './MySubscription/MySubscription'
 
 const dashboardRouter: RouteObject = {
   path: '/dashboard',
@@ -31,7 +31,7 @@ const dashboardRouter: RouteObject = {
           email: formData.get('email') as string,
           username: formData.get('username') as string,
           nickname: formData.get('nickname') as string,
-          Dashboard: {
+          settings: {
             theme: formData.get('theme') as string
           }
         }

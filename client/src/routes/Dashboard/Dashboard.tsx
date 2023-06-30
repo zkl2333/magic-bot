@@ -26,11 +26,11 @@ const Dashboard = () => {
       icon: <PersonOutlinedIcon />,
       label: '个人信息'
     },
-    {
-      path: '/dashboard/my-subscription',
-      icon: <CardMembershipIcon />,
-      label: '我的订阅'
-    },
+    // {
+    //   path: '/dashboard/my-subscription',
+    //   icon: <CardMembershipIcon />,
+    //   label: '我的订阅'
+    // },
     {
       path: '/dashboard/balance',
       icon: <AccountBalanceWalletOutlinedIcon />,
