@@ -50,6 +50,11 @@ const Dashboard = () => {
 
   const adminSidebarLinks = [
     {
+      path: '/dashboard/config',
+      icon: <PersonOutlinedIcon />,
+      label: '配置管理'
+    },
+    {
       path: '/dashboard/subscription',
       icon: <PersonOutlinedIcon />,
       label: '订阅管理'

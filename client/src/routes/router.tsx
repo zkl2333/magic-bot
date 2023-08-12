@@ -7,6 +7,7 @@ import Root from './Root'
 import { getUserInfo } from '../service/user'
 import dashboardRouter from './Dashboard/dashbord.router'
 import assistantRouter from './Assistant/assistant.router'
+import { getIsSystemReady, initSystem } from '@/service/system'
 
 export const router = createBrowserRouter([
   {
@@ -44,5 +45,17 @@ export const router = createBrowserRouter([
   {
     path: '/login',
     element: <Login />
+  },
+  {
+    path: '/install',
+    element: <div>install</div>,
+    loader: async () => {
+      const isSystemReady = await getIsSystemReady()
+      if (!isSystemReady) {
+        await initSystem()
+        alert('系统初始化成功，默认用户名：admin，密码：password')
+      }
+      return redirect('/login')
+    }
   }
 ])

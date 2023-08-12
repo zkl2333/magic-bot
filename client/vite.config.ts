@@ -25,7 +25,7 @@ export default defineConfig(({ mode }) => {
         },
         workbox: {
           globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
-          navigateFallbackDenylist: [/^\/api/]
+          navigateFallbackDenylist: [/^\/api/, /^\/doc/]
         }
       }),
       react()
@@ -35,8 +35,7 @@ export default defineConfig(({ mode }) => {
       proxy: {
         '/api': {
           target: env.VITE_BACKEND_URL || 'http://localhost:3000',
-          changeOrigin: true,
-          rewrite: path => path.replace(/^\/api/, '')
+          changeOrigin: true
         }
       }
     },

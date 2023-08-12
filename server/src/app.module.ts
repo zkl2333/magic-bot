@@ -9,6 +9,7 @@ import { OrderModule } from './modules/order/order.module'
 import { PrismaModule } from './prisma/prisma.module'
 import { SubscriptionModule } from './modules/subscription/subscription.module';
 import { TestModule } from './libraryTest/test.module';
+import { SystemModule } from './modules/system/system.module';
 
 @Module({
   imports: [
@@ -22,7 +23,8 @@ import { TestModule } from './libraryTest/test.module';
     OrderModule,
     PrismaModule,
     SubscriptionModule,
-    TestModule
+    TestModule,
+    SystemModule
   ],
   providers: [JwtService]
 })

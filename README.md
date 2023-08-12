@@ -1,1 +1,1 @@
-# ai-utopia
+# magic-bot
