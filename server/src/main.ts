@@ -23,7 +23,6 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config)
   SwaggerModule.setup('doc', app, document)
   await app.enableShutdownHooks()
-  app.useStaticAssets(join(__dirname, '..', 'public'))
   app.setGlobalPrefix('api')
   app.useGlobalInterceptors(new TransformInterceptor())
   app.useGlobalFilters(new AllExceptionsFilter())
