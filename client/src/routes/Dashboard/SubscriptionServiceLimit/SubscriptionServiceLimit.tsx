@@ -56,7 +56,7 @@ const SubscriptionServiceLimit = () => {
               <summary>{item.name}</summary>
               <ul>
                 {serviceList?.data.map((service: any) => {
-                  const limit = item.subscriptionServiceLimits.find(
+                  const limit = item?.subscriptionServiceLimits?.find(
                     (s: any) => s.serviceType === service.type
                   ) || {
                     subscriptionId: item.id,

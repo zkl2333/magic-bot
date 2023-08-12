@@ -27,13 +27,15 @@ export class OrderService {
 
   // 获取套餐列表
   getPriceList(): { points: number; price: number }[] {
-    return priceList
+    if (this.configService.get('25266') && this.configService.get('XOR_SECRET')) {
+      return priceList
+    }
   }
 
   createSign({ order }: { order: Order }): string {
     const price = priceList.find(item => item.points === order.pointsPurchased).price
     const str = `${order.name}${order.payType}${price}${order.id}${order.notifyUrl}${this.configService.get(
-      'XORPAY_APP_SECRET'
+      'XOR_SECRET'
     )}`
     const sign = createHash('md5').update(str).digest('hex')
     return sign
@@ -79,7 +81,7 @@ export class OrderService {
 
     // 验证签名
     const checkSign = createHash('md5')
-      .update(`${aoid}${order_id}${pay_price}${pay_time}${this.configService.get('XORPAY_APP_SECRET')}`)
+      .update(`${aoid}${order_id}${pay_price}${pay_time}${this.configService.get('XOR_SECRET')}`)
       .digest('hex')
     if (checkSign !== sign) {
       throw new BadRequestException('签名错误')

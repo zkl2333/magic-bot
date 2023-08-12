@@ -9,13 +9,13 @@ import { UpsertSubServiceLimitDto } from './dto/upsert-sub-service-limit.dto'
 export class SubscriptionService {
   constructor(private prisma: PrismaService) {}
 
-  listSubscription(limit: boolean) {
+  listSubscription() {
     return this.prisma.subscription.findMany({
       where: {
         deletedAt: null
       },
       include: {
-        subscriptionServiceLimits: limit
+        subscriptionServiceLimits: true
       }
     })
   }

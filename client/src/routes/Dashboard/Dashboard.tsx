@@ -54,16 +54,16 @@ const Dashboard = () => {
       icon: <PersonOutlinedIcon />,
       label: '配置管理'
     },
-    {
-      path: '/dashboard/subscription',
-      icon: <PersonOutlinedIcon />,
-      label: '订阅管理'
-    },
-    {
-      path: '/dashboard/subscription-service-limit',
-      icon: <PersonOutlinedIcon />,
-      label: '服务限制'
-    }
+    // {
+    //   path: '/dashboard/subscription',
+    //   icon: <PersonOutlinedIcon />,
+    //   label: '订阅管理'
+    // },
+    // {
+    //   path: '/dashboard/subscription-service-limit',
+    //   icon: <PersonOutlinedIcon />,
+    //   label: '服务限制'
+    // }
   ]
 
   return (

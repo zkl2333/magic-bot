@@ -17,8 +17,8 @@ export class SubscriptionController {
 
   @Get()
   @ApiOperation({ summary: '获取所有订阅' })
-  async listSubscription(@Query('limit') limit: boolean) {
-    return this.subscriptionService.listSubscription(limit)
+  async listSubscription() {
+    return this.subscriptionService.listSubscription()
   }
 
   @Post()

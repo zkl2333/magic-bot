@@ -1,6 +1,6 @@
 import { getConfig, updateConfig } from '@/service/system'
 import { useSnackbar } from 'notistack'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { LoaderFunction, useLoaderData } from 'react-router-dom'
 
 export const configLoader: LoaderFunction = async () => {
@@ -13,6 +13,10 @@ const Config = () => {
   const [configList, setConfigList] = useState(configs)
   const { enqueueSnackbar } = useSnackbar()
 
+  useEffect(() => {
+    setConfigList(configs)
+  }, [configs])
+
   return (
     <div className='p-4 w-full'>
       <table className='table bg-base-100 w-full'>
@@ -22,12 +26,13 @@ const Config = () => {
             <th>名称</th>
             <th>值</th>
             <th>是否公开</th>
+            <th>操作</th>
           </tr>
         </thead>
         <tbody>
           {configList.map((item: any) => {
             return (
-              <tr>
+              <tr key={item.id}>
                 <td>
                   <input
                     type='text'
@@ -62,6 +67,16 @@ const Config = () => {
                       setConfigList([...configList])
                     }}
                   />
+                </td>
+                <td>
+                  <div
+                    className='btn btn-error text-base-100 btn-sm'
+                    onClick={() => {
+                      setConfigList(configList.filter((config: any) => config.id !== item.id))
+                    }}
+                  >
+                    删除
+                  </div>
                 </td>
               </tr>
             )
