@@ -5,7 +5,6 @@ import { ValidationPipe } from '@nestjs/common'
 import { TransformInterceptor } from './transform.interceptor'
 import { AllExceptionsFilter } from './all-exceptions.filter'
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger'
-import { PrismaService } from './prisma/prisma.service'
 import { NestExpressApplication } from '@nestjs/platform-express'
 import { join } from 'node:path'
 
@@ -23,12 +22,9 @@ async function bootstrap() {
 
   const document = SwaggerModule.createDocument(app, config)
   SwaggerModule.setup('doc', app, document)
-
-  const prismaService = app.get(PrismaService)
-  await prismaService.enableShutdownHooks(app)
-
+  await app.enableShutdownHooks()
   app.useStaticAssets(join(__dirname, '..', 'public'))
-  app.setGlobalPrefix('api');
+  app.setGlobalPrefix('api')
   app.useGlobalInterceptors(new TransformInterceptor())
   app.useGlobalFilters(new AllExceptionsFilter())
   app.useGlobalPipes(new ValidationPipe())

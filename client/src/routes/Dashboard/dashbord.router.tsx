@@ -13,6 +13,7 @@ import SubscriptionServiceLimit, {
   subscriptionServiceLimitLoader
 } from './SubscriptionServiceLimit/SubscriptionServiceLimit'
 import MySubscription, { mySubscriptionLoader } from './MySubscription/MySubscription'
+import Config, { configLoader } from './Config/Config'
 
 const dashboardRouter: RouteObject = {
   path: '/dashboard',
@@ -79,6 +80,11 @@ const dashboardRouter: RouteObject = {
       path: 'my-subscription',
       element: <MySubscription />,
       loader: mySubscriptionLoader
+    },
+    {
+      path: 'config',
+      element: <Config />,
+      loader: configLoader
     },
     {
       path: 'subscription',
