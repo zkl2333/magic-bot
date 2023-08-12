@@ -3,10 +3,14 @@ import { Public } from 'src/common/decorators/public.decorator'
 import { SystemService } from './system.service'
 import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard'
 import { ApiTags, ApiBearerAuth, ApiOperation } from '@nestjs/swagger'
+import { RolesGuard } from 'src/common/guards/roles.guard'
+import { Roles } from 'src/common/decorators/roles.decorator'
+import { Role } from '@prisma/client'
 
 @ApiTags('system')
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
+@Roles(Role.ADMIN)
 @Controller('system')
 export class SystemController {
   constructor(private readonly systemService: SystemService) {}

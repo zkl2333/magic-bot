@@ -5,8 +5,7 @@ import { PrismaService } from 'src/prisma/prisma.service'
 import { Order } from '@prisma/client'
 import { PaymentCallbackDto } from './dto/payment-callback.dto'
 import { AiProxyService } from 'src/common/aiProxy/ai-proxy.service'
-
-const appSecret = 'XOR_SECRET'
+import { ConfigService } from '@nestjs/config'
 
 // 利润率
 const profitRate = 1.2
@@ -20,7 +19,11 @@ const priceList = [
 
 @Injectable()
 export class OrderService {
-  constructor(private readonly prisma: PrismaService, private readonly aiProxyService: AiProxyService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly aiProxyService: AiProxyService,
+    private configService: ConfigService
+  ) {}
 
   // 获取套餐列表
   getPriceList(): { points: number; price: number }[] {
@@ -29,7 +32,9 @@ export class OrderService {
 
   createSign({ order }: { order: Order }): string {
     const price = priceList.find(item => item.points === order.pointsPurchased).price
-    const str = `${order.name}${order.payType}${price}${order.id}${order.notifyUrl}${appSecret}`
+    const str = `${order.name}${order.payType}${price}${order.id}${order.notifyUrl}${this.configService.get(
+      'XORPAY_APP_SECRET'
+    )}`
     const sign = createHash('md5').update(str).digest('hex')
     return sign
   }
@@ -74,7 +79,7 @@ export class OrderService {
 
     // 验证签名
     const checkSign = createHash('md5')
-      .update(`${aoid}${order_id}${pay_price}${pay_time}${appSecret}`)
+      .update(`${aoid}${order_id}${pay_price}${pay_time}${this.configService.get('XORPAY_APP_SECRET')}`)
       .digest('hex')
     if (checkSign !== sign) {
       throw new BadRequestException('签名错误')

@@ -2,10 +2,11 @@ import { Injectable } from '@nestjs/common'
 import { PrismaService } from 'src/prisma/prisma.service'
 import { Role } from '@prisma/client'
 import * as bcrypt from 'bcrypt'
+import { ConfigService } from '@nestjs/config'
 
 @Injectable()
 export class SystemService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService, private configService: ConfigService) {}
 
   async isSystemReady() {
     const users = await this.prisma.user.findMany()
@@ -31,11 +32,18 @@ export class SystemService {
   }
 
   async getPublicConfig() {
-    return this.prisma.config.findMany({
+    const configs = await this.prisma.config.findMany({
       where: {
         public: true
       }
     })
+    return [
+      {
+        key: '25266',
+        value: this.configService.get('25266')
+      },
+      ...configs
+    ]
   }
 
   async getConfig() {

@@ -1,9 +1,9 @@
 import dialogStore, { DialogProps } from '@/components/PortalDialog/dialogStore'
 import requestHandler from '@/service/request'
+import { getPublicConfig } from '@/service/system'
 import userStore from '@/store/UserStore'
 import { useState } from 'react'
 
-const cashierUrl = 'https://xorpay.com/api/cashier/25266'
 const qrUrl = 'https://xorpay.com/qr?data='
 
 interface PayModalProps {
@@ -30,6 +30,8 @@ function PayModal({ dialogId, points, onFinish }: PayModalProps & DialogProps) {
   const isWechatBrowser = isWechat()
 
   const handleBuy = async (points: number) => {
+    const configs = await getPublicConfig()
+    const aid = configs.find((config: any) => config.key === '25266')?.value
     const res = await requestHandler('/api/orders/create', {
       method: 'POST',
       body: JSON.stringify({
@@ -50,7 +52,7 @@ function PayModal({ dialogId, points, onFinish }: PayModalProps & DialogProps) {
       notify_url: res.data.notifyUrl,
       sign: res.data.sign
     }
-    const payUrl = cashierUrl + '?' + new URLSearchParams(payPrarms)
+    const payUrl = 'https://xorpay.com/api/cashier/' + aid + '?' + new URLSearchParams(payPrarms)
     setPayUrl(payUrl)
   }
 

@@ -5,6 +5,7 @@ import * as bcrypt from 'bcrypt'
 import { PrismaService } from 'src/prisma/prisma.service'
 import * as nodemailer from 'nodemailer'
 import { RegisterDto } from './dto/register.dto'
+import { User } from '@prisma/client'
 
 @Injectable()
 export class AuthService {
@@ -28,9 +29,10 @@ export class AuthService {
     throw new UnauthorizedException('密码错误')
   }
 
-  async login(user: { id: string }) {
-    const { id } = user
-    const payload = { id }
+  async login(user: User) {
+    const { id, role } = user
+    const payload = { id, role }
+    console.log(payload)
     return {
       access_token: this.jwtService.sign(payload)
     }
