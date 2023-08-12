@@ -7,6 +7,21 @@ WORKDIR /app
 # 将你的app的源代码复制到工作目录
 COPY . .
 
+# 前端构建
+WORKDIR /app/client
+
+# 安装项目依赖
+RUN npm ci
+
+# 生成Prisma客户端
+RUN npx prisma generate
+
+# 编译TypeScript代码
+RUN npm run build
+
+# 后端构建
+WORKDIR /app/server 
+
 # 安装项目依赖
 RUN npm ci
 
@@ -20,4 +35,4 @@ RUN npm run build
 EXPOSE 3000
 
 # 启动你的app
-CMD ["/bin/sh", "/app/start.sh"]
+CMD ["/bin/sh", "/app/server/start.sh"]
