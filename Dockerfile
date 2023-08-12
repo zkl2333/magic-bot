@@ -22,6 +22,9 @@ RUN npm run build
 # 后端构建
 WORKDIR /app/server 
 
+# 将前端构建好的静态文件复制到后端的静态文件目录
+RUN cp -r /app/client/dist /app/server/public
+
 # 安装项目依赖
 RUN npm ci
 
