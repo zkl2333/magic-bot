@@ -47,7 +47,7 @@ const Config = () => {
                 </td>
                 <td>
                   <input
-                    type='text'
+                    type={item.public ? 'text' : 'password'}
                     placeholder='value'
                     className='input input-bordered input-primary w-full max-w-xs'
                     value={item.value}
