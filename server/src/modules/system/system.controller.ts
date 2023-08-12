@@ -29,6 +29,7 @@ export class SystemController {
     return this.systemService.createAdminUser()
   }
 
+  @Public()
   @Get('publicConfig')
   @ApiOperation({ summary: '获取公共配置' })
   async getPublicConfig() {
