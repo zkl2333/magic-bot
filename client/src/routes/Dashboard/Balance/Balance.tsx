@@ -40,7 +40,7 @@ const Balance = () => {
           </div>
         </div>
       </div>
-      {priceList.success && (
+      {priceList.success && priceList.data.length > 0 && (
         <div>
           <div className='text-xl font-bold'>购买积分</div>
           <div className='w-full max-w-[900px] mt-4 grid justify-start grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-4'>

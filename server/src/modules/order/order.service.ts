@@ -30,6 +30,7 @@ export class OrderService {
     if (this.configService.get('25266') && this.configService.get('XOR_SECRET')) {
       return priceList
     }
+    return []
   }
 
   createSign({ order }: { order: Order }): string {
