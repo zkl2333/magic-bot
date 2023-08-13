@@ -111,7 +111,8 @@ export class SubscriptionService {
       })
 
       if (!defaultSubscription) {
-        throw new BadRequestException('未找到默认订阅')
+        // throw new BadRequestException('未找到默认订阅')
+        return
       }
 
       userSubscription = {
@@ -121,7 +122,8 @@ export class SubscriptionService {
     }
 
     if (!userSubscription) {
-      throw new BadRequestException('没有可用的订阅')
+      // throw new BadRequestException('没有可用的订阅')
+      return
     }
 
     const serviceLimit = userSubscription.subscription.subscriptionServiceLimits.find(
