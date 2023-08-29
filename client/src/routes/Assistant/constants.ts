@@ -1,6 +1,5 @@
 import prompts from '../../prompts-zh'
 import { Assistant } from '../../service/assistant'
-import multiavatar from '@multiavatar/multiavatar/esm'
 type DefaultAssistant = {
   id: string
   name: string
