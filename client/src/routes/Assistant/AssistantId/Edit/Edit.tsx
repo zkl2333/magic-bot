@@ -11,8 +11,9 @@ import {
   updateAssistant
 } from '../../../../service/assistant'
 import { useDebounce } from '../../../../hooks'
-import Select from '@mui/base/Select'
-import Option from '@mui/base/Option'
+import { Select } from '@mui/base'
+import { Option } from '@mui/base'
+import multiavatar from '@multiavatar/multiavatar/esm'
 
 export const assistantIdEditAction: ActionFunction = async ({ request }) => {
   const formData = await request.formData()
@@ -133,7 +134,17 @@ const Edit = () => {
           <div className='online avatar mb-3'>
             <div className='rounded-full bg-base-content h-24 w-24 bg-opacity-10'>
               {_assistant.avatar ? (
-                <img src={_assistant.avatar} />
+                _assistant.avatar.startsWith('https://api.multiavatar.com/') ? (
+                  <div
+                    dangerouslySetInnerHTML={{
+                      __html: multiavatar(
+                        _assistant.avatar.replace('https://api.multiavatar.com/', '').replace('.svg', '')
+                      )
+                    }}
+                  />
+                ) : (
+                  <img src={_assistant.avatar} />
+                )
               ) : (
                 <OpenaiIcon
                   style={{

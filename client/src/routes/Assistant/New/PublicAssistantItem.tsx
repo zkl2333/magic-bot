@@ -4,6 +4,7 @@ import OpenaiIcon from '../../../components/OpenaiIcon'
 import { Assistant } from '../../../service/assistant'
 import userStore from '../../../store/UserStore'
 import { useNavigate } from 'react-router-dom'
+import multiavatar from '@multiavatar/multiavatar/esm'
 
 export const PublicAssistantItem = ({
   assistant,
@@ -32,7 +33,17 @@ export const PublicAssistantItem = ({
       >
         <div className='rounded-full bg-base-content h-16 w-16 bg-opacity-10'>
           {assistant.avatar ? (
-            <img src={assistant.avatar} />
+            assistant.avatar.startsWith('https://api.multiavatar.com/') ? (
+              <div
+                dangerouslySetInnerHTML={{
+                  __html: multiavatar(
+                    assistant.avatar.replace('https://api.multiavatar.com/', '').replace('.svg', '')
+                  )
+                }}
+              />
+            ) : (
+              <img src={assistant.avatar} />
+            )
           ) : (
             <OpenaiIcon
               style={{

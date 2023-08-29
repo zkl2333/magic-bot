@@ -1,6 +1,7 @@
 import classnames from 'classnames'
 import OpenaiIcon from '../../../components/OpenaiIcon'
 import { Assistant } from '../../../service/assistant'
+import multiavatar from '@multiavatar/multiavatar/esm'
 
 interface IAssistantItemProps {
   className?: string
@@ -18,7 +19,17 @@ const AssistantItem = ({ assistant, isActive, className, onClick }: IAssistantIt
         })}
       >
         {assistant.avatar ? (
-          <img src={assistant.avatar} />
+          assistant.avatar.startsWith('https://api.multiavatar.com/') ? (
+            <div
+              dangerouslySetInnerHTML={{
+                __html: multiavatar(
+                  assistant.avatar.replace('https://api.multiavatar.com/', '').replace('.svg', '')
+                )
+              }}
+            />
+          ) : (
+            <img src={assistant.avatar} />
+          )
         ) : (
           <OpenaiIcon
             style={{

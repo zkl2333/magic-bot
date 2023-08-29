@@ -15,6 +15,7 @@
     "@mui/base": "^5.0.0-beta.0",
     "@mui/icons-material": "^5.11.16",
     "@mui/material": "^5.13.0",
+    "@multiavatar/multiavatar": "^1.0.7",
     "@paralleldrive/cuid2": "^2.2.0",
     "@tailwindcss/typography": "^0.5.9",
     "@traptitech/markdown-it-katex": "^3.6.0",
@@ -61,5 +62,8 @@
     "typescript": "^5.0.2",
     "vite": "^4.3.2",
     "vite-plugin-pwa": "^0.14.7"
+  },
+  "volta": {
+    "node": "18.17.1"
   }
 }

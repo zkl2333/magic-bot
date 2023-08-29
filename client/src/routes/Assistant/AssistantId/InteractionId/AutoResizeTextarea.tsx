@@ -1,4 +1,4 @@
-import TextareaAutosize from '@mui/base/TextareaAutosize'
+import { TextareaAutosize } from '@mui/base'
 import SendIcon from './SendIcon'
 import { useRef } from 'react'
 
